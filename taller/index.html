@@ -1,24 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapa Markmap</title>
-  <style>
-    * { margin: 0; padding: 0; }
-    #mindmap { width: 100vw; height: 100vh; }
-  </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.10/dist/style.css">
-</head>
-<body>
-  <svg id="mindmap"></svg>
-
-  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.10/dist/browser/index.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.10/dist/index.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18.10/dist/index.min.js"></script>
-
-  <script>
     (() => {
       const markdown = `
 # 🧠 Taller de Evaluación
@@ -71,7 +50,7 @@
       const transformer = new Transformer();
       const { root } = transformer.transform(markdown);
       const mm = Markmap.create('#mindmap', {
-        initialExpandLevel: 1,
+        initialExpandLevel: 1, // <--- ESTA ES LA LÍNEA CLAVE Y YA ESTÁ CORRECTA
         spacingVertical: 30,
         spacingHorizontal: 120,
         maxWidth: 300
@@ -81,16 +60,24 @@
       // Toolbar con expandir y colapsar
       const toolbar = new window.markmap.Toolbar();
       toolbar.attach(mm);
+      // Opcional: podrías querer que los botones de la toolbar reflejen el estado inicial
+      // pero Markmap maneja esto internamente.
+      // Si quisieras añadir botones personalizados para expandir/colapsar a niveles específicos:
       toolbar.items.push(
         {
           title: 'Expandir todo',
-          callback: () => mm.expand(true),
-          icon: '<svg viewBox="0 0 24 24" width="20"><path d="M12 4v16m8-8H4"/></svg>'
+          icon: '<svg viewBox="0 0 24 24" width="20"><path d="M12 4v16m8-8H4"/></svg>', // Ícono de ejemplo para expandir
+          onClick: () => mm.setData(root, { initialExpandLevel: -1 }) // -1 o un número grande para expandir todo
         },
         {
-          title: 'Colapsar todo',
-          callback: () => mm.expand(false),
-          icon: '<svg viewBox="0 0 24 24" width="20"><path d="M4 12h16"/></svg>'
+          title: 'Colapsar (Nivel 1)',
+          icon: '<svg viewBox="0 0 24 24" width="20"><path d="M4 12h16"/></svg>', // Ícono de ejemplo para colapsar
+          onClick: () => mm.setData(root, { initialExpandLevel: 1 }) // Colapsar a nivel 1
+        },
+        {
+          title: 'Colapsar (Solo Raíz)',
+          icon: '<svg viewBox="0 0 24 24" width="20"><path d="M19 13H5v-2h14v2Z"/></svg>', // Otro ícono de ejemplo
+          onClick: () => mm.setData(root, { initialExpandLevel: 0 }) // Colapsar a solo la raíz
         }
       );
       const toolbarEl = toolbar.render();
@@ -98,5 +85,3 @@
       document.body.append(toolbarEl);
     })();
   </script>
-</body>
-</html>
