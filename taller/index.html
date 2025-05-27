@@ -3,18 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Markmap</title>
+  <title>Mapa Markmap</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
-    #mindmap {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-    }
+    * { margin: 0; padding: 0; }
+    #mindmap { width: 100vw; height: 100vh; }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.10/dist/style.css">
 </head>
@@ -24,121 +16,86 @@
   <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.10/dist/browser/index.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.10/dist/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-lib@0.18.10/dist/index.min.js"></script>
 
-  <!-- Toolbar con botones personalizados -->
   <script>
     (() => {
-      setTimeout(() => {
-        const { markmap: x, mm: K } = window;
-        const toolbar = new x.Toolbar();
-        toolbar.attach(K);
+      const markdown = `
+# 🧠 Taller de Evaluación
 
-        // Botones personalizados
-        toolbar.items.push(
-          {
-            title: 'Expandir todo',
-            callback: () => K.expand(true),
-            icon: '<svg viewBox="0 0 24 24" width="20"><path d="M12 4v16m8-8H4"/></svg>'
-          },
-          {
-            title: 'Colapsar todo',
-            callback: () => K.expand(false),
-            icon: '<svg viewBox="0 0 24 24" width="20"><path d="M4 12h16"/></svg>'
-          }
-        );
+## 🎯 Objetivos
 
-        const toolbarEl = toolbar.render();
-        toolbarEl.setAttribute("style", "position:absolute;bottom:20px;right:20px");
-        document.body.append(toolbarEl);
-      });
-    })();
-  </script>
+### Cognitivos y metacognitivos
+- Comprender las categorías teóricas del campo de la evaluación.
+- Formular preguntas críticas sobre los procesos evaluativos.
+- Reconocer la evaluación como proceso situado con múltiples implicancias.
+- Identificar supuestos ideológicos en las prácticas de evaluación.
+- Diseñar instrumentos y reconocer los modelos que los fundamentan.
+- Valorar la coevaluación y fomentar la autoevaluación reflexiva.
 
-  <!-- Mapa mental generado -->
-  <script>
-    (() => {
-      const { Markmap } = window.markmap;
-      const data = {
-        "content": "🧠 Taller de Evaluación",
-        "children": [
-          {
-            "content": "🎯 Objetivos",
-            "children": [
-              {
-                "content": "Cognitivos y metacognitivos",
-                "children": [
-                  { "content": "Comprender las categorías teóricas del campo de la evaluación.", "children": [] },
-                  { "content": "Formular preguntas críticas sobre los procesos evaluativos.", "children": [] },
-                  { "content": "Reconocer la evaluación como proceso situado con múltiples implicancias.", "children": [] },
-                  { "content": "Identificar supuestos ideológicos en las prácticas de evaluación.", "children": [] },
-                  { "content": "Diseñar instrumentos y reconocer los modelos que los fundamentan.", "children": [] },
-                  { "content": "Valorar la coevaluación y fomentar la autoevaluación reflexiva.", "children": [] }
-                ]
-              },
-              {
-                "content": "Actitudinales",
-                "children": [
-                  { "content": "Potenciar estrategias cooperativas con respeto a la diversidad.", "children": [] },
-                  { "content": "Desarrollar pensamiento crítico y creativo en la co-construcción del conocimiento.", "children": [] }
-                ]
-              }
-            ]
-          },
-          {
-            "content": "🧩 Contenidos",
-            "children": [
-              {
-                "content": "Unidad 1: Conceptos básicos sobre evaluación",
-                "children": [
-                  { "content": "Evaluar y calificar: conceptualización y diferencias → Evaluar implica emitir juicios sobre procesos; calificar, traducirlos a números." },
-                  { "content": "Breve síntesis histórica de los procesos evaluativos → Qué, quién, cómo y para qué se evalúa han cambiado a lo largo del tiempo." },
-                  { "content": "Posiciones epistemológicas sobre la evaluación → técnica, cultural, política." },
-                  { "content": "Tipos de evaluación → diagnóstica, formativa, sumativa." }
-                ]
-              },
-              {
-                "content": "Unidad 2: Problemáticas emergentes",
-                "children": [
-                  { "content": "Evaluación en distintas modalidades educativas → contenidos, competencias, proyectos." },
-                  { "content": "Pruebas estandarizadas → lógica externa que desatiende la diversidad." },
-                  { "content": "Evaluación en EVA → estrategias específicas en entornos digitales." },
-                  { "content": "Evaluación por competencias → debate con el discurso mercantilista." }
-                ]
-              },
-              {
-                "content": "Unidad 3: Medios, técnicas e instrumentos",
-                "children": [
-                  { "content": "Formas de evaluación → pruebas, tareas, desempeños." },
-                  { "content": "Medios de evaluación → escritos, orales, prácticos." },
-                  { "content": "Técnicas evaluativas → participativas vs. no participativas." },
-                  { "content": "Instrumentos → rúbricas, listas de cotejo, escalas." },
-                  { "content": "Relación con teorías del aprendizaje." },
-                  { "content": "Criterios: confiabilidad, validez, practicidad." }
-                ]
-              },
-              {
-                "content": "Unidad 4: Criterios para la evaluación",
-                "children": [
-                  { "content": "Justicia y equidad → criterios claros y compartidos." },
-                  { "content": "Rúbricas consensuadas → claridad y apropiación." },
-                  { "content": "Retroalimentación → mirada constructiva del proceso." },
-                  { "content": "Heteroevaluación, coevaluación, autoevaluación." },
-                  { "content": "El error como oportunidad." }
-                ]
-              }
-            ]
-          }
-        ]
-      };
+### Actitudinales
+- Potenciar estrategias cooperativas con respeto a la diversidad.
+- Desarrollar pensamiento crítico y creativo en la co-construcción del conocimiento.
 
-      const options = {
+## 🧩 Contenidos
+
+### Unidad 1: Conceptos básicos sobre evaluación
+- Evaluar y calificar → Evaluar implica emitir juicios sobre procesos; calificar, traducirlos a números.
+- Breve síntesis histórica → La evaluación es una práctica histórica, situada y política.
+- Posiciones epistemológicas → técnica, cultural, política.
+- Tipos de evaluación → diagnóstica, formativa, sumativa.
+
+### Unidad 2: Problemáticas emergentes
+- Evaluación en distintas modalidades → contenidos, competencias, proyectos.
+- Pruebas estandarizadas → imposición externa, falta de contextualización.
+- Evaluación en EVA → nuevas estrategias para entornos digitales.
+- Evaluación por competencias → críticas a la lógica de empleabilidad.
+
+### Unidad 3: Medios, técnicas e instrumentos
+- Formas de evaluación → pruebas, tareas, desempeños reales.
+- Medios → escritos, orales, prácticos.
+- Técnicas → participativas vs. no participativas.
+- Instrumentos → rúbricas, listas, escalas.
+- Relación con teorías del aprendizaje.
+- Criterios → confiabilidad, validez, practicidad.
+
+### Unidad 4: Criterios para la evaluación
+- Justicia y equidad → criterios claros, diversidad y horizonte común.
+- Rúbricas consensuadas → claridad, metacognición.
+- Retroalimentación → orientación y fortalecimiento del proceso.
+- Hetero, co y autoevaluación.
+- El error como oportunidad.
+`;
+
+      const { Transformer, Markmap } = window.markmap;
+      const transformer = new Transformer();
+      const { root } = transformer.transform(markdown);
+      const mm = Markmap.create('#mindmap', {
         initialExpandLevel: 1,
         spacingVertical: 30,
         spacingHorizontal: 120,
         maxWidth: 300
-      };
+      }, root);
+      window.mm = mm;
 
-      window.mm = Markmap.create("svg#mindmap", options, data);
+      // Toolbar con expandir y colapsar
+      const toolbar = new window.markmap.Toolbar();
+      toolbar.attach(mm);
+      toolbar.items.push(
+        {
+          title: 'Expandir todo',
+          callback: () => mm.expand(true),
+          icon: '<svg viewBox="0 0 24 24" width="20"><path d="M12 4v16m8-8H4"/></svg>'
+        },
+        {
+          title: 'Colapsar todo',
+          callback: () => mm.expand(false),
+          icon: '<svg viewBox="0 0 24 24" width="20"><path d="M4 12h16"/></svg>'
+        }
+      );
+      const toolbarEl = toolbar.render();
+      toolbarEl.setAttribute("style", "position:absolute;bottom:20px;right:20px");
+      document.body.append(toolbarEl);
     })();
   </script>
 </body>
