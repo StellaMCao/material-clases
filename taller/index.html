@@ -33,7 +33,7 @@
         const toolbar = new x.Toolbar();
         toolbar.attach(K);
 
-        // Botones: Expandir y Colapsar
+        // Botones personalizados
         toolbar.items.push(
           {
             title: 'Expandir todo',
@@ -56,13 +56,9 @@
 
   <!-- Mapa mental generado -->
   <script>
-    ((b, L, T, D) => {
-      const H = b();
-      window.mm = H.Markmap.create("svg#mindmap", (L || H.deriveOptions)(D), T)
-    })(
-      () => window.markmap,
-      null,
-      {
+    (() => {
+      const { Markmap } = window.markmap;
+      const data = {
         "content": "🧠 Taller de Evaluación",
         "children": [
           {
@@ -132,13 +128,18 @@
               }
             ]
           }
-        ],
-        "spacingVertical": 30,
-        "spacingHorizontal": 120,
-        "initialExpandLevel": 2,
-        "maxWidth": 300
-      }
-    );
+        ]
+      };
+
+      const options = {
+        initialExpandLevel: 1,
+        spacingVertical: 30,
+        spacingHorizontal: 120,
+        maxWidth: 300
+      };
+
+      window.mm = Markmap.create("svg#mindmap", options, data);
+    })();
   </script>
 </body>
 </html>
