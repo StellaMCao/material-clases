@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso Interactivo: El Pensamiento de Jean Piaget</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos Generales */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6; /* Off-white background */
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #fff;
+            max-width: 800px;
+            width: 95%;
+            margin: 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50; /* Dark blue-gray for titles */
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff; /* Primary blue for main title */
+        }
+
+        h2 {
+            font-size: 1.8em;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: #34495e; /* Slightly lighter than h2 */
+            margin-top: 25px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: '👉'; /* Pointer icon */
+            position: absolute;
+            left: 0;
+            color: #28a745; /* Green */
+        }
+
+        .concept-highlight {
+            font-weight: 700;
+            color: #007bff; /* Primary blue */
+        }
+
+        .didactic-note {
+            background-color: #e6f7ff; /* Light blue background */
+            border-left: 5px solid #007bff; /* Blue border */
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #333;
+        }
+
+        .warning-box {
+            background-color: #fff3cd; /* Light yellow background */
+            border-left: 5px solid #ffc107; /* Orange border */
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #333;
+        }
+
+        /* Navigation Buttons */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .nav-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Section Display */
+        .course-section {
+            display: none; /* Hidden by default */
+        }
+
+        .course-section.active {
+            display: block; /* Show active section */
+        }
+
+        /* Icons */
+        .icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            h3 {
+                font-size: 1.2em;
+            }
+            .nav-button {
+                padding: 10px 18px;
+                font-size: 0.9em;
+            }
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .nav-button:first-child {
+                margin-bottom: 0; /* No margin on first button for stacking */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Explorando el Pensamiento de Jean Piaget</h1>
+
+        <!-- SECCIÓN 1: Introducción -->
+        <div id="section1" class="course-section active">
+            <h2><span class="icon">🚀</span> ¡Bienvenido al Curso!</h2>
+            <p>Este curso te guiará a través de las ideas fundamentales de Jean Piaget, uno de los psicólogos más influyentes en el estudio del desarrollo infantil. Su enfoque nos ayuda a entender cómo los niños construyen su conocimiento del mundo.</p>
+            <p>Nos centraremos en el <span class="concept-highlight">desarrollo intelectual "espontáneo"</span>, es decir, aquello que el niño descubre por sí mismo, más allá de lo que se le enseña directamente en casa o en la escuela.</p>
+            <div class="didactic-note">
+                <p><strong>¿Para quién es este curso?</strong><br>Si eres estudiante de formación docente, psicología, o simplemente te interesa comprender cómo aprenden los niños, este curso es para ti. ¡Prepárate para una aventura fascinante!</p>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: El Papel del Tiempo en el Desarrollo -->
+        <div id="section2" class="course-section">
+            <h2><span class="icon">⏳</span> El Tiempo: Clave en el Desarrollo Infantil</h2>
+            <p>Para Piaget, el desarrollo del niño es un proceso fundamentalmente <span class="concept-highlight">temporal</span>. Esto significa que el tiempo juega dos papeles cruciales:</p>
+            <ul>
+                <li><strong>La Duración Necesaria:</strong> El desarrollo, tanto biológico como psicológico, requiere un tiempo específico. Cuanto más compleja es una especie, más larga es su infancia. Un gatito aprende rápido; un ser humano necesita muchos años porque tiene mucho más que aprender y descubrir.</li>
+                <li><strong>El Orden de Sucesión:</strong> No solo importa cuánto dura el desarrollo, sino también el orden en que se adquieren ciertas habilidades o conceptos. Algunas ideas deben construirse primero para que otras más complejas sean posibles. ¡Es como construir una casa, no puedes poner el techo antes de las paredes!</li>
+            </ul>
+        </div>
+
+        <!-- SECCIÓN 3: Ejemplo Clave: La Conservación de la Materia -->
+        <div id="section3" class="course-section">
+            <h2><span class="icon">⚖️</span> ¿Se Conserva la Plastilina? (Ejemplo de la Conservación)</h2>
+            <p>Imagina que le das a un niño dos bolitas de plastilina idénticas. El niño comprueba que son iguales en cantidad, peso y volumen. Luego, frente a él, transformas una de las bolitas en una "salchicha" larga o la aplastas como una galleta.</p>
+            <p>Ahora le haces estas preguntas:</p>
+            <ul>
+                <li><strong>¿Hay la misma cantidad de plastilina?</strong> (Conservación de la Sustancia)</li>
+                <li><strong>¿Pesa lo mismo?</strong> (Conservación del Peso)</li>
+                <li><strong>¿Ocupa el mismo espacio si la metemos en agua?</strong> (Conservación del Volumen)</li>
+            </ul>
+            <div class="warning-box">
+                <p><strong>¡Sorprendente!</strong> Los niños no nacen con estas ideas claras. Un niño menor de 7-8 años te dirá que la "salchicha" tiene MÁS plastilina porque es más larga. ¡Piensa que se ha añadido algo!</p>
+            </div>
+            <p>Piaget descubrió que, en promedio:</p>
+            <ul>
+                <li>La conservación de la <span class="concept-highlight">sustancia</span> (cantidad) se adquiere alrededor de los <span class="concept-highlight">8 años</span>.</li>
+                <li>La conservación del <span class="concept-highlight">peso</span> se adquiere alrededor de los <span class="concept-highlight">9-10 años</span>.</li>
+                <li>La conservación del <span class="concept-highlight">volumen</span> se adquiere alrededor de los <span class="concept-highlight">12 años</span>.</li>
+            </ul>
+            <p>Observa el <span class="concept-highlight">desfase</span> de dos años entre cada concepto. Esto demuestra que el desarrollo es gradual y que cada logro sienta las bases para el siguiente.</p>
+        </div>
+
+        <!-- SECCIÓN 4: ¿Cómo se llega a la Conservación? -->
+        <div id="section4" class="course-section">
+            <h2><span class="icon">🧠</span> Los Argumentos de los Niños "Conservadores"</h2>
+            <p>Cuando un niño finalmente comprende que la cantidad de plastilina se conserva, usa argumentos lógicos. Piaget identificó tres tipos de argumentos que se usan juntos:</p>
+            <ol>
+                <li><p><span class="concept-highlight">Argumento de Identidad:</span> "Es lo mismo porque no se quitó nada ni se añadió nada." El niño entiende que la materia es la misma aunque cambie su forma.</p></li>
+                <li><p><span class="concept-highlight">Argumento de Reversibilidad:</span> "Si la vuelves a hacer bolita, verás que es igual." El niño comprende que la transformación puede invertirse, y si se deshace, todo vuelve al estado inicial.</p></li>
+                <li><p><span class="concept-highlight">Argumento de Compensación:</span> "Es más larga, sí, pero también es más delgada, así que se compensa." El niño considera múltiples dimensiones y entiende que un cambio en una dimensión se equilibra con un cambio en otra.</p></li>
+            </ol>
+            <div class="didactic-note">
+                <p><strong>Reflexión Pedagógica:</strong><br> Estos argumentos son señales de que el niño no solo memorizó una respuesta, sino que construyó una verdadera comprensión lógica. Las operaciones mentales de identidad, reversibilidad y compensación son fundamentales para el pensamiento lógico.</p>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 5: Las Etapas del Desarrollo Cognitivo -->
+        <div id="section5" class="course-section">
+            <h2><span class="icon">🪜</span> Las Famosas Etapas de Piaget</h2>
+            <p>Piaget observó que el desarrollo ocurre en una secuencia fija de etapas, aunque la edad exacta en que un niño pasa por ellas puede variar según la cultura y el entorno. Lo importante es el <span class="concept-highlight">orden</span>, no la edad.</p>
+            <p>Piaget distinguió cuatro grandes etapas:</p>
+            <ul>
+                <li><strong>Etapa Sensoriomotriz</strong> (desde el nacimiento hasta los 18 meses aproximadamente)</li>
+                <li><strong>Etapa Preoperatoria</strong> (desde los 18 meses hasta los 7-8 años)</li>
+                <li><strong>Etapa de las Operaciones Concretas</strong> (desde los 7-8 años hasta los 11-12 años)</li>
+                <li><strong>Etapa de las Operaciones Formales</strong> (desde los 11-12 años en adelante)</li>
+            </ul>
+            <p>Cada etapa se construye sobre la anterior, lo que significa que el niño necesita haber dominado ciertas habilidades para poder avanzar.</p>
+        </div>
+
+        <!-- SECCIÓN 6: Etapa Sensoriomotriz (0-18 meses) -->
+        <div id="section6" class="course-section">
+            <h2><span class="icon">👶</span> Etapa 1: Sensoriomotriz (0 - 18 meses)</h2>
+            <h3>La "Inteligencia antes del Lenguaje"</h3>
+            <p>En esta primera etapa, el bebé no tiene pensamiento en el sentido adulto (con lenguaje e imágenes mentales), pero sí tiene <span class="concept-highlight">inteligencia</span>. ¿Cómo? Resuelve problemas coordinando sus sentidos (vista, oído, tacto) y sus acciones (chupar, agarrar, mover).</p>
+            <p>Un logro crucial es la <span class="concept-highlight">Permanencia del Objeto</span>. Al principio, si un objeto desaparece de la vista del bebé (ej. lo cubres con un trapo), para él, ¡el objeto deja de existir! No lo busca. Pero hacia los 9-10 meses, el bebé empieza a buscar el objeto, porque entiende que sigue existiendo aunque no lo vea.</p>
+            <div class="didactic-note">
+                <p><strong>Ejemplo Cotidiano:</strong><br>Jugar al "cucu" o "peek-a-boo" con un bebé es una forma de practicar la permanencia del objeto. Al principio, el bebé se sorprende cada vez que la cara reaparece. Más tarde, espera que reaparezca y ríe anticipando.</p>
+            </div>
+            <p>Durante esta etapa, el bebé también construye las nociones básicas de <span class="concept-highlight">espacio</span>, <span class="concept-highlight">tiempo</span> y <span class="concept-highlight">causalidad</span> a través de sus interacciones físicas con el entorno. Es una "revolución copernicana" donde el bebé pasa de un mundo egocéntrico a uno donde él es un objeto más entre otros.</p>
+        </div>
+
+        <!-- SECCIÓN 7: Etapa Preoperatoria (18 meses - 7/8 años) -->
+        <div id="section7" class="course-section">
+            <h2><span class="icon">🗣️</span> Etapa 2: Preoperatoria (18 meses - 7/8 años)</h2>
+            <h3>El Nacimiento de la Función Simbólica</h3>
+            <p>Alrededor del año y medio, ocurre algo maravilloso: el niño desarrolla la <span class="concept-highlight">función simbólica</span>. Esto significa que puede usar una cosa para representar otra. Las manifestaciones de esta función son:</p>
+            <ul>
+                <li><span class="concept-highlight">El lenguaje:</span> Usa palabras para representar objetos o ideas.</li>
+                <li><span class="concept-highlight">El juego simbólico:</span> Usa un plátano como teléfono, un palo como espada.</li>
+                <li><span class="concept-highlight">La imitación diferida:</span> Imita una acción que vio horas o días antes, sin que el modelo esté presente.</li>
+                <li><span class="concept-highlight">Las imágenes mentales:</span> Crea representaciones internas de objetos o eventos.</li>
+            </ul>
+            <p>Con la función simbólica, surge el <span class="concept-highlight">pensamiento</span>. Pero este pensamiento es diferente de la inteligencia sensoriomotriz. Es una <span class="concept-highlight">inteligencia interiorizada</span>, que no depende de la acción física directa. Sin embargo, lo que se aprendió con el cuerpo (en la etapa sensoriomotriz) debe ser "reaprendido" y reestructurado en el plano mental. ¡Esto toma tiempo!</p>
+            <div class="warning-box">
+                <p><strong>Importante:</strong> Aunque el niño ya habla, todavía le cuesta realizar operaciones lógicas que para nosotros son obvias. Por ejemplo, no suele comprender la conservación de la plastilina en esta etapa.</p>
+            </div>
+            <p>En esta etapa, el pensamiento suele ser <span class="concept-highlight">egocéntrico</span> (el niño tiene dificultad para ver las cosas desde la perspectiva de otro) y se centra en una sola dimensión a la vez (como la longitud de la salchicha, olvidando su grosor).</p>
+        </div>
+
+        <!-- SECCIÓN 8: Etapa de las Operaciones Concretas (7/8 - 11/12 años) -->
+        <div id="section8" class="course-section">
+            <h2><span class="icon">🧩</span> Etapa 3: Operaciones Concretas (7/8 - 11/12 años)</h2>
+            <h3>La Llegada de la Lógica "Práctica"</h3>
+            <p>Alrededor de los 7-8 años, el niño experimenta un cambio fundamental: adquiere la <span class="concept-highlight">lógica de las operaciones concretas</span>. Ahora puede realizar operaciones mentales, pero solo si están relacionadas con <span class="concept-highlight">objetos que puede manipular o imaginar concretamente</span>.</p>
+            <p>Las características clave de esta etapa son:</p>
+            <ul>
+                <li><strong>Reversibilidad:</strong> Entiende que las acciones pueden invertirse (si sumo 2+3=5, entonces 5-3=2).</li>
+                <li><strong>Clasificación:</strong> Puede agrupar objetos por categorías y entender las relaciones entre ellas.</li>
+                <li><strong>Seriación:</strong> Puede ordenar objetos según una dimensión (ej. del más corto al más largo).</li>
+                <li><strong>Conservación:</strong> ¡Por fin entiende la conservación de la sustancia, peso y volumen!</li>
+            </ul>
+            <div class="didactic-note">
+                <p><strong>Ejemplo: Clasificación de Flores</strong><br>Si le muestras a un niño de 8 años un ramo con 6 violetas y 6 rosas, y le preguntas si hay "más flores o más violetas", te responderá "más flores", porque entiende que las violetas son una parte de las flores (inclusión de clase). Un niño más pequeño te dirá "más violetas" o "igual" porque compara solo las partes.</p>
+            </div>
+            <p>Aunque su lógica es sólida, todavía no puede razonar sobre problemas puramente abstractos o hipotéticos sin el apoyo de objetos físicos o representaciones mentales directas.</p>
+        </div>
+
+        <!-- SECCIÓN 9: Etapa de las Operaciones Formales (11/12 años en adelante) -->
+        <div id="section9" class="course-section">
+            <h2><span class="icon">💡</span> Etapa 4: Operaciones Formales (11/12 años en adelante)</h2>
+            <h3>El Pensamiento Abstracto y Científico</h3>
+            <p>Esta es la última etapa del desarrollo cognitivo según Piaget, alcanzando un "nivel de equilibrio" alrededor de los 14-15 años. El adolescente desarrolla la capacidad de realizar <span class="concept-highlight">operaciones formales</span>, lo que significa que puede:</p>
+            <ul>
+                <li><span class="concept-highlight">Razonar sobre hipótesis y proposiciones verbales:</span> No necesita ver o tocar los objetos; puede pensar "qué pasaría si..."</li>
+                <li><span class="concept-highlight">Pensamiento hipotético-deductivo:</span> Formular hipótesis y deducir posibles consecuencias, como un científico.</li>
+                <li><span class="concept-highlight">Pensamiento combinatorio:</span> Considerar todas las combinaciones posibles de un conjunto de elementos.</li>
+            </ul>
+            <div class="didactic-note">
+                <p><strong>Ejemplo: Problemas abstractos</strong><br>Un adolescente en esta etapa podría resolver problemas como "Si la luna fuera de queso y el sol fuera de pan, ¿qué sería más pesado?", sin necesidad de una representación concreta, solo con la lógica de las proposiciones.</p>
+            </div>
+            <p>Esta etapa permite la comprensión de conceptos avanzados como proporciones, el razonamiento científico y la reflexión sobre la moral y la filosofía. Es la base para el pensamiento adulto complejo.</p>
+        </div>
+
+        <!-- SECCIÓN 10: Factores que Influyen en el Desarrollo -->
+        <div id="section10" class="course-section">
+            <h2><span class="icon">🌱</span> ¿Qué Impulsa el Desarrollo? Los Cuatro Factores de Piaget</h2>
+            <p>El desarrollo cognitivo no es un proceso simple. Piaget identificó cuatro factores que interactúan para impulsarlo:</p>
+            <ol>
+                <li><p><span class="concept-highlight">La Herencia y Maduración Biológica:</span> Ciertas capacidades se desarrollan a medida que el cerebro y el cuerpo maduran. Es necesario, pero no es el único factor.</p></li>
+                <li><p><span class="concept-highlight">La Experiencia Física:</span> La interacción directa con los objetos del mundo. Aprender sobre el peso, la forma, el tamaño de las cosas. Pero ojo: la lógica no viene solo de los objetos, sino de las acciones que el niño realiza sobre ellos.</p></li>
+                <li><p><span class="concept-highlight">La Transmisión Social (Educación):</span> Lo que el niño aprende de su familia, la escuela y la cultura. Es vital, pero el niño debe estar "listo" para asimilar esa información. No sirve de nada enseñar algo si el niño aún no tiene las estructuras mentales para comprenderlo.</p></li>
+                <li><p><span class="concept-highlight">La Equilibración:</span> ¡Este es el factor <span class="concept-highlight">fundamental</span> para Piaget! Es el proceso de auto-regulación del niño. Cuando el niño se encuentra con información nueva que no encaja con lo que ya sabe (desequilibrio), se esfuerza por reorganizar sus ideas para lograr una comprensión más coherente (equilibrio). Este proceso lleva a la construcción de nuevas estructuras lógicas.</p></li>
+            </ol>
+        </div>
+
+        <!-- SECCIÓN 11: ¿Podemos Acelerar el Desarrollo? -->
+        <div id="section11" class="course-section">
+            <h2><span class="icon">⚡</span> ¿Podemos Acelerar el Desarrollo de un Niño?</h2>
+            <p>Esta es una pregunta muy común. La respuesta de Piaget es compleja:</p>
+            <p><strong>Sí, hasta cierto punto:</strong> Se ha observado que algunos niños (más dotados o de entornos con mayor estimulación) pueden adquirir ciertas nociones antes. Además, las sociedades modernas, con más acceso a la información y la educación, parecen "acelerar" el desarrollo si se compara con sociedades antiguas (ej. los jóvenes griegos de la época de Platón vs. los jóvenes actuales que aprenden mucho más).</p>
+            <div class="warning-box">
+                <p><strong>¡Pero ojo! Hay límites:</strong><br>Piaget enfatiza que el desarrollo de la lógica no puede acelerarse indefinidamente. Si se intenta "empujar" demasiado rápido, se corre el riesgo de <span class="concept-highlight">romper el equilibrio</span>. Es como querer que un edificio tenga el techo antes de que los cimientos estén firmes. Los niños pueden memorizar una respuesta, pero no habrán construido la comprensión profunda.</p>
+            </div>
+            <p>Para Piaget, la <span class="concept-highlight">equilibración</span> es un proceso que toma su tiempo. No se trata de "inyectar" conocimientos, sino de permitir que el niño construya activamente sus estructuras mentales. El ideal de la educación no es maximizar los resultados o el contenido memorizado, sino <span class="concept-highlight">"aprender a aprender"</span> y a seguir desarrollándose después de la escuela.</p>
+        </div>
+
+        <!-- SECCIÓN 12: Resumen Final -->
+        <div id="section12" class="course-section">
+            <h2><span class="icon">✨</span> Resumen: Puntos Clave del Enfoque de Piaget</h2>
+            <ul>
+                <li>El desarrollo cognitivo es un proceso de <span class="concept-highlight">construcción activa</span> por parte del niño, no solo una acumulación de información.</li>
+                <li>El <span class="concept-highlight">tiempo</span> es esencial: no solo por la duración, sino por el <span class="concept-highlight">orden fijo de sucesión</span> de las etapas y la necesidad de que unas estructuras precedan a otras.</li>
+                <li>Las etapas son: <span class="concept-highlight">Sensoriomotriz</span> (acción, permanencia del objeto), <span class="concept-highlight">Preoperatoria</span> (símbolos, lenguaje, pero lógica limitada), <span class="concept-highlight">Operaciones Concretas</span> (lógica práctica sobre objetos, conservación), y <span class="concept-highlight">Operaciones Formales</span> (pensamiento abstracto e hipotético).</li>
+                <li>La <span class="concept-highlight">equilibración</span> es el motor fundamental del desarrollo: un proceso de auto-regulación para alcanzar comprensiones más coherentes.</li>
+                <li>La educación debe fomentar la <span class="concept-highlight">actividad del niño</span> y permitirle construir su conocimiento a su propio ritmo, más que imponerle contenido. El objetivo es "aprender a aprender".</li>
+            </ul>
+            <p>Esperamos que este curso te haya proporcionado una comprensión clara y útil del fascinante mundo del desarrollo cognitivo según Jean Piaget. ¡Continúa explorando y aprendiendo!</p>
+        </div>
+
+        <!-- Navegación -->
+        <div class="navigation">
+            <button id="prevBtn" class="nav-button">
+                <span class="icon">⬅️</span> Anterior
+            </button>
+            <button id="nextBtn" class="nav-button">
+                Siguiente <span class="icon">➡️</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const sections = [
+            'section1', 'section2', 'section3', 'section4', 'section5',
+            'section6', 'section7', 'section8', 'section9', 'section10',
+            'section11', 'section12'
+        ];
+        let currentSectionIndex = 0;
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function showSection(index) {
+            sections.forEach((id, i) => {
+                const sectionElement = document.getElementById(id);
+                if (sectionElement) {
+                    sectionElement.classList.remove('active');
+                    if (i === index) {
+                        sectionElement.classList.add('active');
+                    }
+                }
+            });
+            updateNavigationButtons();
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on section change
+        }
+
+        function updateNavigationButtons() {
+            prevBtn.disabled = currentSectionIndex === 0;
+            nextBtn.disabled = currentSectionIndex === sections.length - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSectionIndex > 0) {
+                currentSectionIndex--;
+                showSection(currentSectionIndex);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSectionIndex < sections.length - 1) {
+                currentSectionIndex++;
+                showSection(currentSectionIndex);
+            }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection(currentSectionIndex);
+        });
+    </script>
+
+</body>
+</html>
