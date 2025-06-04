@@ -58,9 +58,25 @@
             padding: 0.75rem;
             text-align: left;
         }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-size: 1.2em;
+            color: #1d4ed8;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div id="loadingOverlay" class="loading-overlay hidden">Cargando...</div>
 
     <div id="app-container" class="w-full max-w-3xl bg-white p-6 sm:p-8 rounded-xl shadow-xl">
 
@@ -91,15 +107,38 @@
             <div id="diagnosticsArea" class="space-y-6">
                 <!-- Los diagnósticos se insertarán aquí -->
             </div>
-            <button id="restartQuizAdminBtn" class="btn btn-secondary mt-8 hidden">Reiniciar Cuestionario Completo (Admin)</button>
+            <!-- Cambiado el texto del botón para mayor claridad -->
+            <button id="restartQuizAdminBtn" class="btn btn-secondary mt-8 hidden">Limpiar Vista de Resultados (Admin)</button>
             <button id="startNewUserBtn" class="btn btn-secondary mt-8 hidden">Comenzar con Nuevo Usuario</button>
         </section>
 
     </div>
 
-    <script>
-        // Definición de Preguntas y Opciones con Valores Éticos
-        const questions = [
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+      import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+      // No necesitamos writeBatch ni doc para esta versión de "borrado"
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBZMqR6SmXktOWzFWfhr_O6PtZBXOvg_2A", // ¡Recuerda que esta clave es visible!
+        authDomain: "etica-lengua.firebaseapp.com",
+        projectId: "etica-lengua",
+        storageBucket: "etica-lengua.firebasestorage.app",
+        messagingSenderId: "83515803452",
+        appId: "1:83515803452:web:0426fdd67f1fcd2e864039",
+        measurementId: "G-X1NE1N6CGH"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getFirestore(app);
+      const RESPONSES_COLLECTION = 'quizResponses';
+
+        const questions = [ // ... (Las preguntas se mantienen igual, omitidas por brevedad)
             {
                 id: "q1",
                 text: "Detectas que un trabajo escrito por un estudiante, excepcionalmente brillante, tiene fuertes indicios de haber sido generado o asistido significativamente por IA. El estudiante niega haber recibido ayuda externa. ¿Cómo actuarías?",
@@ -182,8 +221,7 @@
             }
         ];
 
-        // Elementos del DOM
-        const appContainer = document.getElementById('app-container');
+        const loadingOverlay = document.getElementById('loadingOverlay');
         const nameSection = document.getElementById('name-section');
         const quizSection = document.getElementById('quiz-section');
         const resultsSection = document.getElementById('results-section');
@@ -198,9 +236,16 @@
         const startNewUserBtn = document.getElementById('startNewUserBtn');
 
         let currentUser = "";
-        let allUserAnswers = JSON.parse(localStorage.getItem('allUserAnswers_v2')) || [];
 
-        // Inicializar la aplicación
+        function showLoading(message = "Cargando...") {
+            loadingOverlay.textContent = message;
+            loadingOverlay.classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            loadingOverlay.classList.add('hidden');
+        }
+
         function initApp() {
             nameSection.classList.remove('hidden');
             quizSection.classList.add('hidden');
@@ -208,9 +253,10 @@
             restartQuizAdminBtn.classList.add('hidden');
             startNewUserBtn.classList.add('hidden');
             userNameInput.value = "";
+            userNameInput.focus();
         }
         
-        startQuizBtn.addEventListener('click', () => {
+        startQuizBtn.addEventListener('click', async () => {
             currentUser = userNameInput.value.trim();
             if (!currentUser) {
                 alert("Por favor, ingresa tu nombre.");
@@ -218,17 +264,19 @@
             }
 
             nameSection.classList.add('hidden');
+            showLoading("Preparando...");
             if (currentUser.toLowerCase() === "final de juego") {
-                displayAdminResults();
+                await displayAdminResults();
             } else {
                 currentUserDisplay.textContent = `Respondiendo como: ${currentUser}`;
                 loadQuestions();
                 quizSection.classList.remove('hidden');
             }
+            hideLoading();
         });
 
         function loadQuestions() {
-            quizForm.innerHTML = ""; // Limpiar preguntas anteriores
+            quizForm.innerHTML = "";
             questions.forEach((q, index) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question-card';
@@ -247,7 +295,7 @@
             });
         }
 
-        submitQuizBtn.addEventListener('click', (e) => {
+        submitQuizBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             const formData = new FormData(quizForm);
             const userResponses = [];
@@ -258,7 +306,6 @@
                 if (!answer) {
                     allAnswered = false;
                 }
-                // Encontrar el texto de la opción y el texto de diagnóstico
                 const selectedOptionElement = quizForm.querySelector(`input[name="${q.id}"]:checked`);
                 const optionText = selectedOptionElement ? selectedOptionElement.dataset.optiontext : "No respondida";
                 const diagnosticText = selectedOptionElement ? selectedOptionElement.dataset.diagnostictext : "No respondida";
@@ -276,15 +323,30 @@
                 alert("Por favor, responde todas las preguntas.");
                 return;
             }
-
-            allUserAnswers.push({ name: currentUser, responses: userResponses });
-            localStorage.setItem('allUserAnswers_v2', JSON.stringify(allUserAnswers));
             
+            showLoading("Guardando respuestas...");
+            try {
+                await addDoc(collection(db, RESPONSES_COLLECTION), {
+                    name: currentUser,
+                    responses: userResponses,
+                    submittedAt: serverTimestamp()
+                });
+                alert("Respuestas guardadas exitosamente en Firebase.");
+
+            } catch (error)
+             {
+                console.error("Error guardando en Firestore: ", error);
+                alert("Hubo un error al guardar tus respuestas. Por favor, inténtalo de nuevo.");
+                hideLoading();
+                return;
+            }
+            
+            hideLoading();
             displayIndividualDiagnosis(currentUser, userResponses);
             quizSection.classList.add('hidden');
         });
 
-        function getEthicalProfile(responses) {
+        function getEthicalProfile(responses) { // ... (Se mantiene igual, omitida por brevedad)
             const profileCounts = {
                 normaDeber: 0, // K_CON, E_DEON, KT_IC, P_HET
                 justiciaEquidad: 0, // P_JD, K_POST (parcial), P_AUT
@@ -302,14 +364,12 @@
                     profileCounts.normaDeber++;
                 }
                 if (val.includes("P_JD") || (val.includes("K_POST") && !val.includes("CURR")) || (val.includes("P_AUT") && !val.includes("INV") && !val.includes("MED") && !val.includes("CONS") && !val.includes("PROG") && !val.includes("CURR"))) {
-                     // P_AUT más puro hacia justicia
                     profileCounts.justiciaEquidad++;
                 }
                 if (val.includes("E_CUID") || (val.includes("KT_FH") && !val.includes("CURR") && !val.includes("PROG")) ) {
                     profileCounts.cuidadoContexto++;
                 }
                 if (val.includes("K_POST") || val.includes("P_AUT") || val.includes("KT_IC") || val.includes("KT_FH")) {
-                     // K_POST, P_AUT, KT_IC, KT_FH más puros hacia principios/autonomía
                     profileCounts.principiosAutonomia++;
                 }
                 if (val.includes("E_PRAG") || val.includes("K_PRE")) {
@@ -320,7 +380,6 @@
                 }
             });
             
-            // Determinar el perfil dominante
             let dominantProfile = "Perfil Ético Mixto/Equilibrado";
             let maxCount = 0;
             for (const profile in profileCounts) {
@@ -335,12 +394,10 @@
                     }
                 }
             }
-             // Si hay un empate fuerte o bajo conteo general, mantener mixto.
             const totalResponses = responses.length;
-            if (maxCount <= totalResponses / 3 && Object.values(profileCounts).filter(c => c > 0).length > 2) { // Umbral para mixto
+            if (maxCount <= totalResponses / 3 && Object.values(profileCounts).filter(c => c > 0).length > 2) { 
                  dominantProfile = "Perfil Ético Mixto/Equilibrado";
             }
-
 
             let explanation = "";
             switch (dominantProfile) {
@@ -359,7 +416,7 @@
                 case "Orientación Principal Pragmática y Consecuencialista":
                     explanation = "Tu enfoque parece centrarse en los resultados prácticos, la búsqueda de soluciones eficientes y, en ocasiones, la evitación de conflictos, ponderando las consecuencias de las acciones.";
                     break;
-                default: // Perfil Mixto
+                default: 
                     explanation = "Tus respuestas sugieren una combinación de enfoques éticos, mostrando flexibilidad para adaptar tus decisiones a diferentes situaciones o integrando diversas perspectivas éticas en tu razonamiento.";
             }
              if (profileCounts.dudoso > 0) {
@@ -369,9 +426,10 @@
             return { classification: dominantProfile, explanation: explanation };
         }
 
-        function displayIndividualDiagnosis(userName, responses) {
+
+        function displayIndividualDiagnosis(userName, responses) { // ... (Se mantiene igual, omitida por brevedad)
             resultsSection.classList.remove('hidden');
-            diagnosticsArea.innerHTML = ""; // Limpiar diagnósticos anteriores
+            diagnosticsArea.innerHTML = ""; 
 
             const userDiv = document.createElement('div');
             userDiv.className = 'p-6 bg-blue-50 rounded-lg shadow mb-6';
@@ -394,13 +452,27 @@
             startNewUserBtn.classList.remove('hidden');
         }
         
-        function displayAdminResults() {
+        async function displayAdminResults() { // ... (Se mantiene igual, omitida por brevedad)
             resultsSection.classList.remove('hidden');
-            diagnosticsArea.innerHTML = ""; // Limpiar
+            diagnosticsArea.innerHTML = ""; 
             resultsTitle.textContent = "Resultados de Todos los Participantes (Admin)";
+            
+            showLoading("Cargando resultados de la base de datos...");
+            let allUserAnswersFromDB = [];
+            try {
+                const querySnapshot = await getDocs(collection(db, RESPONSES_COLLECTION));
+                querySnapshot.forEach((doc) => {
+                    allUserAnswersFromDB.push({ id: doc.id, ...doc.data() });
+                });
+            } catch (error) {
+                console.error("Error leyendo de Firestore: ", error);
+                diagnosticsArea.innerHTML = "<p class='text-red-600 text-center'>Error al cargar los datos. Revisa la consola.</p>";
+                hideLoading();
+                return;
+            }
 
-            if (allUserAnswers.length === 0) {
-                diagnosticsArea.innerHTML = "<p class='text-gray-600 text-center'>Aún no hay respuestas registradas.</p>";
+            if (allUserAnswersFromDB.length === 0) {
+                diagnosticsArea.innerHTML = "<p class='text-gray-600 text-center'>Aún no hay respuestas registradas en la base de datos.</p>";
             } else {
                 const table = document.createElement('table');
                 table.className = 'w-full results-table border-collapse';
@@ -417,7 +489,9 @@
                 `;
                 const tbody = table.querySelector('tbody');
 
-                allUserAnswers.forEach(userData => {
+                allUserAnswersFromDB.sort((a, b) => (a.name || "").localeCompare(b.name || "")); 
+
+                allUserAnswersFromDB.forEach(userData => {
                     const profile = getEthicalProfile(userData.responses);
                     const row = tbody.insertRow();
                     row.insertCell().textContent = userData.name;
@@ -435,15 +509,23 @@
                 });
                 diagnosticsArea.appendChild(table);
             }
+            hideLoading();
             restartQuizAdminBtn.classList.remove('hidden');
-            startNewUserBtn.classList.remove('hidden'); // También para admin por si quiere probar como usuario normal
+            startNewUserBtn.classList.remove('hidden'); 
         }
 
+        // *** MODIFICACIÓN PRINCIPAL AQUÍ ***
         restartQuizAdminBtn.addEventListener('click', () => {
-            if (confirm("¿Estás seguro de que deseas borrar todos los datos del cuestionario? Esta acción no se puede deshacer.")) {
-                localStorage.removeItem('allUserAnswers_v2');
-                allUserAnswers = [];
-                initApp();
+            // Solo limpia el área de diagnóstico en el HTML, no toca Firebase
+            if (currentUser.toLowerCase() === "final de juego") {
+                if (confirm("¿Estás seguro de que deseas limpiar la vista de resultados actual? Los datos en la base de datos no se verán afectados.")) {
+                    diagnosticsArea.innerHTML = "<p class='text-gray-600 text-center p-4'>Vista de resultados limpiada. Los datos permanecen en la base de datos. Para verlos de nuevo, vuelve a ingresar como 'Final de Juego'.</p>";
+                    // Opcional: podrías ocultar el botón de limpiar vista después de usarlo
+                    // restartQuizAdminBtn.classList.add('hidden');
+                }
+            } else {
+                // Comportamiento original si se quisiera usar para otros casos (actualmente no se usa)
+                alert("Esta función es solo para la vista de administrador.");
             }
         });
         
