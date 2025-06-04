@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Ético Docente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .question-card {
+            border: 1px solid #e2e8f0; /* cool-gray-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+        }
+        .option-label {
+            display: block;
+            padding: 0.75rem; /* p-3 */
+            border: 1px solid #cbd5e1; /* cool-gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            margin-bottom: 0.5rem; /* mb-2 */
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .option-label:hover {
+            background-color: #f1f5f9; /* cool-gray-100 */
+        }
+        .option-label input[type="radio"] {
+            margin-right: 0.75rem; /* mr-3 */
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8; /* blue-700 */
+        }
+        .btn-secondary {
+            background-color: #64748b; /* cool-gray-500 */
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #475569; /* cool-gray-600 */
+        }
+        .results-table th, .results-table td {
+            border: 1px solid #cbd5e1;
+            padding: 0.75rem;
+            text-align: left;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div id="app-container" class="w-full max-w-3xl bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Reflexiones Éticas en la Práctica Docente</h1>
+            <p class="text-gray-600 mt-2">Lengua y Literatura</p>
+        </header>
+
+        <!-- Sección de Ingreso de Nombre -->
+        <section id="name-section" class="text-center">
+            <label for="userName" class="block text-lg font-medium text-gray-700 mb-2">Nombre del Docente:</label>
+            <input type="text" id="userName" class="w-full max-w-md mx-auto p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ingresa tu nombre >
+            <button id="startQuizBtn" class="btn btn-primary mt-6">Comenzar / Ver Resultados</button>
+        </section>
+
+        <!-- Sección de Preguntas del Cuestionario -->
+        <section id="quiz-section" class="hidden">
+            <h2 id="currentUserDisplay" class="text-xl font-semibold text-gray-700 mb-6 text-center"></h2>
+            <form id="quizForm">
+                <!-- Las preguntas se insertarán aquí por JavaScript -->
+            </form>
+            <button id="submitQuizBtn" class="btn btn-primary w-full mt-8">Finalizar y Ver Diagnóstico</button>
+        </section>
+
+        <!-- Sección de Resultados y Diagnóstico -->
+        <section id="results-section" class="hidden mt-8">
+            <h2 id="resultsTitle" class="text-2xl font-bold text-gray-800 mb-6 text-center"></h2>
+            <div id="diagnosticsArea" class="space-y-6">
+                <!-- Los diagnósticos se insertarán aquí -->
+            </div>
+            <button id="restartQuizAdminBtn" class="btn btn-secondary mt-8 hidden">Reiniciar Cuestionario Completo (Admin)</button>
+            <button id="startNewUserBtn" class="btn btn-secondary mt-8 hidden">Comenzar con Nuevo Usuario</button>
+        </section>
+
+    </div>
+
+    <script>
+        // Definición de Preguntas y Opciones con Valores Éticos
+        const questions = [
+            {
+                id: "q1",
+                text: "Detectas que un trabajo escrito por un estudiante, excepcionalmente brillante, tiene fuertes indicios de haber sido generado o asistido significativamente por IA. El estudiante niega haber recibido ayuda externa. ¿Cómo actuarías?",
+                options: [
+                    { text: "Calificar el trabajo basándome únicamente en su calidad final.", value: "P_HET", diagnosticText: "Prioriza el resultado objetivo sobre el proceso o la intención (Piaget - Moral Heterónoma)." },
+                    { text: "Hablar con el estudiante sobre autoría y proceso, ofreciendo rehacerlo con seguimiento.", value: "P_AUT_KT_FH", diagnosticText: "Fomenta la autonomía, el aprendizaje y trata al estudiante como fin (Piaget - Moral Autónoma; Kant - Fórmula Humanidad)." },
+                    { text: "Aplicar una sanción directa por deshonestidad académica según el reglamento.", value: "K_CON_P_JR", diagnosticText: "Se enfoca en el mantenimiento del orden y la justicia retributiva (Kohlberg - Convencional; Piaget - Justicia Retributiva)." },
+                    { text: "Devolver el trabajo, indicando sospechas y solicitando que explique su proceso.", value: "E_CUID_P_AUT", diagnosticText: "Busca comprender la situación y la intención del estudiante (Ética del Cuidado; Piaget - Moral Autónoma)." }
+                ]
+            },
+            {
+                id: "q2",
+                text: "Enseñas una novela clásica extensa. Un grupo de estudiantes expresa grandes dificultades (contexto socioeconómico, posibles dificultades de aprendizaje). ¿Cómo abordas la evaluación?",
+                options: [
+                    { text: "Mantener la misma exigencia y tipo de evaluación para todos.", value: "E_DEON_P_HET", diagnosticText: "Aplica la norma de forma estricta e igualitaria sin considerar contextos (Ética Deontológica; Piaget - Moral Heterónoma)." },
+                    { text: "Ofrecer opciones de evaluación diversificadas (ensayo, presentación, proyecto adaptado).", value: "P_JD_K_POST", diagnosticText: "Busca la equidad y considera derechos individuales, adaptando a contextos (Piaget - Justicia Distributiva; Kohlberg - Postconvencional)." },
+                    { text: "Reemplazar la novela por lecturas más breves y sencillas para todos.", value: "E_PRAG_CUID", diagnosticText: "Busca una solución práctica que podría interpretarse como cuidado, pero puede subestimar (Ética Pragmática; Ética del Cuidado)." },
+                    { text: "Evaluar con la misma prueba, pero ser más flexible en la corrección para algunos, sin explicitarlo.", value: "E_PRAG_DUDOSO", diagnosticText: "Solución pragmática para evitar conflicto, pero con transparencia cuestionable (Ética Pragmática)." }
+                ]
+            },
+            {
+                id: "q3",
+                text: "El presupuesto para fotocopias es nulo y varios estudiantes no pueden comprar el libro de cuentos fundamental. Fotocopiarlo infringe derechos de autor. ¿Qué haces?",
+                options: [
+                    { text: "Fotocopiar el libro para quienes no pueden adquirirlo, priorizando el derecho a la educación.", value: "K_POST_CUID", diagnosticText: "Pondera principios superiores (derecho a educación) sobre la norma, similar al Dilema de Heinz (Kohlberg - Postconvencional; Ética del Cuidado)." },
+                    { text: "Negarme a fotocopiar, explicando la importancia de los derechos de autor. Buscar alternativas limitadas.", value: "K_CON_DEON", diagnosticText: "Adhesión a normas y leyes establecidas (Kohlberg - Convencional; Ética Deontológica)." },
+                    { text: "Pedir a los estudiantes que tienen el libro que lo compartan.", value: "E_CUID_PARCIAL", diagnosticText: "Fomenta solidaridad, pero traslada la responsabilidad y puede generar inequidad (Ética del Cuidado parcial)." },
+                    { text: "Modificar la planificación para usar materiales de acceso libre, aunque no sean los ideales.", value: "E_PRAG_P_JD", diagnosticText: "Solución pragmática que busca justicia en el acceso (Ética Pragmática; Piaget - Justicia Distributiva)." }
+                ]
+            },
+            {
+                id: "q4",
+                text: "Te apasiona enseñar poesía, pero una gran parte de la clase muestra apatía, sin importar tus esfuerzos. ¿Cuál es tu postura ética?",
+                options: [
+                    { text: "Seguir enseñando con la misma pasión, por compromiso con la materia.", value: "KT_IC", diagnosticText: "Actúa por deber y principios, independientemente de las consecuencias inmediatas (Kant - Imperativo Categórico)." },
+                    { text: "Invertir menos energía en este tema, ya que no hay recepción positiva.", value: "E_PRAG_AUTO", diagnosticText: "Respuesta pragmática de autoconservación del esfuerzo (Ética Pragmática)." },
+                    { text: "Buscar activamente nuevas estrategias y feedback para entender y adaptar el enfoque.", value: "P_AUT_E_CUID_KT_FH", diagnosticText: "Enfoque reflexivo, cooperativo y centrado en el estudiante como fin (Piaget - Autonomía; Ética del Cuidado; Kant - Fórmula Humanidad)." },
+                    { text: "Centrarme en los pocos estudiantes interesados y cumplir superficialmente con el resto.", value: "E_PRAG_SEL", diagnosticText: "Pragmatismo selectivo, cuestionable en términos de justicia distributiva de la atención (Ética Pragmática)." }
+                ]
+            },
+            {
+                id: "q5",
+                text: "Un trabajo práctico grupal resulta excelente. Sin embargo, un estudiante aportó la mayoría de las ideas brillantes, mientras otros tuvieron participación pasiva. ¿Cómo evalúas?",
+                options: [
+                    { text: "Evaluar el resultado final del grupo, asignando la misma calificación a todos.", value: "P_HET_PRAG", diagnosticText: "Prioriza el resultado grupal y la simplicidad, puede ignorar el mérito individual (Piaget - Heterónoma; Ética Pragmática)." },
+                    { text: "Diseñar mecanismos para evaluar proceso y resultado individualmente (coevaluación, defensa).", value: "P_JR_AUT", diagnosticText: "Busca una justicia retributiva más fina y fomenta la autonomía en la evaluación (Piaget - Justicia Retributiva; Piaget - Autonomía)." },
+                    { text: "Calificar el producto grupal, pero reconocer adicionalmente al estudiante líder de forma informal.", value: "E_PRAG_JR_PARCIAL", diagnosticText: "Intento pragmático de reconocimiento del mérito, pero puede carecer de sistematicidad (Ética Pragmática; Piaget - Justicia Retributiva parcial)." },
+                    { text: "Pedir al grupo que reflexione sobre aportes individuales antes de calificar, guiando la discusión.", value: "P_AUT_K_CON_GRP", diagnosticText: "Fomenta la autonomía moral del grupo y la creación de normas internas (Piaget - Autonomía; Kohlberg - Convencional grupal)." }
+                ]
+            },
+            {
+                id: "q6",
+                text: "Un estudiante te informa confidencialmente que otro compañero es víctima de ciberacoso por parte de otros alumnos. El informante teme represalias. ¿Qué haces?",
+                options: [
+                    { text: "Animar al estudiante a hablar con autoridades/padres, manteniendo tú un rol de escucha.", value: "E_PRAG_DELEG", diagnosticText: "Delega la acción, siguiendo conductos formales de manera pragmática (Ética Pragmática; Kohlberg - Convencional)." },
+                    { text: "Investigar discretamente por tu cuenta antes de decidir un curso de acción formal.", value: "E_CUID_P_AUT_INV", diagnosticText: "Busca proteger y comprender la situación antes de actuar (Ética del Cuidado; Piaget - Autonomía)." },
+                    { text: "Reportar inmediatamente a las autoridades del colegio, protegiendo al informante si es posible.", value: "K_CON_DEON_REP", diagnosticText: "Cumple con el deber de reportar y sigue protocolos establecidos (Kohlberg - Convencional; Ética Deontológica)." },
+                    { text: "Intentar mediar informalmente con los supuestos acosadores, apelando a la empatía.", value: "P_AUT_E_CUID_MED", diagnosticText: "Busca la resolución directa y la cooperación, apelando a la reciprocidad (Piaget - Autonomía; Ética del Cuidado)." }
+                ]
+            },
+            {
+                id: "q7",
+                text: "El currículum oficial indica trabajar con un autor que consideras literariamente pobre o con valores problemáticos. Tienes la opción de reemplazarlo. ¿Qué haces?",
+                options: [
+                    { text: "Seguir estrictamente el currículum oficial, es tu deber cumplirlo.", value: "K_CON_DEON_CURR", diagnosticText: "Adhesión a la norma institucional y al deber formal (Kohlberg - Convencional; Ética Deontológica)." },
+                    { text: "Reemplazar al autor, priorizando la calidad y formación crítica de los estudiantes.", value: "K_POST_KT_FH_CURR", diagnosticText: "Prioriza principios éticos y el desarrollo del estudiante sobre la norma (Kohlberg - Postconvencional; Kant - Fórmula Humanidad)." },
+                    { text: "Trabajar brevemente el autor oficial y dedicar más tiempo al que consideras valioso.", value: "E_PRAG_P_AUT_CURR", diagnosticText: "Busca un equilibrio pragmático, tomando una decisión pedagógica razonada (Ética Pragmática; Piaget - Autonomía)." },
+                    { text: "Consultar con colegas/directivos para proponer formalmente un cambio o flexibilización.", value: "K_CON_P_AUT_CONS", diagnosticText: "Busca consenso y cambio dentro del sistema, mediante cooperación (Kohlberg - Convencional; Piaget - Autonomía)." }
+                ]
+            },
+             {
+                id: "q8",
+                text: "Un estudiante es muy tímido y raramente participa oralmente, aunque sus trabajos escritos son excelentes. La participación oral es un ítem de evaluación. ¿Cómo procedes?",
+                options: [
+                    { text: "Evaluar su participación oral con baja calificación, es un criterio para todos.", value: "P_HET_DEON_PART", diagnosticText: "Aplica la norma de forma literal y universal sin considerar particularidades (Piaget - Heterónoma; Ética Deontológica)." },
+                    { text: "Buscar formas alternativas para que demuestre su 'participación' (grabaciones, grupos pequeños).", value: "P_JD_E_CUID_KT_FH_PART", diagnosticText: "Busca equidad, cuida al estudiante y lo trata como fin, adaptando la evaluación (Piaget - Justicia Distributiva; Ética del Cuidado; Kant - Fórmula Humanidad)." },
+                    { text: "No considerar la participación oral en su caso o darle peso mínimo, valorando sus escritos.", value: "E_PRAG_CUID_PART", diagnosticText: "Solución pragmática y compasiva, enfocada en el resultado donde el estudiante brilla (Ética Pragmática; Ética del Cuidado)." },
+                    { text: "Hablar con el estudiante, ofrecer estrategias y valorar sus progresos en participación.", value: "P_AUT_E_CUID_KT_FH_PROG", diagnosticText: "Fomenta la autonomía, el cuidado y el desarrollo progresivo del estudiante (Piaget - Autonomía; Ética del Cuidado; Kant - Fórmula Humanidad)." }
+                ]
+            }
+        ];
+
+        // Elementos del DOM
+        const appContainer = document.getElementById('app-container');
+        const nameSection = document.getElementById('name-section');
+        const quizSection = document.getElementById('quiz-section');
+        const resultsSection = document.getElementById('results-section');
+        const userNameInput = document.getElementById('userName');
+        const startQuizBtn = document.getElementById('startQuizBtn');
+        const submitQuizBtn = document.getElementById('submitQuizBtn');
+        const quizForm = document.getElementById('quizForm');
+        const currentUserDisplay = document.getElementById('currentUserDisplay');
+        const resultsTitle = document.getElementById('resultsTitle');
+        const diagnosticsArea = document.getElementById('diagnosticsArea');
+        const restartQuizAdminBtn = document.getElementById('restartQuizAdminBtn');
+        const startNewUserBtn = document.getElementById('startNewUserBtn');
+
+        let currentUser = "";
+        let allUserAnswers = JSON.parse(localStorage.getItem('allUserAnswers_v2')) || [];
+
+        // Inicializar la aplicación
+        function initApp() {
+            nameSection.classList.remove('hidden');
+            quizSection.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+            restartQuizAdminBtn.classList.add('hidden');
+            startNewUserBtn.classList.add('hidden');
+            userNameInput.value = "";
+        }
+        
+        startQuizBtn.addEventListener('click', () => {
+            currentUser = userNameInput.value.trim();
+            if (!currentUser) {
+                alert("Por favor, ingresa tu nombre.");
+                return;
+            }
+
+            nameSection.classList.add('hidden');
+            if (currentUser.toLowerCase() === "final de juego") {
+                displayAdminResults();
+            } else {
+                currentUserDisplay.textContent = `Respondiendo como: ${currentUser}`;
+                loadQuestions();
+                quizSection.classList.remove('hidden');
+            }
+        });
+
+        function loadQuestions() {
+            quizForm.innerHTML = ""; // Limpiar preguntas anteriores
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-card';
+                questionDiv.innerHTML = `<p class="text-lg font-semibold text-gray-700 mb-4">${index + 1}. ${q.text}</p>`;
+                
+                q.options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    label.innerHTML = `
+                        <input type="radio" name="${q.id}" value="${opt.value}" data-diagnostictext="${opt.diagnosticText}" data-optiontext="${opt.text}" required>
+                        ${opt.text}
+                    `;
+                    questionDiv.appendChild(label);
+                });
+                quizForm.appendChild(questionDiv);
+            });
+        }
+
+        submitQuizBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const formData = new FormData(quizForm);
+            const userResponses = [];
+            let allAnswered = true;
+
+            questions.forEach(q => {
+                const answer = formData.get(q.id);
+                if (!answer) {
+                    allAnswered = false;
+                }
+                // Encontrar el texto de la opción y el texto de diagnóstico
+                const selectedOptionElement = quizForm.querySelector(`input[name="${q.id}"]:checked`);
+                const optionText = selectedOptionElement ? selectedOptionElement.dataset.optiontext : "No respondida";
+                const diagnosticText = selectedOptionElement ? selectedOptionElement.dataset.diagnostictext : "No respondida";
+
+                userResponses.push({ 
+                    questionId: q.id, 
+                    questionText: q.text,
+                    answerValue: answer,
+                    optionText: optionText, 
+                    diagnosticText: diagnosticText 
+                });
+            });
+
+            if (!allAnswered) {
+                alert("Por favor, responde todas las preguntas.");
+                return;
+            }
+
+            allUserAnswers.push({ name: currentUser, responses: userResponses });
+            localStorage.setItem('allUserAnswers_v2', JSON.stringify(allUserAnswers));
+            
+            displayIndividualDiagnosis(currentUser, userResponses);
+            quizSection.classList.add('hidden');
+        });
+
+        function getEthicalProfile(responses) {
+            const profileCounts = {
+                normaDeber: 0, // K_CON, E_DEON, KT_IC, P_HET
+                justiciaEquidad: 0, // P_JD, K_POST (parcial), P_AUT
+                cuidadoContexto: 0, // E_CUID, KT_FH
+                principiosAutonomia: 0, // K_POST, P_AUT, KT_IC, KT_FH
+                pragmaticoConsecuencialista: 0, // E_PRAG, K_PRE
+                dudoso: 0 // E_PRAG_DUDOSO
+            };
+
+            responses.forEach(r => {
+                const val = r.answerValue;
+                if (!val) return;
+
+                if (val.includes("K_CON") || val.includes("DEON") || val.includes("KT_IC") || val.includes("P_HET")) {
+                    profileCounts.normaDeber++;
+                }
+                if (val.includes("P_JD") || (val.includes("K_POST") && !val.includes("CURR")) || (val.includes("P_AUT") && !val.includes("INV") && !val.includes("MED") && !val.includes("CONS") && !val.includes("PROG") && !val.includes("CURR"))) {
+                     // P_AUT más puro hacia justicia
+                    profileCounts.justiciaEquidad++;
+                }
+                if (val.includes("E_CUID") || (val.includes("KT_FH") && !val.includes("CURR") && !val.includes("PROG")) ) {
+                    profileCounts.cuidadoContexto++;
+                }
+                if (val.includes("K_POST") || val.includes("P_AUT") || val.includes("KT_IC") || val.includes("KT_FH")) {
+                     // K_POST, P_AUT, KT_IC, KT_FH más puros hacia principios/autonomía
+                    profileCounts.principiosAutonomia++;
+                }
+                if (val.includes("E_PRAG") || val.includes("K_PRE")) {
+                    profileCounts.pragmaticoConsecuencialista++;
+                }
+                 if (val.includes("DUDOSO")) {
+                    profileCounts.dudoso++;
+                }
+            });
+            
+            // Determinar el perfil dominante
+            let dominantProfile = "Perfil Ético Mixto/Equilibrado";
+            let maxCount = 0;
+            for (const profile in profileCounts) {
+                if (profileCounts[profile] > maxCount) {
+                    maxCount = profileCounts[profile];
+                    switch (profile) {
+                        case "normaDeber": dominantProfile = "Orientación Principal hacia la Norma y el Deber"; break;
+                        case "justiciaEquidad": dominantProfile = "Orientación Principal hacia la Justicia y la Equidad"; break;
+                        case "cuidadoContexto": dominantProfile = "Orientación Principal hacia el Cuidado y el Contexto"; break;
+                        case "principiosAutonomia": dominantProfile = "Orientación Principal hacia Principios Éticos Universales y Autonomía"; break;
+                        case "pragmaticoConsecuencialista": dominantProfile = "Orientación Principal Pragmática y Consecuencialista"; break;
+                    }
+                }
+            }
+             // Si hay un empate fuerte o bajo conteo general, mantener mixto.
+            const totalResponses = responses.length;
+            if (maxCount <= totalResponses / 3 && Object.values(profileCounts).filter(c => c > 0).length > 2) { // Umbral para mixto
+                 dominantProfile = "Perfil Ético Mixto/Equilibrado";
+            }
+
+
+            let explanation = "";
+            switch (dominantProfile) {
+                case "Orientación Principal hacia la Norma y el Deber":
+                    explanation = "Tus decisiones tienden a basarse en el cumplimiento de reglas establecidas, el mantenimiento del orden social y el deber por el deber, mostrando una fuerte consideración por los marcos normativos.";
+                    break;
+                case "Orientación Principal hacia la Justicia y la Equidad":
+                    explanation = "Muestras una inclinación a buscar la imparcialidad, adaptar las normas a las necesidades individuales y promover la igualdad de oportunidades, considerando los contextos particulares.";
+                    break;
+                case "Orientación Principal hacia el Cuidado y el Contexto":
+                    explanation = "Tus elecciones reflejan una preocupación prioritaria por el bienestar de los estudiantes, las relaciones interpersonales y la flexibilidad para abordar situaciones considerando sus particularidades.";
+                    break;
+                case "Orientación Principal hacia Principios Éticos Universales y Autonomía":
+                    explanation = "Tiendes a tomar decisiones basadas en principios éticos abstractos, el razonamiento crítico y el fomento de la autonomía moral, evaluando las normas más allá de su formulación literal.";
+                    break;
+                case "Orientación Principal Pragmática y Consecuencialista":
+                    explanation = "Tu enfoque parece centrarse en los resultados prácticos, la búsqueda de soluciones eficientes y, en ocasiones, la evitación de conflictos, ponderando las consecuencias de las acciones.";
+                    break;
+                default: // Perfil Mixto
+                    explanation = "Tus respuestas sugieren una combinación de enfoques éticos, mostrando flexibilidad para adaptar tus decisiones a diferentes situaciones o integrando diversas perspectivas éticas en tu razonamiento.";
+            }
+             if (profileCounts.dudoso > 0) {
+                explanation += " Se detectaron además algunas elecciones pragmáticas cuya transparencia podría ser motivo de reflexión adicional.";
+            }
+
+            return { classification: dominantProfile, explanation: explanation };
+        }
+
+        function displayIndividualDiagnosis(userName, responses) {
+            resultsSection.classList.remove('hidden');
+            diagnosticsArea.innerHTML = ""; // Limpiar diagnósticos anteriores
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'p-6 bg-blue-50 rounded-lg shadow mb-6';
+            
+            const profile = getEthicalProfile(responses);
+
+            userDiv.innerHTML = `
+                <h3 class="text-xl font-semibold text-blue-700 mb-3">Diagnóstico para: ${userName}</h3>
+                <p class="text-gray-700 mb-1"><strong>Clasificación Ética Principal:</strong> ${profile.classification}</p>
+                <p class="text-gray-700 mb-4"><strong>Explicación:</strong> ${profile.explanation}</p>
+                <details class="mt-2">
+                    <summary class="text-blue-600 cursor-pointer font-medium">Ver respuestas detalladas</summary>
+                    <ul class="list-disc pl-5 mt-2 text-sm text-gray-600 space-y-1">
+                        ${responses.map(r => `<li><strong>Pregunta ${questions.findIndex(q => q.id === r.questionId) + 1}:</strong> ${r.optionText} <br><em class="text-xs text-gray-500">(${r.diagnosticText})</em></li>`).join('')}
+                    </ul>
+                </details>
+            `;
+            diagnosticsArea.appendChild(userDiv);
+            resultsTitle.textContent = "Tu Diagnóstico Ético";
+            startNewUserBtn.classList.remove('hidden');
+        }
+        
+        function displayAdminResults() {
+            resultsSection.classList.remove('hidden');
+            diagnosticsArea.innerHTML = ""; // Limpiar
+            resultsTitle.textContent = "Resultados de Todos los Participantes (Admin)";
+
+            if (allUserAnswers.length === 0) {
+                diagnosticsArea.innerHTML = "<p class='text-gray-600 text-center'>Aún no hay respuestas registradas.</p>";
+            } else {
+                const table = document.createElement('table');
+                table.className = 'w-full results-table border-collapse';
+                table.innerHTML = `
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="p-3">Nombre</th>
+                            <th class="p-3">Respuestas y Diagnóstico Detallado</th>
+                            <th class="p-3">Clasificación Principal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                `;
+                const tbody = table.querySelector('tbody');
+
+                allUserAnswers.forEach(userData => {
+                    const profile = getEthicalProfile(userData.responses);
+                    const row = tbody.insertRow();
+                    row.insertCell().textContent = userData.name;
+                    
+                    const responsesCell = row.insertCell();
+                    let responsesHtml = `<ul class="list-disc pl-5 text-sm space-y-1">`;
+                    userData.responses.forEach((r, index) => {
+                         responsesHtml += `<li><strong>P${index + 1}:</strong> ${r.optionText} <br><em class="text-xs text-gray-500">(${r.diagnosticText})</em></li>`;
+                    });
+                    responsesHtml += `</ul>`;
+                    responsesHtml += `<p class="mt-3 text-sm"><strong>Explicación del Perfil:</strong> ${profile.explanation}</p>`;
+                    responsesCell.innerHTML = responsesHtml;
+
+                    row.insertCell().textContent = profile.classification;
+                });
+                diagnosticsArea.appendChild(table);
+            }
+            restartQuizAdminBtn.classList.remove('hidden');
+            startNewUserBtn.classList.remove('hidden'); // También para admin por si quiere probar como usuario normal
+        }
+
+        restartQuizAdminBtn.addEventListener('click', () => {
+            if (confirm("¿Estás seguro de que deseas borrar todos los datos del cuestionario? Esta acción no se puede deshacer.")) {
+                localStorage.removeItem('allUserAnswers_v2');
+                allUserAnswers = [];
+                initApp();
+            }
+        });
+        
+        startNewUserBtn.addEventListener('click', () => {
+            initApp();
+        });
+
+        // Cargar estado inicial
+        initApp();
+    </script>
+
+</body>
+</html>
