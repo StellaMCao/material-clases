@@ -5,478 +5,346 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Curso Completo: La escuela hoy</title>
     <style>
-        /* Estilos Generales */
+        /* --- ESTILOS CSS --- */
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #4CAF50;
+            --background-color: #f0f4f0;
+            --sidebar-bg: #e8f5e9;
+            --text-color: #333;
+            --sidebar-width: 280px;
+        }
+
         html {
             scroll-behavior: smooth;
         }
         body {
-            background-color: #d0f4d0;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
             margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 900px;
-            margin: 2rem auto;
-            padding: 1rem 2rem;
-            background-color: #fafffa;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: var(--background-color);
+            display: flex;
         }
 
-        /* Encabezado y Navegación Principal */
-        header {
-            background-color: #4CAF50;
-            color: white;
+        /* --- Menú Lateral (Sidebar) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid #ccc;
             padding: 1.5rem;
+            box-sizing: border-box;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .sidebar h3 {
+            color: var(--primary-color);
             text-align: center;
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 1rem;
+        }
+        .sidebar nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar nav a {
+            cursor: pointer;
+            display: block;
+            color: var(--primary-color);
+            padding: 12px 15px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .sidebar nav a:hover {
+            background-color: #d0e8d0;
+        }
+        .sidebar nav a.active {
+            background-color: var(--secondary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* --- Contenido Principal --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem 3rem;
+            width: calc(100% - var(--sidebar-width));
+            box-sizing: border-box;
+        }
+        .content-section {
+            display: none; /* Oculto por defecto */
+        }
+        .content-section.active {
+            display: block; /* Visible cuando está activo */
+        }
+
+        header {
+            border-bottom: 3px solid var(--primary-color);
+            margin-bottom: 2rem;
         }
         header h1 {
-            color: white;
-            margin: 0;
-            font-size: 2rem;
-        }
-
-        /* Secciones de Contenido */
-        section {
-            padding: 2rem 0;
-            border-top: 3px dashed #a5d6a7;
-        }
-        #inicio {
-            border-top: none;
-            text-align: center;
-        }
-
-        /* Títulos */
-        h1, h2, h3, h4 {
-            color: #2e7d32;
+            font-size: 2.5rem;
+            color: var(--primary-color);
             margin-bottom: 1rem;
         }
-        section > h1 {
-            font-size: 2.2rem;
-            text-align: center;
-        }
-        section > h2 {
-            font-size: 1.8rem;
-            border-bottom: 2px solid #a5d6a7;
-            padding-bottom: 0.5rem;
+        section h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
             margin-top: 2rem;
             text-align: left;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 0.5rem;
         }
         h3 {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
         }
-        h4 {
-            font-size: 1.2rem;
-            font-style: italic;
-        }
-
-        /* Contenido del texto */
         p, li {
             font-size: 1.1rem;
             text-align: justify;
         }
-        ul, ol {
-            padding-left: 2rem;
-        }
-        strong {
-            color: #1b5e20;
-        }
+        ul { margin-left: 20px; }
         .critica {
-            background-color: #ffebee;
-            border-left: 5px solid #c62828;
-            padding: 1rem;
+            background-color: #fff3f3;
+            border-left: 5px solid #d32f2f;
+            padding: 1rem 1.5rem;
             margin: 1.5rem 0;
             border-radius: 5px;
         }
-
-        /* Imágenes */
-        .header-image {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        blockquote {
+            border-left: 5px solid #ccc;
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: #555;
         }
-
-        /* Tabla de Contenidos (Índice) */
-        .toc ol {
-            list-style-type: none;
-            padding: 0;
-        }
-        .toc li {
-            margin: 1rem 0;
-            background-color: #e8f5e9;
-            padding: 1rem;
-            border-radius: 5px;
-            transition: transform 0.2s ease;
-        }
-        .toc li:hover {
-            transform: translateX(10px);
-        }
-        .toc a {
-            text-decoration: none;
-            color: #2e7d32;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        /* Botón de "Volver al Inicio" */
-        .back-to-top {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            display: inline-block;
-            background-color: #ff9800;
-            color: white;
-            width: 50px;
-            height: 50px;
-            text-align: center;
-            border-radius: 50%;
-            text-decoration: none;
-            font-size: 30px;
-            line-height: 50px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            transition: background-color 0.3s ease;
-        }
-        .back-to-top:hover {
-            background-color: #f57c00;
-        }
-
-        /* Pie de Página */
         footer {
             text-align: center;
-            margin-top: 2rem;
-            padding: 1rem;
-            color: #555;
-            font-size: 0.9rem;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #ddd;
+            color: #777;
         }
-        
-        /* Responsividad */
-        @media (max-width: 768px) {
-            .container {
-                margin: 1rem;
-                padding: 1rem;
+
+        /* --- Diseño Adaptable (Responsive) --- */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
             }
-            header h1 { font-size: 1.5rem; }
-            section > h1 { font-size: 1.8rem; }
-            section > h2 { font-size: 1.5rem; }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 2px solid #ccc;
+                overflow-y: hidden;
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 1.5rem;
+            }
+            .sidebar h3 {
+                display: none;
+            }
+            .sidebar nav ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .sidebar nav a {
+                font-size: 0.9rem;
+                padding: 8px 10px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <a href="#inicio" class="back-to-top" title="Volver al inicio">↑</a>
+    <!-- MENÚ LATERAL DE NAVEGACIÓN -->
+    <aside class="sidebar">
+        <h3>La escuela hoy</h3>
+        <nav>
+            <ul>
+                <li><a data-target="capitulo0" class="active">Tabla de Contenidos</a></li>
+                <li><a data-target="capitulo1">1. Desafíos de la educación</a></li>
+                <li><a data-target="capitulo2">2. Plan de Alfabetización</a></li>
+                <li><a data-target="capitulo3">3. Lineamientos Curriculares</a></li>
+                <li><a data-target="capitulo4">4. Plan "Buenos Aires Aprende"</a></li>
+                <li><a data-target="capitulo5">5. Secundaria Aprende</a></li>
+                <li><a data-target="capitulo6">6. Educación socioemocional</a></li>
+                <li><a data-target="capitulo7">7. FEPBA y TESBA</a></li>
+                <li><a data-target="capitulo8">8. Contenidos transversales</a></li>
+                <li><a data-target="capitulo9">9. Críticas a las reformas</a></li>
+            </ul>
+        </nav>
+    </aside>
 
-    <header id="inicio">
-        <h1>Curso Completo: La escuela hoy</h1>
-    </header>
+    <!-- ÁREA DE CONTENIDO PRINCIPAL -->
+    <div class="main-content">
 
-    <main class="container">
-        <!-- ÍNDICE PRINCIPAL -->
-        <section id="indice">
-            <h1>Tabla de Contenidos</h1>
-            <nav class="toc">
-                <ol>
-                    <li><a href="#capitulo1">1. Desafíos de la educación media y superior</a></li>
-                    <li><a href="#capitulo2">2. Plan Nacional de Alfabetización</a></li>
-                    <li><a href="#capitulo3">3. Lineamientos curriculares para la Formación Docente</a></li>
-                    <li><a href="#capitulo4">4. Plan Estratégico "Buenos Aires Aprende"</a></li>
-                    <li><a href="#capitulo5">5. Secundaria Aprende</a></li>
-                    <li><a href="#capitulo6">6. Educación socioemocional</a></li>
-                    <li><a href="#capitulo7">7. FEPBA y TESBA</a></li>
-                    <li><a href="#capitulo8">8. Contenidos transversales en formación docente</a></li>
-                    <li><a href="#capitulo9">9. Algunas críticas a las reformas</a></li>
-                </ol>
-            </nav>
-        </section>
+        <!-- BIENVENIDA / ÍNDICE (CAPITULO 0) -->
+        <article id="capitulo0" class="content-section active">
+            <header>
+                <h1>Bienvenido al Curso "La escuela hoy"</h1>
+            </header>
+            <main>
+                <section>
+                    <h2>Tabla de Contenidos</h2>
+                    <p>Usa el menú lateral para navegar por los diferentes capítulos del curso. Cada sección aborda un aspecto clave de las transformaciones y desafíos educativos actuales en el contexto presentado.</p>
+                    <p>Este curso está diseñado para ser una guía de estudio clara y directa, basada en los documentos proporcionados. ¡Comienza a explorar!</p>
+                </section>
+            </main>
+        </article>
 
         <!-- CAPÍTULO 1 -->
-        <section id="capitulo1">
-            <img src="img/page_03.png" alt="Desafíos de la educación" class="header-image">
-            <h1>1. Desafíos de la educación media y superior</h1>
-            <h2>La transformación educativa: Adaptándose al siglo XXI</h2>
-            <p>La educación en el siglo XXI enfrenta el desafío de adaptarse a un mundo en constante cambio, caracterizado por la digitalización, la globalización y la necesidad de desarrollar habilidades que permitan a los estudiantes afrontar los retos del futuro. La búsqueda de una educación más integral, personalizada y relevante para los estudiantes impulsa la transformación curricular y la reorganización de las instituciones educativas.</p>
-            <p>En el nivel medio, la iniciativa "Secundaria Aprende" de Buenos Aires propone una serie de cambios que buscan superar el modelo tradicional de asignaturas aisladas. Se promueve un enfoque interdisciplinario que integra diferentes campos del conocimiento, fomentando el pensamiento crítico y la capacidad de aplicar los conocimientos para resolver problemas complejos. La organización curricular se flexibiliza, permitiendo a los estudiantes profundizar en temas de su interés y avanzar a su propio ritmo a través de planes personales de aprendizaje. Se busca también una mayor autonomía estudiantil, ampliando el tiempo de aprendizaje más allá del aula y dando mayor protagonismo a los estudiantes en la toma de decisiones sobre su proceso formativo.</p>
-            <p>En el nivel superior, los Lineamientos Curriculares Nacionales para la Formación Docente en Argentina también reflejan la necesidad de adaptación a las "demandas" del siglo XXI. Se prioriza el desarrollo de capacidades profesionales docentes que permitan a los futuros educadores crear ambientes de aprendizaje positivos, gestionar la diversidad y acompañar las trayectorias individuales de los estudiantes. La incorporación de la Educación Híbrida, con la integración de tecnologías digitales en el proceso de enseñanza-aprendizaje, también se presenta como una tendencia clave en la formación docente, respondiendo a las nuevas formas de acceder al conocimiento y construir saberes en un mundo cada vez más digitalizado.</p>
-        </section>
+        <article id="capitulo1" class="content-section">
+            <header>
+                <h1>1. Desafíos de la educación media y superior</h1>
+            </header>
+            <main>
+                <section>
+                    <h2>La transformación educativa: Adaptándose al siglo XXI</h2>
+                    <p>La educación en el siglo XXI enfrenta el desafío de adaptarse a un mundo en constante cambio, caracterizado por la digitalización, la globalización y la necesidad de desarrollar habilidades que permitan a los estudiantes afrontar los retos del futuro. La búsqueda de una educación más integral, personalizada y relevante para los estudiantes impulsa la transformación curricular y la reorganización de las instituciones educativas.</p>
+                    <p>En el nivel medio, la iniciativa "Secundaria Aprende" de Buenos Aires propone una serie de cambios que buscan superar el modelo tradicional de asignaturas aisladas. Se promueve un enfoque interdisciplinario que integra diferentes campos del conocimiento, fomentando el pensamiento crítico y la capacidad de aplicar los conocimientos para resolver problemas complejos. La organización curricular se flexibiliza, permitiendo a los estudiantes profundizar en temas de su interés y avanzar a su propio ritmo a través de planes personales de aprendizaje. Se busca también una mayor autonomía estudiantil, ampliando el tiempo de aprendizaje más allá del aula y dando mayor protagonismo a los estudiantes en la toma de decisiones sobre su proceso formativo.</p>
+                    <p>En el nivel superior, los Lineamientos Curriculares Nacionales para la Formación Docente en Argentina también reflejan la necesidad de adaptación a las "demandas" del siglo XXI. Se prioriza el desarrollo de capacidades profesionales docentes que permitan a los futuros educadores crear ambientes de aprendizaje positivos, gestionar la diversidad y acompañar las trayectorias individuales de los estudiantes. La incorporación de la Educación Híbrida, con la integración de tecnologías digitales en el proceso de enseñanza-aprendizaje, también se presenta como una tendencia clave en la formación docente, respondiendo a las nuevas formas de acceder al conocimiento y construir saberes en un mundo cada vez más digitalizado.</p>
+                </section>
+            </main>
+        </article>
 
         <!-- CAPÍTULO 2 -->
-        <section id="capitulo2">
-            <img src="img/page_04.png" alt="Plan Nacional de Alfabetización" class="header-image">
-            <h1>2. Plan Nacional de Alfabetización</h1>
-            <h2>Un compromiso federal para la mejora educativa</h2>
-            <p>El Plan Nacional de Alfabetización, aprobado en mayo de 2024 por la Asamblea del Consejo Federal de Educación de Argentina, es una iniciativa crucial para abordar los desafíos de aprendizaje que enfrenta el país. Su objetivo principal es garantizar que todos los estudiantes de la República Argentina puedan leer, comprender y producir textos, reconociendo la alfabetización como un proceso continuo que se extiende desde la primera infancia hasta la adultez. Este plan surge como respuesta a la evidencia que muestra un deterioro progresivo en el desempeño de los estudiantes en habilidades lingüísticas en los últimos años.</p>
-            <p>El Plan Nacional de Alfabetización se construye sobre una base federal, con planes jurisdiccionales adaptados a las particularidades de cada región. La Secretaría de Educación de la Nación, a través de la Unidad de Alfabetización, trabaja en articulación con las 24 jurisdicciones para diseñar, implementar y dar seguimiento a los planes.</p>
-            
-            <h3>Objetivos específicos y ejes de acción</h3>
-            <p>El plan establece tres objetivos específicos:</p>
-            <ul>
-                <li>Garantizar el desarrollo de niveles de lectura y escritura apropiados para los estudiantes de 3er grado.</li>
-                <li>Garantizar oportunidades equitativas de alfabetización como motor para la aceleración de aprendizajes en los estudiantes de 4to grado en adelante.</li>
-                <li>Desarrollar dispositivos de seguimiento y evaluación que permitan el mejoramiento de la calidad y equidad de la educación.</li>
-            </ul>
-            <p>Para lograr estos objetivos, el Plan Nacional de Alfabetización se organiza en seis ejes principales:</p>
-            <ol>
-                <li><strong>Compromiso de alcance comunitario:</strong> Busca involucrar a actores del sector público, privado y de la sociedad civil para crear una sociedad lectora. Se promoverán alianzas, seminarios, foros y campañas de comunicación para consolidar redes que apoyen el desarrollo de los planes de alfabetización.</li>
-                <li><strong>La alfabetización en los primeros años de la escolaridad:</strong> Se enfoca en fortalecer la educación infantil temprana (0 a 8 años) para construir bases sólidas en el proceso de alfabetización. Se buscará mejorar la calidad del nivel inicial, la articulación internivel e intranivel, y la implementación de modelos pedagógicos y organizacionales que potencien la enseñanza y el aprendizaje de la lectura y la escritura.</li>
-                <li><strong>Transversalidad de la alfabetización:</strong> Reconoce que la alfabetización es fundamental para el aprendizaje en todas las áreas del conocimiento. Las acciones se implementarán de forma transversal en los diferentes niveles educativos, incluyendo la formación docente y la producción de materiales didácticos.</li>
-                <li><strong>Formación Docente:</strong> Se fortalecerá la formación inicial y continua de los docentes para que cuenten con las herramientas necesarias para enseñar a leer y escribir de manera efectiva. Se implementarán capacitaciones sobre estrategias didácticas, evaluación de aprendizajes y acompañamiento a las trayectorias estudiantiles.</li>
-                <li><strong>Acceso a recursos educativos de calidad:</strong> Se buscará asegurar la disponibilidad de recursos educativos de calidad para todos los estudiantes, incluyendo libros, materiales didácticos y tecnologías digitales. Se tendrán en cuenta las particularidades de cada contexto para garantizar la pertinencia de los recursos.</li>
-                <li><strong>Monitoreo y evaluación:</strong> Se implementarán dispositivos de evaluación y de relevamiento de información para monitorear el progreso de los planes de alfabetización. Se realizará una evaluación de aprendizajes en 3er grado del nivel primario y se fortalecerán los procesos de evaluación en el aula. Los resultados de las evaluaciones serán de acceso público para asegurar la transparencia y la rendición de cuentas.</li>
-            </ol>
-            
-            <h3>Financiamiento y articulación con otras políticas</h3>
-            <p>La Secretaría de Educación se compromete a financiar las líneas de acción del Plan Nacional de Alfabetización a través de convenios bilaterales con cada jurisdicción. Algunos de los puntos prioritarios para el financiamiento son la creación de la Unidad Nacional de Alfabetización, las evaluaciones de aprendizajes, la entrega de libros, la formación docente y la continuidad del programa "Una Hora Más".</p>
-            <p>Es importante destacar que el Plan Nacional de Alfabetización se articula con otras políticas educativas, como la formación docente inicial (abordada en los Lineamientos Curriculares Nacionales para la Formación Docente) y el Plan estratégico "Buenos Aires Aprende" para la Ciudad de Buenos Aires. Esta articulación busca crear un sistema educativo más coherente e integrado, donde la alfabetización sea un eje central para el desarrollo integral de los estudiantes.</p>
-
-            <h3>Conclusión</h3>
-            <p>El Plan Nacional de Alfabetización representa un compromiso federal para mejorar la calidad y equidad de la educación en Argentina. A través de una estrategia integral y la participación de diversos actores, se busca garantizar que todos los estudiantes puedan acceder al mundo letrado y desarrollar su máximo potencial. La implementación efectiva de este plan será fundamental para construir una sociedad más justa, inclusiva y con mayores oportunidades para todos.</p>
-        </section>
+        <article id="capitulo2" class="content-section">
+            <header>
+                <h1>2. Plan Nacional de Alfabetización</h1>
+            </header>
+            <main>
+                <section>
+                    <h2>Un compromiso federal para la mejora educativa</h2>
+                    <p>El Plan Nacional de Alfabetización, aprobado en mayo de 2024 por la Asamblea del Consejo Federal de Educación de Argentina, es una iniciativa crucial para abordar los desafíos de aprendizaje que enfrenta el país...</p>
+                    <h3>Objetivos específicos y ejes de acción</h3>
+                    <ul>
+                        <li>Garantizar el desarrollo de niveles de lectura y escritura apropiados para los estudiantes de 3er grado.</li>
+                        <li>Garantizar oportunidades equitativas de alfabetización como motor para la aceleración de aprendizajes en los estudiantes de 4to grado en adelante.</li>
+                        <li>Desarrollar dispositivos de seguimiento y evaluación que permitan el mejoramiento de la calidad y equidad de la educación.</li>
+                    </ul>
+                </section>
+            </main>
+        </article>
 
         <!-- CAPÍTULO 3 -->
-        <section id="capitulo3">
-            <img src="img/page_05.png" alt="Lineamientos curriculares" class="header-image">
-            <h1>3. Lineamientos curriculares para la Formación Docente</h1>
-            <h2>Lineamientos curriculares para la formación docente en Argentina</h2>
-            <p>Se puede observar una clara intención de fortalecer la formación docente inicial y continua, reconociendo su importancia crucial para mejorar la calidad y la equidad del sistema educativo. Los lineamientos curriculares se enmarcan en un contexto de cambio y actualización, impulsado por la necesidad de responder a los desafíos actuales de la educación, incluyendo los resultados de las evaluaciones nacionales e internacionales, la incorporación de tecnologías emergentes y la necesidad de una educación más inclusiva.</p>
-
-            <h3>La Resolución CFE N° 476/24: Un nuevo marco para la formación docente inicial</h3>
-            <p>La Resolución CFE N° 476/24 establece los nuevos Lineamientos Curriculares Nacionales para la Formación Docente Inicial en Argentina, reemplazando la Resolución CFE N° 24/07. Este nuevo marco busca:</p>
-            <ul>
-                <li>Promover el desarrollo de capacidades profesionales docentes, pasando del conocimiento repetitivo al desarrollo de hábitos y habilidades para la acción.</li>
-                <li>Consensuar federalmente Núcleos de Aprendizajes Prioritarios (NAP) para la formación docente inicial, garantizando una base común de saberes centrales.</li>
-                <li>Reflexionar sobre la enseñanza, el aprendizaje y la evaluación en la Educación Superior, adaptando la formación a las necesidades actuales.</li>
-                <li>Habilitar la incorporación de formatos híbridos en la formación, ampliando las posibilidades de aprendizaje más allá del tiempo presencial en las aulas.</li>
-                <li>Atender a las vacancias docentes en determinados niveles y campos disciplinares a través de formatos curriculares flexibles.</li>
-            </ul>
-
-            <h3>La importancia de la alfabetización en la formación docente</h3>
-            <p>El Plan Nacional de Alfabetización (PNA), aprobado por Resolución CFE N° 471/24, destaca la alfabetización como un eje transversal para la mejora educativa. En línea con este plan, la Resolución CFE N° 476/24 reconoce la necesidad de abordar la alfabetización de manera integral en la formación docente, tanto en la formación inicial como en la continua. Se busca formar docentes capaces de:</p>
-            <ul>
-                <li>Enseñar a leer y escribir de manera efectiva, considerando los diferentes niveles de alfabetización.</li>
-                <li>Atender a la diversidad lingüística y cultural de los estudiantes.</li>
-                <li>Implementar estrategias didácticas para la alfabetización inicial y avanzada.</li>
-                <li>Recuperar procesos de alfabetización deficientes o incompletos.</li>
-            </ul>
-
-            <h3>El desarrollo de capacidades profesionales: un enfoque central</h3>
-            <p>Tanto la Resolución CFE N° 476/24 como el "Plan Estratégico Buenos Aires Aprende 2024-2027" para la Ciudad de Buenos Aires, destacan la importancia de formar docentes en capacidades profesionales. Se busca que los futuros docentes desarrollen habilidades para:</p>
-            <ul>
-                <li>Dominar los saberes a enseñar: seleccionando, organizando y secuenciando los contenidos de manera efectiva.</li>
-                <li>Planificar y gestionar la enseñanza: diseñando e implementando estrategias didácticas diversas para favorecer el aprendizaje.</li>
-                <li>Evaluar los aprendizajes: utilizando diferentes instrumentos y estrategias para evaluar el progreso de los estudiantes.</li>
-                <li>Trabajar en equipo y comunicarse: participando en la vida institucional y construyendo relaciones positivas con los estudiantes, las familias y la comunidad.</li>
-                <li>Comprometerse con su propio proceso formativo: reflexionando sobre su práctica y buscando la mejora continua.</li>
-            </ul>
-
-            <h3>La formación en la práctica profesional: el puente entre la teoría y la realidad</h3>
-            <p>El "Plan Estratégico Buenos Aires Aprende 2024-2027" y la Resolución CFE N° 476/24 hacen hincapié en la importancia de fortalecer la formación en la práctica profesional. Se busca que los futuros docentes tengan:</p>
-            <ul>
-                <li>Experiencias de aprendizaje auténticas en contextos reales, a través de prácticas progresivas en escuelas asociadas.</li>
-                <li>Oportunidades para vincular la teoría con la práctica, reflexionando sobre su experiencia y construyendo saber pedagógico situado.</li>
-                <li>Acompañamiento y supervisión por parte de docentes formadores y co-formadores, asegurando la calidad de la formación.</li>
-            </ul>
-
-            <h3>La flexibilidad curricular y la innovación pedagógica</h3>
-            <p>La Resolución CFE N° 476/24 promueve la flexibilidad curricular y la innovación pedagógica en la formación docente. Se propone:</p>
-            <ul>
-                <li>Diversificar los formatos pedagógicos, utilizando estrategias como talleres, seminarios, trabajos de campo y proyectos interdisciplinarios.</li>
-                <li>Incorporar unidades curriculares optativas, permitiendo a los estudiantes personalizar su formación.</li>
-                <li>Implementar el sistema de créditos, facilitando la movilidad y el reconocimiento de experiencias de aprendizaje.</li>
-            </ul>
-
-            <h3>Conclusión</h3>
-            <p>Los lineamientos curriculares para la formación docente en Argentina se plantean como un compromiso con la mejora continua del sistema educativo. Se busca formar docentes capaces de responder a los desafíos de la educación actual, con un enfoque centrado en el desarrollo de capacidades profesionales y la formación en la práctica. La implementación efectiva de estos lineamientos, junto con la articulación con otras políticas educativas como el Plan Nacional de Alfabetización, será clave para garantizar una educación de calidad para todos los estudiantes.</p>
-        </section>
-
-        <!-- CAPÍTULO 4 -->
-        <section id="capitulo4">
-            <img src="img/page_06.png" alt="Plan Buenos Aires Aprende" class="header-image">
-            <h1>4. Plan Estratégico "Buenos Aires Aprende"</h1>
-            <p>El Plan estratégico "Buenos Aires Aprende" es un documento que establece los objetivos y el rumbo del sistema educativo de la Ciudad de Buenos Aires para el período 2024-2027. Este plan surge como respuesta a los desafíos de aprendizaje que enfrenta la ciudad, especialmente en las comunidades con contextos socioeconómicos más desfavorecidos.</p>
-            <p>El Plan "Buenos Aires Aprende" se elaboró de forma colaborativa con la participación de diversos actores del sistema educativo, incluyendo equipos técnico-pedagógicos del Ministerio de Educación, supervisores, equipos de conducción, docentes, especialistas educativos, familias y estudiantes.</p>
-
-            <h2>Objetivos y Propósitos del Plan</h2>
-            <p>El objetivo general del plan es "Garantizar que todos los niños, niñas, jóvenes y adultos logren los aprendizajes necesarios para desarrollar su máximo potencial velando por su bienestar socioemocional y creando experiencias significativas para su vida".</p>
-            <p>Para alcanzar este objetivo, se proponen tres objetivos específicos:</p>
-            <ul>
-                <li><strong>Mejorar los aprendizajes fundacionales de Lengua y Matemática:</strong> a través de nuevas estrategias, mayor acompañamiento, más tiempo de enseñanza y la asistencia sostenida a la escuela en un ambiente que promueva el bienestar socioemocional, la inclusión y la atención a la diversidad.</li>
-                <li><strong>Impulsar nuevas maneras de enseñar y aprender:</strong> que permitan alcanzar los objetivos de aprendizajes fundacionales y avanzar hacia el desarrollo de capacidades que posibiliten a los estudiantes vivir y trabajar en un mundo dinámico, global y cambiante.</li>
-                <li><strong>Fortalecer las tareas pedagógicas y administrativas de las escuelas:</strong> mediante la incorporación de nuevas funciones y potencialidades que ofrece la tecnología.</li>
-            </ul>
-            
-            <h2>Ejes del Plan</h2>
-            <p>El Plan "Buenos Aires Aprende" se estructura en torno a tres ejes principales, que a su vez se traducen en una serie de políticas prioritarias:</p>
-            <ol>
-                <li><strong>Aprendizajes fundacionales:</strong> Este eje se centra en mejorar los aprendizajes de Lengua y Matemática, que son la base para aprendizajes más complejos.</li>
-                <li><strong>Innovación en la enseñanza y el aprendizaje:</strong> Este eje busca impulsar nuevas maneras de enseñar y aprender, que permitan a los estudiantes desarrollar las capacidades necesarias para vivir y trabajar en un mundo cambiante.</li>
-                <li><strong>Transformación digital para el aprendizaje:</strong> Este eje se centra en el uso de la tecnología para fortalecer las tareas pedagógicas y administrativas de las escuelas.</li>
-            </ol>
-            
-            <h2>Evaluación y monitoreo</h2>
-            <p>El Plan "Buenos Aires Aprende" contempla un sistema de evaluación y monitoreo para asegurar una gestión transparente y efectiva. Se utilizarán datos, evaluaciones y evidencia científica para tomar decisiones informadas y mejorar continuamente la calidad de la educación.</p>
-            
-            <h2>Conclusión</h2>
-            <p>El Plan estratégico "Buenos Aires Aprende" presenta una hoja de ruta para la transformación del sistema educativo de la Ciudad de Buenos Aires. Este plan, basado en la colaboración, la innovación y la transformación digital, busca garantizar una educación de calidad para todos los estudiantes, preparándolos para los desafíos del siglo XXI.</p>
-        </section>
-
-        <!-- CAPÍTULO 5 -->
-        <section id="capitulo5">
-            <img src="img/page_08.png" alt="Secundaria Aprende" class="header-image">
-            <h1>5. Secundaria Aprende</h1>
-            <h2>Cambios principales en el diseño curricular de la escuela secundaria en Buenos Aires</h2>
-            <p>El documento marco "Secundaria Aprende" describe una serie de cambios propuestos para el diseño curricular de la escuela secundaria en Buenos Aires. Estos cambios se basan en la necesidad de adaptar la escuela a las demandas del siglo XXI y buscan crear una educación más integral, personalizada y relevante para los estudiantes. A continuación, se detallan los principales cambios propuestos:</p>
-
-            <h3>1. Integración de los aprendizajes:</h3>
-            <ul>
-                <li>Se propone un cambio desde un modelo de asignaturas aisladas hacia un modelo interdisciplinario que integre diferentes campos del conocimiento.</li>
-                <li>Se busca que los estudiantes desarrollen un pensamiento crítico y la capacidad de aplicar conocimientos de diferentes áreas para resolver problemas complejos.</li>
-            </ul>
-            
-            <h3>2. Desarrollo de capacidades:</h3>
-            <ul>
-                <li>Se enfatiza la importancia de que los estudiantes desarrollen capacidades junto a la adquisición de conocimientos.</li>
-                <li>Se identifican capacidades transversales como: Comunicación, Pensamiento crítico, Trabajo colaborativo, Creatividad, Ciudadanía responsable y Aprendizaje a lo largo de la vida.</li>
-            </ul>
-            
-            <h3>3. Avance continuo:</h3>
-            <ul>
-                <li>Se propone una organización curricular por niveles, en lugar de por años, que permita a los estudiantes avanzar a su propio ritmo.</li>
-                <li>Se plantea la creación de planes personales de aprendizaje.</li>
-            </ul>
-
-            <h3>4. Modalidad de cursada y autonomía estudiantil:</h3>
-            <ul>
-                <li>Se busca una modalidad de cursada más flexible que permita a los estudiantes elegir entre diferentes formatos de aprendizaje.</li>
-                <li>Se busca dar mayor protagonismo a los estudiantes en su proceso de aprendizaje.</li>
-            </ul>
-
-            <h3>5. Organización docente:</h3>
-            <ul>
-                <li>Se propone un cambio hacia cargos de dedicación completa para los docentes.</li>
-                <li>Se busca que los docentes trabajen de manera más colaborativa.</li>
-            </ul>
-            <p>Estos cambios propuestos para el diseño curricular de la escuela secundaria en Buenos Aires buscan crear una educación más relevante, significativa y motivadora para los estudiantes, preparándolos para los desafíos del siglo XXI.</p>
-        </section>
-
-        <!-- CAPÍTULO 6 -->
-        <section id="capitulo6">
-            <img src="img/page_09.png" alt="Educación Socioemocional" class="header-image">
-            <h1>6. Educación socioemocional</h1>
-            <h2>La Importancia de la Educación Socioemocional en el Contexto Educativo Argentino</h2>
-            <p>El "Proyecto de ley educación socioemocional" busca instaurar un Programa de Educación Socioemocional en la Ciudad Autónoma de Buenos Aires, reconociendo la importancia del desarrollo emocional en la formación integral de los estudiantes. Este proyecto de ley se alinea con las tendencias educativas actuales, como se refleja en los "Lineamientos Curriculares Nacionales para la Formación Docente" y el "Plan Nacional de Alfabetización", que también destacan la importancia de la educación socioemocional.</p>
-            <p>El "Plan Estratégico Buenos Aires Aprende 2024-2027", por su parte, identifica el bienestar socioemocional como una de las políticas prioritarias para mejorar la calidad educativa en la ciudad. Se observa una creciente preocupación por atender no solo a los aspectos cognitivos, sino también a las dimensiones afectivas y sociales de los estudiantes, creando un ambiente de aprendizaje positivo que favorezca su desarrollo integral.</p>
-            
-            <h3>Objetivos del Programa de Educación Socioemocional:</h3>
-            <ul>
-                <li>Favorecer el desarrollo integral del alumnado.</li>
-                <li>Promover la educación en valores.</li>
-                <li>Prevenir conductas de riesgo.</li>
-                <li>Fomentar las capacidades sociales de respeto, tolerancia y colaboración.</li>
-                <li>Potenciar el aprendizaje y la sociabilización saludable.</li>
-            </ul>
-            
-            <h3>Conclusión</h3>
-            <p>El "Proyecto de ley educación socioemocional" es un paso importante para fortalecer la educación integral en la Ciudad de Buenos Aires. Su implementación, en conjunto con otras políticas educativas que promueven la formación en capacidades socioemocionales, contribuirá a formar ciudadanos/as más preparados/as para enfrentar los desafíos del siglo XXI.</p>
-        </section>
-
-        <!-- CAPÍTULO 7 -->
-        <section id="capitulo7">
-            <img src="img/page_10.png" alt="FEPBA y TESBA" class="header-image">
-            <h1>7. FEPBA y TESBA</h1>
-            <h2>FEPBA</h2>
-            <p>La evaluación FEPBA (Finalización de Estudios Primarios en la Ciudad de Buenos Aires) es censal y la organiza el Ministerio de Educación de la Ciudad Autónoma de Buenos Aires, a través de la Unidad de Evaluación Integral de la Calidad y Equidad Educativa. Desde 2021 se realiza cada dos años.</p>
-            <p>Se evalúa el aprendizaje en las áreas de Matemática y Prácticas del Lenguaje. En Prácticas del Lenguaje, se evalúa la reflexión sobre el lenguaje y los procesos lectores en textos de ámbitos literario, académico y social.</p>
-            
-            <h2>TESBA</h2>
-            <p>La evaluación TESBA (Tercer año de Estudios Secundarios en la Ciudad de Buenos Aires) es censal y la organiza el Ministerio de Educación de la Ciudad Autónoma de Buenos Aires, a través de la Unidad de Evaluación Integral de la Calidad y Equidad Educativa. Desde 2021 se realiza cada dos años.</p>
-            <p>Las pruebas TESBA han sido diseñadas para obtener información sobre algunos de los logros de aprendizaje en Lengua y Literatura y Matemática, establecidos en el Diseño Curricular de la Nueva Escuela Secundaria (NES).</p>
-            
-            <div class="critica">
-                <h4>Críticas a las Evaluaciones Estandarizadas</h4>
-                <p>Las evaluaciones estandarizadas son instrumentos de medición que miden las fortalezas y debilidades de los alumnos. Permiten detectar grupos de población con necesidades de mejoras educativas e identificar factores que impactan en el desempeño de los estudiantes.</p>
-                <p>Sin embargo, algunas críticas a las evaluaciones estandarizadas señalan que:</p>
-                <ul>
-                    <li>Se evalúa de la misma manera a estudiantes de diferentes realidades socio educativas.</li>
-                    <li>No contemplan la mirada integral del proceso educativo.</li>
-                    <li>Son instrumentos gubernamentales que trasladan la responsabilidad estatal a docentes, estudiantes y familias.</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- CAPÍTULO 8 -->
-        <section id="capitulo8">
-            <img src="img/page_11.png" alt="Contenidos transversales" class="header-image">
-            <h1>8. Contenidos transversales en formación docente</h1>
-            <h2>Los contenidos transversales en la Resolución CFE N° 476/24: Un análisis detallado</h2>
-            <p>La Resolución CFE N° 476/24, que establece los Lineamientos Curriculares Nacionales para la Formación Docente Inicial, aborda de manera explícita la importancia de los contenidos transversales en la formación de los futuros docentes. El documento enfatiza la necesidad de formar profesionales integrales, capaces de responder a los desafíos de una sociedad en constante cambio y de atender a la diversidad de necesidades de los estudiantes en los distintos niveles educativos.</p>
-            
-            <h3>Los contenidos transversales como ejes centrales de la formación docente:</h3>
-            <ul>
-                <li><strong>Educación Sexual Integral (ESI):</strong> La resolución remarca la obligatoriedad de la unidad curricular "Educación Sexual Integral" en todos los profesorados.</li>
-                <li><strong>Derechos Humanos (DDHH):</strong> La formación en DDHH se considera esencial para la formación ética y ciudadana de los futuros docentes.</li>
-                <li><strong>Educación Ambiental:</strong> Se establece la educación ambiental como un contenido transversal fundamental en la formación docente.</li>
-                <li><strong>Educación Digital:</strong> La resolución promueve la incorporación de la Educación Híbrida en la formación docente.</li>
-            </ul>
-
-            <h3>Estrategias para una implementación efectiva de la transversalidad:</h3>
-            <ul>
-                <li>Articulación entre campos de formación.</li>
-                <li>Trabajo colaborativo.</li>
-                <li>Formación en la Práctica Profesional.</li>
-                <li>Flexibilidad curricular.</li>
-            </ul>
-
-            <div class="critica">
-                <h4>Algunas problemáticas posibles (8.1)</h4>
-                <p>Implementar contenidos transversales en la formación docente puede generar diversas problemáticas:</p>
-                <ul>
-                    <li><strong>ESI:</strong> Resistencia de docentes, falta de preparación y desafíos en la interdisciplinariedad.</li>
-                    <li><strong>DDHH:</strong> Falta de postura crítica, sobrecarga de contenidos y dificultad para relacionar con la realidad local.</li>
-                    <li><strong>Educación Ambiental:</strong> Inconsistencias en la aplicación, conflictos de valores y necesidad de actualización constante.</li>
-                    <li><strong>Educación Digital:</strong> Brecha digital, desigualdad en competencias y dilemas éticos y pedagógicos.</li>
-                </ul>
-            </div>
-        </section>
+        <article id="capitulo3" class="content-section">
+            <header>
+                <h1>3. Lineamientos curriculares para la Formación Docente</h1>
+            </header>
+            <main>
+                <section>
+                    <h2>Lineamientos curriculares para la formación docente en Argentina</h2>
+                    <p>Se puede observar una clara intención de fortalecer la formación docente inicial y continua, reconociendo su importancia crucial para mejorar la calidad y la equidad del sistema educativo...</p>
+                    <h3>La Resolución CFE N° 476/24: Un nuevo marco para la formación docente inicial</h3>
+                    <p>Este nuevo marco busca:</p>
+                    <ul>
+                        <li>Promover el desarrollo de capacidades profesionales docentes.</li>
+                        <li>Consensuar federalmente Núcleos de Aprendizajes Prioritarios (NAP).</li>
+                        <li>Habilitar la incorporación de formatos híbridos en la formación.</li>
+                    </ul>
+                </section>
+            </main>
+        </article>
         
+        <!-- CAPÍTULO 4 -->
+        <article id="capitulo4" class="content-section">
+            <header><h1>4. Plan Estratégico "Buenos Aires Aprende"</h1></header>
+            <main><section><h2>Objetivos y Propósitos del Plan</h2><p>El objetivo general del plan es "Garantizar que todos los niños, niñas, jóvenes y adultos logren los aprendizajes necesarios para desarrollar su máximo potencial velando por su bienestar socioemocional y creando experiencias significativas para su vida".</p></section></main>
+        </article>
+        
+        <!-- CAPÍTULO 5 -->
+        <article id="capitulo5" class="content-section">
+            <header><h1>5. Secundaria Aprende</h1></header>
+            <main><section><h2>Cambios principales en el diseño curricular</h2><p>El documento marco "Secundaria Aprende"describe una serie de cambios propuestos para el diseño curricular de la escuela secundaria en Buenos Aires. Estos cambios se basan en la necesidad de adaptar la escuela a las demandas del siglo XXI.</p></section></main>
+        </article>
+        
+        <!-- CAPÍTULO 6 -->
+        <article id="capitulo6" class="content-section">
+            <header><h1>6. Educación socioemocional</h1></header>
+            <main><section><h2>La Importancia de la Educación Socioemocional</h2><p>El "Proyecto de ley educación socioemocional" busca instaurar un Programa de Educación Socioemocional en la Ciudad Autónoma de Buenos Aires, reconociendo la importancia del desarrollo emocional en la formación integral de los estudiantes.</p></section></main>
+        </article>
+        
+        <!-- CAPÍTULO 7 -->
+        <article id="capitulo7" class="content-section">
+            <header><h1>7. FEPBA y TESBA</h1></header>
+            <main><section><h2>FEPBA</h2><p>La evaluación FEPBA (Finalización de Estudios Primarios en la Ciudad de Buenos Aires) es censal y la organiza el Ministerio de Educación de la Ciudad Autónoma de Buenos Aires...</p><h2>TESBA</h2><p>La evaluación TESBA (Tercer año de Estudios Secundarios en la Ciudad de Buenos Aires) es censal y la organiza el Ministerio de Educación de la Ciudad Autónoma de Buenos Aires...</p><div class="critica"><h4>Críticas a las Evaluaciones Estandarizadas</h4><p>Algunas críticas señalan que se evalúa de la misma manera a estudiantes de diferentes realidades, no contemplan la mirada integral del proceso educativo y trasladan la responsabilidad estatal a docentes y familias.</p></div></section></main>
+        </article>
+        
+        <!-- CAPÍTULO 8 -->
+        <article id="capitulo8" class="content-section">
+            <header><h1>8. Contenidos transversales en formación docente</h1></header>
+            <main><section><h2>Los contenidos transversales en la Resolución CFE N° 476/24</h2><p>La resolución aborda de manera explícita la importancia de los contenidos transversales en la formación de los futuros docentes, como ESI, Derechos Humanos, Educación Ambiental y Educación Digital.</p></section></main>
+        </article>
+
         <!-- CAPÍTULO 9 -->
-        <section id="capitulo9">
-            <img src="img/page_13.png" alt="Críticas a las reformas" class="header-image">
-            <h1>9. Algunas críticas a las reformas</h1>
-            <blockquote>
-                <p>"Allí donde los profesores entran de hecho en el debate, son objeto de reformas educativas que los reducen a la categoría de técnicos superiores encargados de llevar a cabo dictámenes y objetivos decididos por expertos totalmente ajenos a las realidades cotidianas de la vida del aula."</p>
-                <footer>— Giroux, H (1990) Los profesores como intelectuales. Barcelona, Paidós.</footer>
-            </blockquote>
-            <div class="critica">
-                <h4>Crítica general a las Reformas Educativas</h4>
-                <p>Las reformas, tanto a nivel nacional (Consejo Federal de Educación) como en CABA, son vistas como una transformación que conduce a la pauperización de la formación estudiantil. Se critica una "impronta generalista" (aprender lo básico) que iría en detrimento de la construcción de conocimiento y pensamiento crítico. Los contenidos que se priorizan, como la educación socioemocional y la educación digital, son interpretados como herramientas para el control, la adaptación pasiva y el ajuste económico (sistema híbrido para reducir costos en infraestructura y salarios).</p>
-            </div>
-            
-            <h3>Críticas a Proyectos y Resoluciones Nacionales</h3>
-            <ul>
-                <li><strong>Plan Federal de Alfabetización (Res. 471/24):</strong> Se critica su enfoque en "aprendizajes fundamentales" y métodos estructurados, lo que podría llevar a la imposición de un método sobre otro basado en resultados de pruebas estandarizadas, ignorando contextos socio-históricos. Se menciona el uso del sistema SINIDE como un "gran panóptico".</li>
-                <li><strong>Lineamientos para Formación Docente (Res. 476/24):</strong> Se critica el enfoque en habilidades y competencias técnicas desde una mirada instrumental, la "transformación digital" para adaptar la escuela al mercado, y la "educación socioemocional" para la adaptación pasiva. Se señala la creación de un profesorado "multi-disciplinar" generalista y de baja calidad y la habilitación de hasta un 50% de cursada virtual, lo que reduce la interacción presencial.</li>
-                <li><strong>Sistema de Evaluación Docente (Res. 477/24):</strong> Se lo ve como un dispositivo burocrático para avanzar en el cierre de carreras e Institutos de Formación Docente, como parte de una política de ajuste.</li>
-            </ul>
-            
-            <h3>Críticas a las Reformas en CABA</h3>
-            <ul>
-                <li><strong>Plan Estratégico Buenos Aires Aprende:</strong> Se lo describe como un plan de reforma educativa y laboral con una visión mercantilista, enfocado en competencias y transformación digital al servicio de corporaciones.</li>
-                <li><strong>Diseño Curricular Primaria:</strong> Se critica el foco en "capacidades" para "vivir y trabajar en un mundo global", y la incorporación de "bienestar socioemocional" como un "gerenciamiento de la subjetividad".</li>
-                <li><strong>Diseño Curricular Secundaria (Plan Secundaria Aprende):</strong> Se denuncia una reforma laboral que implicaría una reducción de docentes por escuela (40-50% de la POF), sobreexplotación laboral para quienes tomen más horas, y cese de interinos y suplentes. Se critica la eliminación de materias específicas, fusionándolas en "áreas", lo que empobrece el contenido y dificulta el acceso a la educación superior. El regreso a la virtualidad (30-50%) profundizaría la desigualdad.</li>
-                <li><strong>Reforma de Planes de Formación Docente:</strong> Se critica la tendencia a una formación "interareal" con más espacios generalistas (Digital, Socioemocional) y menos formación disciplinar específica, además de avanzar hacia la hibridación.</li>
-                <li><strong>Falsas Titularizaciones en Superior (Res. 2091/24):</strong> Se señala que no es una titularización real sino una "contratación a término" por 5 años, que va en contra del Estatuto Docente y el derecho a la estabilidad laboral.</li>
-            </ul>
-        </section>
+        <article id="capitulo9" class="content-section">
+            <header>
+                <h1>9. Algunas críticas a las reformas</h1>
+            </header>
+            <main>
+                <section>
+                    <blockquote>
+                        <p>"Allí donde los profesores entran de hecho en el debate, son objeto de reformas educativas que los reducen a la categoría de técnicos superiores encargados de llevar a cabo dictámenes y objetivos decididos por expertos totalmente ajenos a las realidades cotidianas de la vida del aula."</p>
+                        <footer>— Giroux, H (1990) Los profesores como intelectuales. Barcelona, Paidós.</footer>
+                    </blockquote>
+                    <div class="critica">
+                        <h4>Crítica general a las Reformas Educativas</h4>
+                        <p>Las reformas, tanto a nivel nacional como en CABA, son vistas como una transformación que conduce a la pauperización de la formación estudiantil. Se critica una "impronta generalista" (aprender lo básico) que iría en detrimento de la construcción de conocimiento y pensamiento crítico. Los contenidos que se priorizan, como la educación socioemocional y la educación digital, son interpretados como herramientas para el control, la adaptación pasiva y el ajuste económico.</p>
+                    </div>
+                </section>
+            </main>
+        </article>
 
-    </main>
+        <!-- PIE DE PÁGINA COMÚN A TODOS -->
+        <footer>
+            <p>Curso basado en el documento "La escuela hoy".</p>
+        </footer>
 
-    <footer>
-        <p>Mini-curso "La escuela hoy" | Contenido extraído de documentos de dominio público.</p>
-    </footer>
+    </div>
+
+    <!-- SCRIPT DE JAVASCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarLinks = document.querySelectorAll('.sidebar nav a');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevenir comportamiento por defecto del link
+
+                    const targetId = this.getAttribute('data-target');
+
+                    // Ocultar todas las secciones de contenido
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+
+                    // Mostrar la sección de contenido correcta
+                    document.getElementById(targetId).classList.add('active');
+
+                    // Actualizar el estado activo en el menú
+                    sidebarLinks.forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>
