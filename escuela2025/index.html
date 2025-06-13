@@ -59,20 +59,22 @@
         margin: 0;
     }
     .sidebar nav a {
-        cursor: pointer;
-        display: block;
-        color: var(--primary-color);
-        padding: 8px 10px;
-        text-decoration: none;
-        border-radius: 6px;
-        margin-bottom: 0.1rem;
-        font-size: 1rem;
-        font-weight: 500;
-        text-align: left;  /* Alineado a la izquierda, no justificado */
-        transition: background-color 0.2s, color 0.2s;
-        letter-spacing: 0.1px;
-        white-space: normal; /* Permite saltos de línea si es necesario */
-        line-height: 1.35;
+    cursor: pointer;
+    display: block;
+    color: var(--primary-color);
+    padding: 3px 8px;      /* Más compacto arriba/abajo y costados */
+    text-decoration: none;
+    border-radius: 6px;
+    margin-bottom: 0;      /* Sin separación extra */
+    font-size: 0.93rem;    /* Tipografía un poco más chica */
+    font-weight: 500;
+    text-align: left;
+    transition: background-color 0.2s, color 0.2s;
+    letter-spacing: 0.02em;/* Menos espacio entre letras */
+    white-space: normal;
+    line-height: 1.1;      /* Más apretado */
+}
+
     }
     .sidebar nav a:hover {
         background-color: #d0e8d0;
