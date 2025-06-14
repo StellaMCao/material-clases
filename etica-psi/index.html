@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de ética en la docencia de Psicología</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Librerías para generar el PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .question-card { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1.5rem; background-color: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .option-label { display: block; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; margin-bottom: 0.5rem; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+        .option-label:hover { background-color: #f1f5f9; }
+        .option-label input[type="checkbox"]:checked + span { font-weight: 600; color: #2563eb; }
+        .option-label input[type="checkbox"] { margin-right: 0.75rem; accent-color: #2563eb; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-weight: 600; transition: background-color 0.2s; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-primary { background-color: #2563eb; color: white; }
+        .btn-primary:hover { background-color: #1d4ed8; }
+        .btn-secondary { background-color: #64748b; color: white; }
+        .btn-secondary:hover { background-color: #475569; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; font-size: 1.2em; color: #1d4ed8; }
+        summary::-webkit-details-marker { display: none; }
+        summary::marker { display: none; }
+        #diagnosticsArea h3 { color: #1d4ed8; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div id="loadingOverlay" class="loading-overlay hidden">Cargando...</div>
+
+    <div id="app-container" class="w-full max-w-3xl bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Reflexionando sobre nuestras decisiones éticas en el aula</h1>
+            <p class="text-gray-600 mt-2">Test de ética en la docencia de Psicología – Nivel medio</p>
+        </header>
+
+        <section id="name-section" class="text-center">
+            <label for="userName" class="block text-lg font-medium text-gray-700 mb-2">Nombre del docente:</label>
+            <input type="text" id="userName" class="w-full max-w-md mx-auto p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Ingresa tu nombre para el informe">
+            <button id="startQuizBtn" class="btn btn-primary mt-6">Comenzar test</button>
+        </section>
+
+        <section id="quiz-section" class="hidden">
+            <h2 id="currentUserDisplay" class="text-xl font-semibold text-gray-700 mb-6 text-center"></h2>
+            <p class="text-center text-gray-500 mb-6">Leé cada situación y elegí la o las opciones que más se acerquen a lo que harías. No hay respuestas correctas o incorrectas.</p>
+            <form id="quizForm"></form>
+            <button id="submitQuizBtn" class="btn btn-primary w-full mt-8">Finalizar y ver resultados</button>
+        </section>
+
+        <section id="results-section" class="hidden mt-8">
+            <h2 id="resultsTitle" class="text-2xl font-bold text-gray-800 mb-6 text-center"></h2>
+            <div id="diagnosticsArea" class="space-y-8 border p-6 rounded-lg bg-slate-50">
+                <!-- Los resultados se insertarán aquí -->
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
+                 <button id="printResultsBtn" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v6a2 2 0 002 2h12a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg>
+                    Descargar resultados en PDF
+                </button>
+                <button id="restartQuizBtn" class="btn btn-secondary">Realizar el test nuevamente</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const questions = [ { id: "q1", text: "Una alumna que suele participar activamente hoy está ausente en un examen importante. Sabés que tiene problemas familiares graves. ¿Qué harías?", options: [{ text: "Le doy otra instancia porque su situación merece comprensión.", value: "cuidado_post" },{ text: "No le permito otra instancia, la normativa es clara.", value: "deber_conv" },{ text: "Analizo qué opción puede ayudar más a su trayectoria futura.", value: "consecuencias" },{ text: "No me involucro, no es mi responsabilidad personal.", value: "preconvencional" }] }, { id: "q2", text: "Al corregir trabajos, detectás que varios alumnos copiaron contenidos de Internet. ¿Cómo reaccionás?", options: [{ text: "Dialogo con ellos para que comprendan por qué esto es un problema ético y académico.", value: "cuidado_post" },{ text: "Los desapruebo automáticamente según el reglamento.", value: "deber_conv" },{ text: "Veo si hay casos particulares que ameriten comprehension y busco una respuesta diferenciada.", value: "cuidado_post" },{ text: "No actúo porque no quiero conflictos con las familias.", value: "preconvencional" }] }, { id: "q3", text: "Un estudiante trans solicita ser nombrado por su nombre autopercibido, aunque en el sistema figura el nombre registral. ¿Qué hacés?", options: [{ text: "Respeto su identidad y uso su nombre autopercibido.", value: "cuidado_post" },{ text: "Cumplo con lo que dice el sistema oficial.", value: "deber_conv" },{ text: "Evalúo el contexto y priorizo el bienestar del estudiante.", value: "consecuencias" },{ text: "Me mantengo al margen para no comprometerme.", value: "preconvencional" }] }, { id: "q4", text: "Notás que en las clases predominan las voces de algunos alumnos, mientras otros no participan. ¿Qué hacés?", options: [{ text: "Propongo estrategias para fomentar la participación equitativa.", value: "cuidado_post" },{ text: "Mantengo la dinámica, no es mi tarea forzar la participación.", value: "preconvencional" },{ text: "Actúo solo si la dirección me lo solicita.", value: "deber_conv" },{ text: "Busco una metodología que favorezca más el aprendizaje de todos.", value: "consecuencias" }] }, { id: "q5", text: "Te ofrecen dar contenido adicional en un taller extracurricular pago, pero algunos alumnos no podrían pagarlo. ¿Qué decidís?", options: [{ text: "No acepto si la propuesta no garantiza la participación gratuita de todos.", value: "cuidado_post" },{ text: "Acepto, es un espacio fuera del aula formal.", value: "consecuencias" },{ text: "Cumplo con la normativa del colegio sobre talleres.", value: "deber_conv" },{ text: "Acepto sin plantear nada, es una oportunidad para mí.", value: "preconvencional" }] }, { id: "q6", text: "Un colega propone aplicar un examen que considerás poco pertinente para el nivel de tus alumnos. ¿Cómo respondés?", options: [{ text: "Planteo mis objeciones y propongo alternativas.", value: "cuidado_post" },{ text: "Acepto la propuesta porque es el procedimiento establecido.", value: "deber_conv" },{ text: "Busco el modo de minimizar el impacto negativo en los alumnos.", value: "consecuencias" },{ text: "No opino, para evitar confrontaciones.", value: "preconvencional" }] }, { id: "q7", text: "Durante una actividad grupal, un alumno se siente excluido por sus compañeros. ¿Qué hacés?", options: [{ text: "Intervengo para promover el respeto y la inclusión.", value: "cuidado_post" },{ text: "No intervengo, es parte de la dinámica grupal.", value: "preconvencional" },{ text: "Sigo el protocolo institucional para situaciones de acoso.", value: "deber_conv" },{ text: "Evalúo si intervenir puede realmente mejorar la situación.", value: "consecuencias" }] }, { id: "q8", text: "Tenés que elegir entre dedicar más tiempo a la enseñanza de teorías clásicas o a temas de Psicología vinculados con los intereses actuales de los alumnos. ¿Qué priorizás?", options: [{ text: "Prioritariamente los temas que fortalezcan su desarrollo como sujetos críticos.", value: "cuidado_post" },{ text: "Cumplo estrictamente con el diseño curricular.", value: "deber_conv" },{ text: "Busco un equilibrio que motive y enseñe los contenidos esenciales.", value: "consecuencias" },{ text: "Me centro en los temas que sean más fáciles de evaluar.", value: "preconvencional" }] }, { id: "q9", text: "Un estudiante expresa públicamente opiniones discriminatorias en clase. ¿Qué hacés?", options: [{ text: "Abro un espacio de reflexión y marco límites claros.", value: "cuidado_post" },{ text: "No intervengo, para no generar conflictos.", value: "preconvencional" },{ text: "Aplico el protocolo institucional.", value: "deber_conv" },{ text: "Busco el modo más efectivo de promover un cambio en su actitud.", value: "consecuencias" }] }, { id: "q10", text: "La carga administrativa y las exigencias institucionales te están agotando. ¿Cómo actuás?", options: [{ text: "Reflexiono sobre mis límites y busco apoyo institucional.", value: "cuidado_post" },{ text: "Cumplo con todo aunque me afecte personalmente.", value: "deber_conv" },{ text: "Selecciono las tareas prioritarias para sostener la calidad de la enseñanza.", value: "consecuencias" },{ text: "Dejo de hacer lo que más me agota, sin comunicarlo.", value: "preconvencional" }] }];
+        const categoryDetails = { cuidado_post: { name: "Ética del cuidado / Postconvencional", explanation: "Este enfoque prioriza el bienestar, la empatía y las relaciones interpersonales. Las decisiones se basan en principios éticos universales (justicia, dignidad, derechos) que pueden trascender las normas establecidas si estas perjudican a alguien. Se enfoca en el contexto particular de cada individuo.", interpretation: { fortaleza: "Muestras una alta sensibilidad hacia las necesidades individuales, la dignidad y el contexto de cada estudiante. Tus decisiones se orientan por principios éticos universales como la justicia, la equidad y el fomento de un pensamiento crítico y autónomo.", desarrollo: "El desafío principal es equilibrar esta mirada empática con las normativas institucionales para garantizar la equidad en el trato grupal. La comunicación transparente de tus decisiones es clave cuando una situación particular requiere una medida excepcional.", } }, deber_conv: { name: "Ética del deber / Convencional", explanation: "Las decisiones se guían por el respeto a las normas, reglas y leyes establecidas por la institución o la sociedad. El foco está en mantener el orden, cumplir con las responsabilidades formales y tratar a todos por igual bajo el mismo reglamento. Se valora la consistencia y la imparcialidad.", interpretation: { fortaleza: "Valoras la consistencia, la imparcialidad y el respeto por las normas y reglamentos establecidos. Este enfoque proporciona un marco de referencia claro y predecible para los estudiantes, promoviendo un sentido de orden e igualdad formal.", desarrollo: "Una adhesión muy estricta a la norma podría, en ocasiones, dificultar la consideración de situaciones personales complejas que demandan una respuesta más flexible. El reto es saber cuándo la norma debe aplicarse y cuándo debe ser interpretada a la luz de un bien mayor.", } }, consecuencias: { name: "Ética de las consecuencias", explanation: "También conocida como consecuencialismo o utilitarismo, esta perspectiva evalúa la moralidad de una acción en función de sus resultados. Se busca la opción que produzca el mayor bien para el mayor número de personas, o que minimice los daños. Es un enfoque pragmático y flexible.", interpretation: { fortaleza: "Tu enfoque es pragmático y orientado a resultados, buscando siempre la acción que genere el mayor bienestar o el menor impacto negativo para la mayoría. Esta flexibilidad te permite adaptarte y encontrar soluciones eficientes en escenarios complejos.", desarrollo: "El foco en el resultado práctico podría, a veces, llevar a decisiones que, si bien son efectivas a corto plazo, podrían no alinearse completamente con principios éticos fundamentales (como la justicia para una minoría) o con el deber profesional.", } }, preconvencional: { name: "Preconvencional", explanation: "En este nivel, las decisiones éticas se basan principalmente en el interés propio. Se busca evitar el castigo, obtener una recompensa o eludir un conflicto. Las normas se siguen por conveniencia personal, no por un convencimiento interno sobre su valor.", interpretation: { fortaleza: "Priorizas la evitación de conflictos y la autoprotección, lo que puede ser una estrategia funcional para navegar entornos laborales muy demandantes o con poca contención institucional.", desarrollo: "El desafío es trascender la conveniencia personal para asumir un rol activo en la resolución de problemas, incluso cuando implica una incomodidad o un esfuerzo adicional.", } } };
+        
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const nameSection = document.getElementById('name-section');
+        const quizSection = document.getElementById('quiz-section');
+        const resultsSection = document.getElementById('results-section');
+        const userNameInput = document.getElementById('userName');
+        const startQuizBtn = document.getElementById('startQuizBtn');
+        const submitQuizBtn = document.getElementById('submitQuizBtn');
+        const quizForm = document.getElementById('quizForm');
+        const currentUserDisplay = document.getElementById('currentUserDisplay');
+        const resultsTitle = document.getElementById('resultsTitle');
+        const diagnosticsArea = document.getElementById('diagnosticsArea');
+        const printResultsBtn = document.getElementById('printResultsBtn');
+        const restartQuizBtn = document.getElementById('restartQuizBtn');
+        let currentUser = "";
+        let lastUserResponses = []; // Almacenar las respuestas para el PDF
+
+        function showLoading(message = "Cargando...") { loadingOverlay.textContent = message; loadingOverlay.classList.remove('hidden'); }
+        function hideLoading() { loadingOverlay.classList.add('hidden'); }
+        function initApp() { nameSection.classList.remove('hidden'); quizSection.classList.add('hidden'); resultsSection.classList.add('hidden'); userNameInput.value = ""; quizForm.innerHTML = ""; diagnosticsArea.innerHTML = ""; }
+        function formatCategoryName(name) { const parts = name.split(' / '); return parts.length > 1 ? `${parts[0]} / ${parts[1].toLowerCase()}` : parts[0]; }
+        startQuizBtn.addEventListener('click', () => { currentUser = userNameInput.value.trim(); if (!currentUser) { alert("Por favor, ingresa tu nombre para personalizar el informe."); return; } nameSection.classList.add('hidden'); showLoading("Preparando test..."); currentUserDisplay.textContent = `Respondiendo como: ${currentUser}`; loadQuestions(); quizSection.classList.remove('hidden'); hideLoading(); });
+        function loadQuestions() { quizForm.innerHTML = ""; questions.forEach((q, index) => { const questionDiv = document.createElement('div'); questionDiv.className = 'question-card'; questionDiv.innerHTML = `<p class="text-lg font-semibold text-gray-700 mb-4">${index + 1}. ${q.text}</p>`; const optionsContainer = document.createElement('div'); q.options.forEach(opt => { const label = document.createElement('label'); label.className = 'option-label'; label.innerHTML = `<input type="checkbox" name="${q.id}" value="${opt.value}" data-optiontext="${opt.text}"><span>${opt.text}</span>`; optionsContainer.appendChild(label); }); questionDiv.appendChild(optionsContainer); quizForm.appendChild(questionDiv); }); }
+        
+        submitQuizBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const formData = new FormData(quizForm);
+            lastUserResponses = []; // Limpiar respuestas anteriores
+            let allAnswered = true;
+            for (const q of questions) {
+                const selectedValues = formData.getAll(q.id);
+                if (selectedValues.length === 0) { allAnswered = false; break; }
+                const selectedOptions = selectedValues.map(value => ({ value, text: q.options.find(opt => opt.value === value).text }));
+                lastUserResponses.push({ questionId: q.id, questionText: q.text, selectedOptions });
+            }
+            if (!allAnswered) { alert("Por favor, responde al menos una opción en todas las preguntas."); return; }
+            showLoading("Calculando resultados...");
+            displayDetailedResults(currentUser, lastUserResponses);
+            quizSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            hideLoading();
+        });
+
+        function generateNuancedInterpretation(percentages) {
+            const sortedProfiles = Object.keys(percentages).map(key => ({ key, value: percentages[key] })).sort((a, b) => b.value - a.value);
+            const dominantProfile = sortedProfiles[0];
+            const secondaryProfiles = sortedProfiles.slice(1).filter(p => p.value > 25);
+            let fortalezas = `<p class="mb-2">${categoryDetails[dominantProfile.key].interpretation.fortaleza}</p>`;
+            let desarrollo = `<p class="mb-2">${categoryDetails[dominantProfile.key].interpretation.desarrollo}</p>`;
+            secondaryProfiles.forEach(profile => {
+                const secondaryProfileName = formatCategoryName(categoryDetails[profile.key].name).toLowerCase();
+                const secondaryFortaleza = categoryDetails[profile.key].interpretation.fortaleza;
+                const secondaryDesarrollo = categoryDetails[profile.key].interpretation.desarrollo;
+                fortalezas += `<p class="mt-3 text-sm text-gray-700"><strong>Adicionalmente, tu inclinación por la ${secondaryProfileName}</strong> sugiere que ${secondaryFortaleza.charAt(0).toLowerCase() + secondaryFortaleza.slice(1)}</p>`;
+                desarrollo += `<p class="mt-3 text-sm text-gray-700"><strong>Por otro lado, el desafío asociado a tu inclinación por la ${secondaryProfileName}</strong> es que ${secondaryDesarrollo.charAt(0).toLowerCase() + secondaryDesarrollo.slice(1)}</p>`;
+            });
+            return { fortalezas, area_desarrollo: desarrollo, sugerencia: "La práctica ética más rica suele surgir del diálogo consciente entre estos diferentes enfoques. Te invitamos a reflexionar sobre cómo tus tendencias dominantes y secundarias interactúan en tu día a día, y cómo podés potenciarlas para tomar decisiones cada vez más integrales y fundadas." };
+        }
+
+        function displayDetailedResults(userName, responses) {
+            resultsTitle.textContent = `Informe de reflexión ética para ${userName}`;
+            const counts = { cuidado_post: 0, deber_conv: 0, consecuencias: 0, preconvencional: 0 };
+            responses.forEach(r => r.selectedOptions.forEach(opt => { if (counts.hasOwnProperty(opt.value)) counts[opt.value]++; }));
+            const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+            if (total === 0) { diagnosticsArea.innerHTML = "<p>No se han seleccionado opciones válidas.</p>"; return; }
+            const percentages = {};
+            for (const key in counts) percentages[key] = Math.round((counts[key] / total) * 100);
+            const interpretation = generateNuancedInterpretation(percentages);
+            diagnosticsArea.innerHTML = `
+                <div id="reportForPdf">
+                    <div style="margin-bottom: 1rem;">
+                        <h3 class="text-xl font-semibold mb-3">Para comprender tus resultados: breve guía de los enfoques éticos</h3>
+                        <div class="space-y-3 text-sm">${Object.keys(categoryDetails).map(key => `<div class="p-3 bg-white border border-gray-200 rounded-lg"><p><strong>${formatCategoryName(categoryDetails[key].name)}:</strong> ${categoryDetails[key].explanation}</p></div>`).join('')}</div>
+                    </div>
+                    <div style="margin-bottom: 1rem; padding-top: 1.5rem; border-top: 2px solid #e5e7eb;">
+                        <h3 class="text-xl font-semibold text-center mb-1">Tu perfil ético docente</h3>
+                        <p class="text-center text-sm text-gray-500 mb-4">(Los porcentajes se calculan sobre el total de opciones que marcaste)</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">${Object.keys(percentages).map(key => `<div class="p-3 bg-white rounded-lg border"><p class="font-medium text-gray-800">${formatCategoryName(categoryDetails[key].name)}:</p><div class="flex items-center"><div class="w-full bg-gray-200 rounded-full h-2.5 mr-2"><div class="bg-blue-600 h-2.5 rounded-full" style="width: ${percentages[key]}%"></div></div><span class="font-bold text-blue-700">${percentages[key]}%</span></div></div>`).join('')}</div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <h3 class="text-xl font-semibold mt-2 mb-2">Interpretación detallada</h3>
+                        <div class="space-y-4"><div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg"><h4 class="font-bold text-green-800">Fortalezas</h4><div class="text-green-700">${interpretation.fortalezas}</div></div><div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg"><h4 class="font-bold text-yellow-800">Área de desarrollo</h4><div class="text-yellow-700">${interpretation.area_desarrollo}</div></div><div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg"><h4 class="font-bold text-blue-800">Sugerencia</h4><p class="text-blue-700">${interpretation.sugerencia}</p></div></div>
+                    </div>
+                    <div>
+                        <details id="answers-details" class="mt-8" open><summary class="text-gray-700 cursor-pointer font-medium hover:text-blue-600 inline-flex items-center"><span class="mr-1">Tus respuestas detalladas</span><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></summary><div class="list-disc pl-5 mt-3 text-sm text-gray-600 space-y-3 border-t pt-4">${lastUserResponses.map((r, index) => `<div><strong>Pregunta ${index + 1}:</strong> ${r.questionText}<br><ul class="list-disc pl-5 mt-1">${r.selectedOptions.map(opt => `<li><em class="text-blue-600">${opt.text}</em></li>`).join('')}</ul></div>`).join('')}</div></details>
+                    </div>
+                </div>`;
+        }
+
+        // --- FUNCIÓN DE PDF NATIVA, CONTROLADA Y CON MÁRGENES CORREGIDOS ---
+        printResultsBtn.addEventListener('click', () => {
+            showLoading("Generando PDF profesional...");
+            try {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+                // --- CONSTANTES Y VARIABLES DE CONTROL ---
+                const MARGIN = 18; // Margen más generoso
+                const PAGE_WIDTH = pdf.internal.pageSize.getWidth();
+                const PAGE_HEIGHT = pdf.internal.pageSize.getHeight();
+                const CONTENT_WIDTH = PAGE_WIDTH - (MARGIN * 2);
+                const LINE_HEIGHT = 5;
+                let currentY = MARGIN;
+                
+                // --- DATOS NECESARIOS ---
+                const counts = { cuidado_post: 0, deber_conv: 0, consecuencias: 0, preconvencional: 0 };
+                lastUserResponses.forEach(r => r.selectedOptions.forEach(opt => { if (counts.hasOwnProperty(opt.value)) counts[opt.value]++; }));
+                const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+                const percentages = {};
+                for (const key in counts) percentages[key] = Math.round((counts[key] / total) * 100);
+                const interpretation = generateNuancedInterpretation(percentages);
+
+                const checkPageBreak = (heightNeeded) => {
+                    if (currentY + heightNeeded > PAGE_HEIGHT - MARGIN) {
+                        pdf.addPage();
+                        currentY = MARGIN;
+                    }
+                };
+                
+                // --- CONSTRUCCIÓN DEL PDF ---
+                pdf.setFontSize(16).setFont(undefined, 'bold');
+                pdf.text("Informe de Reflexión Ética", PAGE_WIDTH / 2, currentY, { align: 'center' });
+                currentY += 8;
+                pdf.setFontSize(12).setFont(undefined, 'normal');
+                pdf.text(`Docente: ${currentUser}`, PAGE_WIDTH / 2, currentY, { align: 'center' });
+                currentY += 10;
+                
+                pdf.setFontSize(14).setFont(undefined, 'bold');
+                checkPageBreak(10);
+                pdf.text("Para comprender tus resultados: breve guía de los enfoques éticos", MARGIN, currentY);
+                currentY += 8;
+                Object.values(categoryDetails).forEach(detail => {
+                    const title = formatCategoryName(detail.name);
+                    const explanation = detail.explanation;
+                    const explanationLines = pdf.splitTextToSize(explanation, CONTENT_WIDTH);
+                    const blockHeight = (explanationLines.length * LINE_HEIGHT) + 8;
+                    checkPageBreak(blockHeight);
+                    pdf.setFontSize(11).setFont(undefined, 'bold');
+                    pdf.text(title, MARGIN, currentY);
+                    currentY += LINE_HEIGHT + 1;
+                    pdf.setFontSize(10).setFont(undefined, 'normal');
+                    pdf.text(explanationLines, MARGIN, currentY);
+                    currentY += (explanationLines.length * LINE_HEIGHT) + 5;
+                });
+                
+                checkPageBreak(50);
+                currentY += 5;
+                pdf.line(MARGIN, currentY, PAGE_WIDTH - MARGIN, currentY);
+                currentY += 10;
+                pdf.setFontSize(14).setFont(undefined, 'bold');
+                pdf.text("Tu perfil ético docente", PAGE_WIDTH / 2, currentY, { align: 'center' });
+                currentY += 8;
+                
+                const barData = Object.keys(percentages).map(key => ({ label: formatCategoryName(categoryDetails[key].name), value: percentages[key] }));
+                const barHeight = 8;
+                const barSpacing = 15;
+                pdf.setFontSize(10);
+                barData.forEach(data => {
+                    checkPageBreak(barSpacing);
+                    pdf.setFont(undefined, 'bold').text(data.label, MARGIN, currentY);
+                    const percentText = `${data.value}%`;
+                    const textWidth = pdf.getTextWidth(percentText);
+                    pdf.setFont(undefined, 'normal').text(percentText, PAGE_WIDTH - MARGIN, currentY, { align: 'right' });
+                    currentY += 4;
+                    pdf.setFillColor(229, 231, 235);
+                    pdf.rect(MARGIN, currentY, CONTENT_WIDTH, barHeight, 'F');
+                    pdf.setFillColor(37, 99, 235);
+                    const filledWidth = (CONTENT_WIDTH * data.value) / 100;
+                    pdf.rect(MARGIN, currentY, filledWidth, barHeight, 'F');
+                    currentY += barHeight + 5;
+                });
+                
+                checkPageBreak(10);
+                currentY += 5;
+                pdf.setFontSize(14).setFont(undefined, 'bold');
+                pdf.text("Interpretación detallada", MARGIN, currentY);
+                currentY += 8;
+                const sections = [ { title: "Fortalezas", text: interpretation.fortalezas, color: [4, 120, 87] }, { title: "Área de desarrollo", text: interpretation.area_desarrollo, color: [217, 119, 6] }, { title: "Sugerencia", text: interpretation.sugerencia, color: [29, 78, 216] } ];
+                pdf.setFontSize(10);
+                sections.forEach(section => {
+                    const cleanText = section.text.replace(/<[^>]*>/g, '\n').replace(/\n+/g, '\n').trim();
+                    const textLines = pdf.splitTextToSize(cleanText, CONTENT_WIDTH - 5);
+                    const blockHeight = (textLines.length * LINE_HEIGHT) + 10;
+                    checkPageBreak(blockHeight);
+                    pdf.setDrawColor(section.color[0], section.color[1], section.color[2]);
+                    pdf.setLineWidth(1.5);
+                    pdf.line(MARGIN, currentY, MARGIN, currentY + blockHeight - 4);
+                    pdf.setFont(undefined, 'bold').text(section.title, MARGIN + 3, currentY);
+                    currentY += LINE_HEIGHT + 1;
+                    pdf.setFont(undefined, 'normal').text(textLines, MARGIN + 3, currentY);
+                    currentY += (textLines.length * LINE_HEIGHT) + 5;
+                });
+                
+                checkPageBreak(10);
+                currentY += 5;
+                pdf.line(MARGIN, currentY, PAGE_WIDTH - MARGIN, currentY);
+                currentY += 10;
+                pdf.setFontSize(14).setFont(undefined, 'bold');
+                pdf.text("Tus respuestas detalladas", MARGIN, currentY);
+                currentY += 8;
+                pdf.setFontSize(10);
+                lastUserResponses.forEach((r, index) => {
+                    const qText = `Pregunta ${index + 1}: ${r.questionText}`;
+                    const qLines = pdf.splitTextToSize(qText, CONTENT_WIDTH);
+                    let blockHeight = qLines.length * LINE_HEIGHT + 2;
+                    r.selectedOptions.forEach(opt => { blockHeight += pdf.splitTextToSize(`• ${opt.text}`, CONTENT_WIDTH - 5).length * LINE_HEIGHT; });
+                    checkPageBreak(blockHeight);
+                    pdf.setFont(undefined, 'bold').text(qLines, MARGIN, currentY);
+                    currentY += qLines.length * LINE_HEIGHT;
+                    pdf.setFont(undefined, 'normal');
+                    r.selectedOptions.forEach(opt => {
+                        const optLines = pdf.splitTextToSize(`• ${opt.text}`, CONTENT_WIDTH - 5);
+                        pdf.text(optLines, MARGIN + 5, currentY);
+                        currentY += optLines.length * LINE_HEIGHT;
+                    });
+                    currentY += 5;
+                });
+                
+                const totalPages = pdf.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+                    pdf.setFontSize(9);
+                    pdf.setTextColor(128);
+                    pdf.text(`Página ${i} de ${totalPages}`, PAGE_WIDTH / 2, PAGE_HEIGHT - 10, { align: 'center' });
+                }
+
+                pdf.save(`Resultados-Etica-${currentUser.replace(/\s+/g, '-')}.pdf`);
+
+            } catch (error) {
+                console.error("Error generando el PDF:", error);
+                alert("Hubo un error al generar el PDF. Por favor, revisa la consola para más detalles.");
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        restartQuizBtn.addEventListener('click', initApp);
+        initApp();
+    </script>
+</body>
+</html>
