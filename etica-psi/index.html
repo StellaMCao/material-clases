@@ -82,7 +82,7 @@
         const printResultsBtn = document.getElementById('printResultsBtn');
         const restartQuizBtn = document.getElementById('restartQuizBtn');
         let currentUser = "";
-        let lastUserResponses = []; // Almacenar las respuestas para el PDF
+        let lastUserResponses = []; 
 
         function showLoading(message = "Cargando...") { loadingOverlay.textContent = message; loadingOverlay.classList.remove('hidden'); }
         function hideLoading() { loadingOverlay.classList.add('hidden'); }
@@ -94,7 +94,7 @@
         submitQuizBtn.addEventListener('click', (e) => {
             e.preventDefault();
             const formData = new FormData(quizForm);
-            lastUserResponses = []; // Limpiar respuestas anteriores
+            lastUserResponses = []; 
             let allAnswered = true;
             for (const q of questions) {
                 const selectedValues = formData.getAll(q.id);
@@ -151,32 +151,31 @@
                         <div class="space-y-4"><div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg"><h4 class="font-bold text-green-800">Fortalezas</h4><div class="text-green-700">${interpretation.fortalezas}</div></div><div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg"><h4 class="font-bold text-yellow-800">Área de desarrollo</h4><div class="text-yellow-700">${interpretation.area_desarrollo}</div></div><div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg"><h4 class="font-bold text-blue-800">Sugerencia</h4><p class="text-blue-700">${interpretation.sugerencia}</p></div></div>
                     </div>
                     <div>
-                        <details id="answers-details" class="mt-8" open><summary class="text-gray-700 cursor-pointer font-medium hover:text-blue-600 inline-flex items-center"><span class="mr-1">Tus respuestas detalladas</span><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></summary><div class="list-disc pl-5 mt-3 text-sm text-gray-600 space-y-3 border-t pt-4">${lastUserResponses.map((r, index) => `<div><strong>Pregunta ${index + 1}:</strong> ${r.questionText}<br><ul class="list-disc pl-5 mt-1">${r.selectedOptions.map(opt => `<li><em class="text-blue-600">${opt.text}</em></li>`).join('')}</ul></div>`).join('')}</div></details>
+                        <!-- El 'details' ahora comienza cerrado por defecto -->
+                        <details id="answers-details" class="mt-8"><summary class="text-gray-700 cursor-pointer font-medium hover:text-blue-600 inline-flex items-center"><span class="mr-1">Ver tus respuestas detalladas</span><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></summary><div class="list-disc pl-5 mt-3 text-sm text-gray-600 space-y-3 border-t pt-4">${lastUserResponses.map((r, index) => `<div><strong>Pregunta ${index + 1}:</strong> ${r.questionText}<br><ul class="list-disc pl-5 mt-1">${r.selectedOptions.map(opt => `<li><em class="text-blue-600">${opt.text}</em></li>`).join('')}</ul></div>`).join('')}</div></details>
                     </div>
                 </div>`;
         }
 
-        // --- FUNCIÓN DE PDF NATIVA, CONTROLADA Y CON MÁRGENES CORREGIDOS ---
+        // --- FUNCIÓN DE PDF NATIVA Y ESTABLE, CON LÓGICA DE DESPLEGABLE ---
         printResultsBtn.addEventListener('click', () => {
             showLoading("Generando PDF profesional...");
             try {
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
-                // --- CONSTANTES Y VARIABLES DE CONTROL ---
-                const MARGIN = 18; // Margen más generoso
+                const MARGIN = 18;
                 const PAGE_WIDTH = pdf.internal.pageSize.getWidth();
                 const PAGE_HEIGHT = pdf.internal.pageSize.getHeight();
                 const CONTENT_WIDTH = PAGE_WIDTH - (MARGIN * 2);
                 const LINE_HEIGHT = 5;
                 let currentY = MARGIN;
                 
-                // --- DATOS NECESARIOS ---
                 const counts = { cuidado_post: 0, deber_conv: 0, consecuencias: 0, preconvencional: 0 };
                 lastUserResponses.forEach(r => r.selectedOptions.forEach(opt => { if (counts.hasOwnProperty(opt.value)) counts[opt.value]++; }));
                 const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
                 const percentages = {};
-                for (const key in counts) percentages[key] = Math.round((counts[key] / total) * 100);
+                for (const key in counts) percentages[key] = Math.round((total > 0 ? (counts[key] / total) * 100 : 0));
                 const interpretation = generateNuancedInterpretation(percentages);
 
                 const checkPageBreak = (heightNeeded) => {
@@ -186,7 +185,6 @@
                     }
                 };
                 
-                // --- CONSTRUCCIÓN DEL PDF ---
                 pdf.setFontSize(16).setFont(undefined, 'bold');
                 pdf.text("Informe de Reflexión Ética", PAGE_WIDTH / 2, currentY, { align: 'center' });
                 currentY += 8;
@@ -228,7 +226,6 @@
                     checkPageBreak(barSpacing);
                     pdf.setFont(undefined, 'bold').text(data.label, MARGIN, currentY);
                     const percentText = `${data.value}%`;
-                    const textWidth = pdf.getTextWidth(percentText);
                     pdf.setFont(undefined, 'normal').text(percentText, PAGE_WIDTH - MARGIN, currentY, { align: 'right' });
                     currentY += 4;
                     pdf.setFillColor(229, 231, 235);
