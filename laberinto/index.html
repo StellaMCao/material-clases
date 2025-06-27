@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Laberinto de la ESNU: Un Juego de Análisis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Playfair+Display&display=swap" rel="stylesheet">
+  <style>
+    body {
+        font-family: 'Merriweather', serif;
+        line-height: 1.8;
+        margin: 0;
+        background-color: #eef2f7;
+        color: #333;
+        padding: 20px;
+        overflow-x: hidden;
+    }
+    .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        background: #ffffff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        min-height: 60vh;
+    }
+    header {
+        text-align: center;
+        margin-bottom: 50px;
+        border-bottom: 3px solid #4a148c;
+        padding-bottom: 25px;
+    }
+    h1 {
+        color: #4a148c;
+        font-family: 'Playfair Display', serif;
+        font-size: 2.8em;
+        margin-bottom: 0.4em;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        text-transform: uppercase;
+    }
+    h2 {
+        color: #673ab7;
+        font-size: 2em;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #b39ddb;
+        padding-bottom: 8px;
+    }
+    h3 {
+        color: #9575cd;
+        font-size: 1.6em;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-bottom: 1px dotted #d1c4e9;
+        padding-bottom: 6px;
+    }
+    .nav-button {
+        background-color: #7e57c2;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        margin: 0 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease;
+    }
+    .nav-button:hover {
+        background-color: #5e35b1;
+    }
+    footer {
+        text-align: center;
+        margin-top: 50px;
+        padding-top: 25px;
+        border-top: 2px solid #e1bee7;
+        font-size: 0.95em;
+        color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>el laberinto de la ESNU</h1>
+      <h2>Un juego interactivo de análisis</h2>
+      <p><strong>Seminario de Problemáticas Nivel Superior</strong></p>
+    </header>
+
+    <div id="start-screen">
+      <h2>¡Bienvenido/a a la aventura de análisis!</h2>
+      <p>Este juego te guiará paso a paso en la tarea de analizar una problemática de la Educación Superior No Universitaria (ESNU)...</p>
+      <button id="start-button" class="nav-button">Comenzar el Juego</button>
+    </div>
+
+    <div id="mission-container"></div>
+
+    <div id="completion-screen">
+      <h2>¡Misiones completadas!</h2>
+      <p id="final-score-message"></p>
+      <div class="navigation-buttons">
+        <button class="nav-button" onclick="copyResultsToClipboard()">Copiar Resultados (Borrador)</button>
+        <button class="nav-button" onclick="exportPDF()">Exportar como PDF (Imprimir)</button>
+      </div>
+      <p><small>Recordá que la opción "Exportar como PDF" usa la impresora
+  const missions = [
+    {
+      id: "mission-1",
+      title: "Misión 1: Trazando el mapa inicial",
+      content: `
+        <div class="mission-content">
+          <p>Tu primera tarea es definir claramente la problemática que vas a trabajar.</p>
+          <textarea id="input-m1-p1" placeholder="Escribí tu problemática..."></textarea>
+        </div>
+      `
+    },
+    {
+      id: "mission-2",
+      title: "Misión 2: Explorando el terreno",
+      content: `
+        <div class="mission-content">
+          <p>Ahora vas a profundizar en el contexto y manifestaciones de la problemática.</p>
+          <textarea id="input-m2-p1" placeholder="Describí el contexto..."></textarea>
+        </div>
+      `
+    },
+    {
+      id: "mission-3",
+      title: "Misión 3: DAFO",
+      content: `
+        <div class="mission-content">
+          <p>Completá tu análisis DAFO.</p>
+          <textarea id="input-m3-p1" placeholder="Debilidades..."></textarea>
+          <textarea id="input-m3-p2" placeholder="Amenazas..."></textarea>
+          <textarea id="input-m3-p3" placeholder="Fortalezas..."></textarea>
+          <textarea id="input-m3-p4" placeholder="Oportunidades..."></textarea>
+        </div>
+      `
+    }
+  ];
+
+  let currentMissionIndex = 0;
+  let missionData = {};
+  let totalScoreFields = 0;
+  let startScreen, missionContainer, completionScreen, startButton, printableContent;
+
+  function calculateTotalFields() {
+    let total = 0;
+    missions.forEach(m => {
+      const temp = document.createElement('div');
+      temp.innerHTML = m.content;
+      total += temp.querySelectorAll('textarea').length;
+    });
+    totalScoreFields = total;
+  }
+
+  function loadMission(index) {
+    saveCurrentMission();
+    currentMissionIndex = index;
+
+    if (index >= missions.length) {
+      missionContainer.style.display = 'none';
+      completionScreen.style.display = 'block';
+      updateCompletionScore();
+      return;
+    }
+
+    const mission = missions[index];
+    missionContainer.innerHTML = `
+      <div class="mission">
+        <h3>${mission.title}</h3>
+        ${mission.content}
+        <div class="navigation-buttons">
+          <button class="nav-button" onclick="prevMission()" ${index === 0 ? 'disabled' : ''}>Anterior</button>
+          <button class="nav-button" onclick="nextMission()">${index === missions.length - 1 ? 'Finalizar' : 'Siguiente'}</button>
+        </div>
+      </div>
+    `;
+
+    const textareas = missionContainer.querySelectorAll('textarea');
+    textareas.forEach(textarea => {
+      if (missionData[textarea.id]) {
+        textarea.value = missionData[textarea.id];
+      }
+    });
+  }
+
+  function saveCurrentMission() {
+    const current = missionContainer.querySelectorAll('textarea');
+    current.forEach(t => {
+      missionData[t.id] = t.value;
+    });
+  }
+
+  function nextMission() {
+    loadMission(currentMissionIndex + 1);
+  }
+
+  function prevMission() {
+    loadMission(currentMissionIndex - 1);
+  }
+
+  function copyResultsToClipboard() {
+    saveCurrentMission();
+    const text = Object.entries(missionData)
+      .map(([id, val]) => `${id}:\n${val}\n`)
+      .join("\n");
+
+    const temp = document.createElement("textarea");
+    temp.value = text;
+    document.body.appendChild(temp);
+    temp.select();
+    try {
+      document.execCommand("copy");
+      alert("¡Copiado al portapapeles!");
+    } catch {
+      alert("No se pudo copiar.");
+    }
+    document.body.removeChild(temp);
+  }
+
+  function exportPDF() {
+    saveCurrentMission();
+    window.print();
+  }
+
+  function updateCompletionScore() {
+    const filled = Object.values(missionData).filter(v => v.trim() !== "").length;
+    const msg = document.getElementById("final-score-message");
+    if (msg) msg.innerHTML = `Completaste <strong>${filled}</strong> de <strong>${totalScoreFields}</strong> campos.`;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    startScreen = document.getElementById("start-screen");
+    missionContainer = document.getElementById("mission-container");
+    completionScreen = document.getElementById("completion-screen");
+    startButton = document.getElementById("start-button");
+    printableContent = document.getElementById("printable-content");
+
+    calculateTotalFields();
+    updateCompletionScore();
+
+    startButton.addEventListener("click", () => {
+      startScreen.style.display = "none";
+      missionContainer.style.display = "block";
+      loadMission(0);
+    });
+  });
+</script>
+  </div> <!-- cierre de .container -->
+
+  <footer>
+    <p>Seminario de Problemáticas Nivel Superior</p>
+    <p><small>Este juego guía está pensado como una herramienta de análisis para el trabajo final. Consultá con tu docente si tenés dudas o querés compartir avances.</small></p>
+  </footer>
+
+</body>
+</html>
