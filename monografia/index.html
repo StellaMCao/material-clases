@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>La Aventura de la Monografía Exitosa</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f7f6;
+      color: #333;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 1em;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    button {
+      background-color: #27ae60;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1em;
+      display: block;
+      margin: 20px auto;
+    }
+    button:hover {
+      background-color: #1e8449;
+    }
+    #finalOutput {
+      background: #f0fdfc;
+      border: 1px solid #b2dfdb;
+      border-radius: 5px;
+      padding: 15px;
+      margin-top: 20px;
+      font-family: Consolas, monospace;
+      white-space: pre-wrap;
+    }
+    #previewOutput {
+      background: #fffefc;
+      border: 1px dashed #ccc;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+    .copy-feedback {
+      text-align: center;
+      color: green;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>La Aventura de la Monografía Exitosa</h1>
+    <p>Completá el contenido abajo, generá el proyecto y visualizalo con formato.</p>
+    
+    <textarea id="contenidoInput" placeholder="Ej: **Título**\n\n*   Idea 1\n*   Idea 2\n\nTexto plano con *negritas* en Markdown."></textarea>
+    
+    <button onclick="generarProyecto()">Generar y Copiar Proyecto</button>
+    
+    <div id="finalOutput" readonly></div>
+    <div id="previewOutput"></div>
+    
+    <div class="copy-feedback" id="copyFeedback"></div>
+  </div>
+
+  <script>
+    function generarProyecto() {
+      const input = document.getElementById("contenidoInput").value;
+      const markdown = input.trim() || "**[Sin contenido ingresado]**";
+
+      document.getElementById("finalOutput").textContent = markdown;
+      renderPreview(markdown);
+      copyToClipboard(markdown);
+    }
+
+    function renderPreview(md) {
+      let html = md
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*   (.+)/g, "<li>$1</li>")
+        .replace(/(?:^|\n)(\*   .+(\n\*   .+)*)/g, match => "<ul>" + match.replace(/\*   /g, "").split("\n").map(item => `<li>${item}</li>`).join("") + "</ul>")
+        .replace(/\n/g, "<br>");
+      
+      document.getElementById("previewOutput").innerHTML = html;
+    }
+
+    async function copyToClipboard(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showFeedback("✅ ¡Copiado al portapapeles!");
+      } catch {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        showFeedback("✅ ¡Copiado con método alternativo!");
+      }
+    }
+
+    function showFeedback(msg) {
+      const feedback = document.getElementById("copyFeedback");
+      feedback.textContent = msg;
+      setTimeout(() => feedback.textContent = "", 3000);
+    }
+  </script>
+</body>
+</html>
