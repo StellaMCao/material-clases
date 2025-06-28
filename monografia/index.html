@@ -1,129 +1,474 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>La Aventura de la Monografía Exitosa</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f4f7f6;
-      color: #333;
-    }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-    h1, h2 {
-      text-align: center;
-    }
-    textarea {
-      width: 100%;
-      min-height: 100px;
-      margin: 10px 0;
-      padding: 10px;
-      font-size: 1em;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    button {
-      background-color: #27ae60;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1.1em;
-      display: block;
-      margin: 20px auto;
-    }
-    button:hover {
-      background-color: #1e8449;
-    }
-    #finalOutput {
-      background: #f0fdfc;
-      border: 1px solid #b2dfdb;
-      border-radius: 5px;
-      padding: 15px;
-      margin-top: 20px;
-      font-family: Consolas, monospace;
-      white-space: pre-wrap;
-    }
-    #previewOutput {
-      background: #fffefc;
-      border: 1px dashed #ccc;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 5px;
-    }
-    .copy-feedback {
-      text-align: center;
-      color: green;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Aventura de la Monografía Exitosa</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 30px;
+            font-size: 1.4em;
+        }
+        .instructions {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .step {
+            background-color: #fcfcfc;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .step-content label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        .step-content textarea {
+            width: calc(100% - 20px);
+            min-height: 80px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box; /* Ensures padding doesn't increase width */
+            resize: vertical; /* Allow vertical resizing */
+        }
+        .step-content ul {
+            list-style: disc inside;
+            padding-left: 20px;
+        }
+        .step-content ul li {
+            margin-bottom: 5px;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            display: block; /* Make button take full width if needed, or center it */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        button:hover {
+            background-color: #229954;
+        }
+        .copy-feedback {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        #finalProject {
+            background-color: #e8f5e9;
+            border: 1px solid #a8d5b1;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: center; /* Centrar el botón */
+        }
+        #finalOutput {
+            width: calc(100% - 20px);
+            min-height: 500px; /* Aumentado para mejor visualización */
+            padding: 15px;
+            border: 1px solid #b2dfdb;
+            border-radius: 5px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.95em;
+            background-color: #f0fdfc;
+            color: #004d40;
+            resize: vertical;
+            margin-top: 15px;
+            text-align: left; /* Asegurar que el texto dentro del textarea sea normal */
+        }
+        /* Estilo para los títulos de capítulo dentro del textarea */
+        .step-content ul li textarea[id$="_titulo"] {
+            font-weight: bold;
+            min-height: 30px;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>La Aventura de la Monografía Exitosa</h1>
-    <p>Completá el contenido abajo, generá el proyecto y visualizalo con formato.</p>
-    
-    <textarea id="contenidoInput" placeholder="Ej: **Título**\n\n*   Idea 1\n*   Idea 2\n\nTexto plano con *negritas* en Markdown."></textarea>
-    
-    <button onclick="generarProyecto()">Generar y Copiar Proyecto</button>
-    
-    <div id="finalOutput" readonly></div>
-    <div id="previewOutput"></div>
-    
-    <div class="copy-feedback" id="copyFeedback"></div>
-  </div>
 
-  <script>
-    function generarProyecto() {
-      const input = document.getElementById("contenidoInput").value;
-      const markdown = input.trim() || "**[Sin contenido ingresado]**";
+    <div class="container">
+        <h1>LA AVENTURA DE LA MONOGRAFÍA EXITOSA: Tu Proyecto Paso a Paso</h1>
 
-      document.getElementById("finalOutput").textContent = markdown;
-      renderPreview(markdown);
-      copyToClipboard(markdown);
-    }
+        <div class="instructions">
+            <p>¡Bienvenido/a a tu viaje hacia una monografía brillante! Este juego te guiará a través de cada etapa crucial, transformando ideas en un proyecto sólido.</p>
+            <p><strong>Instrucciones Generales:</strong></p>
+            <ol>
+                <li>Lee cada paso y su explicación.</li>
+                <li>Responde a las preguntas en el espacio indicado. Los **ejemplos** te ayudarán a entender qué tipo de información se espera; si dejas un campo vacío, el ejemplo se incluirá automáticamente en el resultado final.</li>
+                <li>Cuando hayas completado todos los pasos, desplázate hasta el final y haz clic en "Generar y Copiar Proyecto Completo". Todas tus respuestas se articularán en una propuesta coherente.</li>
+                <li><strong>Nota sobre el formato:</strong> Las negritas y el formato de lista (`*` y `-`) se aplican usando **Markdown**. Esto significa que el texto se verá plano dentro de la caja de resultado, pero cuando lo copies y lo pegues en un editor de texto (como Microsoft Word, Google Docs o un editor Markdown) que interprete este formato, las negritas y listas se visualizarán correctamente.</li>
+                <li>¡Disfruta el proceso!</li>
+            </ol>
+            <div class="copy-feedback" id="copyFeedback"></div>
+        </div>
 
-    function renderPreview(md) {
-      let html = md
-        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-        .replace(/\*   (.+)/g, "<li>$1</li>")
-        .replace(/(?:^|\n)(\*   .+(\n\*   .+)*)/g, match => "<ul>" + match.replace(/\*   /g, "").split("\n").map(item => `<li>${item}</li>`).join("") + "</ul>")
-        .replace(/\n/g, "<br>");
-      
-      document.getElementById("previewOutput").innerHTML = html;
-    }
+        <!-- Paso 1 -->
+        <div class="step" id="step1">
+            <h3>Paso 1: La Chispa Inicial – Delimitando Tu Universo</h3>
+            <p>Todo gran viaje comienza con una dirección clara. Aquí definirás el tema que te apasiona y la pregunta específica que tu monografía intentará responder.</p>
+            <p><strong>Explicación:</strong></p>
+            <ul>
+                <li>**Tema General:** Un área de interés amplia (ej. "La historia de Roma").</li>
+                <li>**Tema Delimitado:** Una porción específica y manejable de ese tema general (ej. "La influencia del Derecho Romano en la legislación argentina del siglo XIX"). Es crucial que sea algo que puedas investigar a fondo.</li>
+                <li>**Problema/Pregunta de Investigación:** La interrogante central que tu monografía abordará. Debe ser clara, concisa y soluble a través de la investigación. Es la columna vertebral de tu trabajo.</li>
+            </ul>
+            <div class="step-content">
+                <label for="temaGeneral1">1. Mi Tema General (amplio):</label>
+                <textarea id="temaGeneral1" placeholder="Ej: La evolución de la inteligencia artificial y su impacto social"></textarea>
 
-    async function copyToClipboard(text) {
-      try {
-        await navigator.clipboard.writeText(text);
-        showFeedback("✅ ¡Copiado al portapapeles!");
-      } catch {
-        const textarea = document.createElement("textarea");
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
-        showFeedback("✅ ¡Copiado con método alternativo!");
-      }
-    }
+                <label for="temaDelimitado1">2. Mi Tema Delimitado (específico y manejable):</label>
+                <textarea id="temaDelimitado1" placeholder="Ej: El impacto de los modelos de lenguaje grandes (LLMs) en la educación superior en el período 2020-2023"></textarea>
 
-    function showFeedback(msg) {
-      const feedback = document.getElementById("copyFeedback");
-      feedback.textContent = msg;
-      setTimeout(() => feedback.textContent = "", 3000);
-    }
-  </script>
+                <label for="preguntaInvestigacion1">3. Mi Problema/Pregunta de Investigación (la pregunta central):</label>
+                <textarea id="preguntaInvestigacion1" placeholder="Ej: ¿De qué manera los LLMs han alterado los métodos de enseñanza y aprendizaje en las universidades latinoamericanas entre 2020 y 2023?"></textarea>
+            </div>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="step" id="step2">
+            <h3>Paso 2: El Faro – Estableciendo Tus Objetivos</h3>
+            <p>Una vez que sabes *qué* quieres investigar, necesitas saber *para qué*. Tus objetivos son los resultados que esperas alcanzar con tu monografía.</p>
+            <p><strong>Explicación:</strong></p>
+            <ul>
+                <li>**Objetivo General:** El propósito principal de tu investigación, lo que esperas lograr al final. Responde al "para qué" de tu problema. (Verbo en infinitivo + el qué + el cómo + el dónde/cuándo).</li>
+                <li>**Objetivos Específicos:** Los pasos concretos y medibles que te permitirán alcanzar el objetivo general. Son las tareas que debes cumplir para resolver tu problema de investigación.</li>
+            </ul>
+            <div class="step-content">
+                <label for="objetivoGeneral2">1. Mi Objetivo General:</label>
+                <textarea id="objetivoGeneral2" placeholder="Ej: Analizar el impacto de los modelos de lenguaje grandes (LLMs) en los métodos de enseñanza y aprendizaje de la educación superior latinoamericana durante el período 2020-2023, con el fin de identificar desafíos y oportunidades."></textarea>
+
+                <label for="objetivosEspecificos2_1">2. Mis Objetivos Específicos (al menos 3):</label>
+                <textarea id="objetivosEspecificos2_1" placeholder="Ej: a) Describir las principales herramientas de LLMs adoptadas en la educación superior latinoamericana."></textarea>
+                <textarea id="objetivosEspecificos2_2" placeholder="Ej: b) Evaluar las percepciones de docentes y estudiantes sobre la integración de LLMs en el proceso educativo."></textarea>
+                <textarea id="objetivosEspecificos2_3" placeholder="Ej: c) Proponer recomendaciones para una implementación ética y efectiva de LLMs en contextos universitarios."></textarea>
+            </div>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="step" id="step3">
+            <h3>Paso 3: La Justificación – ¿Por Qué Importa?</h3>
+            <p>Aquí argumentarás la relevancia de tu estudio. ¿Por qué tu monografía es necesaria? ¿Qué aportará? ¿A quién le interesará?</p>
+            <p><strong>Explicación:</strong></p>
+            <ul>
+                <li>**Justificación:** Explica la importancia, la utilidad y la viabilidad de tu investigación. Responde a preguntas como: ¿Qué vacío de conocimiento llena? ¿Qué problema resuelve o ayuda a entender? ¿Quiénes se beneficiarán de sus resultados? Considera la relevancia teórica, práctica, social y/o metodológica.</li>
+            </ul>
+            <div class="step-content">
+                <label for="justificacion3">1. Mi Justificación (mínimo 3-5 líneas):</label>
+                <textarea id="justificacion3" placeholder="Ej: Esta monografía es relevante porque el rápido avance de los LLMs está transformando el panorama educativo global, y es crucial comprender cómo estas tecnologías específicas están siendo adoptadas e impactando la educación superior en América Latina. Aportará una perspectiva regional sobre los desafíos y oportunidades, ofreciendo información valiosa para formuladores de políticas educativas, instituciones universitarias, docentes y estudiantes interesados en la integración tecnológica ética y efectiva."></textarea>
+            </div>
+        </div>
+
+        <!-- Paso 4 -->
+        <div class="step" id="step4">
+            <h3>Paso 4: El Mapa Teórico – Construyendo Tus Cimientos</h3>
+            <p>Toda investigación se apoya en conocimientos previos. Aquí identificarás las teorías, conceptos y estudios anteriores que sustentan tu trabajo.</p>
+            <p><strong>Explicación:</strong></p>
+            <ul>
+                <li>**Marco Teórico y Antecedentes:** Consiste en presentar las teorías, modelos, conceptos y estudios previos (antecedentes) que existen sobre tu tema. Esto te ayuda a entender qué se ha investigado antes, qué perspectivas existen y dónde encaja tu propia investigación. No se trata solo de resumir, sino de conectar estos conocimientos con tu problema.</li>
+            </ul>
+            <div class="step-content">
+                <label for="conceptosClave4">1. Conceptos Clave o Teorías Principales que sustentarán mi investigación:</label>
+                <textarea id="conceptosClave4" placeholder="Ej: Inteligencia Artificial, Modelos de Lenguaje Grandes (LLMs), Educación Superior, Tecnologías Educativas, Pedagogía Digital, Ética en IA."></textarea>
+
+                <label for="antecedentesRelevantes4">2. Algunos Antecedentes Relevantes (estudios o autores previos que abordaron temas similares):</label>
+                <textarea id="antecedentesRelevantes4" placeholder="Ej: Trabajos sobre la curva de adopción de tecnología en educación (Rogers), estudios sobre la integración de IA en aulas universitarias pre-LLMs, informes de UNESCO o bancos de desarrollo sobre digitalización educativa en América Latina."></textarea>
+            </div>
+        </div>
+
+        <!-- Paso 5 -->
+        <div class="step" id="step5">
+            <h3>Paso 5: La Brújula – Definiendo Tu Metodología</h3>
+            <p>¿Cómo vas a llevar a cabo tu investigación? Este paso describe los métodos, herramientas y el enfoque que utilizarás para recolectar y analizar la información.</p>
+            <p><strong>Explicación:</strong></p>
+            <ul>
+                <li>**Metodología:** Describe el "cómo" de tu investigación. Incluye el tipo de investigación (descriptiva, exploratoria, explicativa, etc.), el enfoque (cualitativo, cuantitativo o mixto), los métodos de recolección de datos (encuestas, entrevistas, análisis documental, experimentación, etc.) y cómo analizarás esos datos.</li>
+            </ul>
+            <div class="step-content">
+                <label for="tipoInvestigacion5">1. Tipo de Investigación (ej. descriptiva, histórica, de caso, etc.):</label>
+                <textarea id="tipoInvestigacion5" placeholder="Ej: Descriptiva y Exploratoria."></textarea>
+
+                <label for="enfoque5">2. Enfoque (Cualitativo, Cuantitativo o Mixto):</label>
+                <textarea id="enfoque5" placeholder="Ej: Mixto (predominantemente cualitativo con elementos cuantitativos para contextualización)."></textarea>
+
+                <label for="instrumentosRecoleccion5">3. Principales Instrumentos o Técnicas de Recolección de Datos (ej. análisis de documentos, encuestas, entrevistas, observación):</label>
+                <textarea id="instrumentosRecoleccion5" placeholder="Ej: Encuestas a docentes y estudiantes, entrevistas semiestructuradas a expertos en tecnología educativa y análisis de documentos (planes de estudio, políticas universitarias, publicaciones sobre LLMs)."></textarea>
+            </div>
+        </div>
+
+        <!-- Paso 6 -->
+        <div class="step" id="step6">
+            <h3>Paso 6: El Arquitecto – Estructura Preliminar de Contenido</h3>
+            <p>Ahora que tienes los pilares, es hora de imaginar la "arquitectura" de tu monografía. ¿Cómo se organizarían los capítulos o secciones?</p>
+            <p><strong>Explicación:</strong></p>
+            <ul>
+                <li>**Estructura Preliminar/Índice:** Un esbozo de los capítulos o secciones principales de tu monografía. Esto te ayuda a organizar lógicamente la información y a visualizar el flujo de tu argumento. No tiene que ser definitivo, pero sí un punto de partida.</li>
+            </ul>
+            <div class="step-content">
+                <label>1. Borrador de mi Índice / Capítulos Principales (al menos 3 secciones/capítulos además de Introducción y Conclusiones):</label>
+                <ul>
+                    <li>**1. Introducción** (Aquí iría la presentación del tema, problema, objetivos, justificación y estructura del trabajo)</li>
+                    <li>
+                        <label for="capitulo2_titulo">2. Título del Primer Capítulo Principal:</label>
+                        <textarea id="capitulo2_titulo" rows="1" placeholder="Ej: Fundamentos de los Modelos de Lenguaje Grandes (LLMs)"></textarea>
+                        <label for="capitulo2_descripcion">Descripción breve:</label>
+                        <textarea id="capitulo2_descripcion" placeholder="Ej: Conceptos clave de LLMs, tipos, funcionamiento básico y su evolución."></textarea>
+                    </li>
+                    <li>
+                        <label for="capitulo3_titulo">3. Título del Segundo Capítulo Principal:</label>
+                        <textarea id="capitulo3_titulo" rows="1" placeholder="Ej: Integración y Percepción de LLMs en la Educación Superior Latinoamericana"></textarea>
+                        <label for="capitulo3_descripcion">Descripción breve:</label>
+                        <textarea id="capitulo3_descripcion" placeholder="Ej: Casos de uso actuales, análisis de encuestas a docentes y estudiantes, beneficios y desafíos."></textarea>
+                    </li>
+                    <li>
+                        <label for="capitulo4_titulo">4. Título del Tercer Capítulo Principal:</label>
+                        <textarea id="capitulo4_titulo" rows="1" placeholder="Ej: Implicaciones Éticas y Pedagógicas de los LLMs"></textarea>
+                        <label for="capitulo4_descripcion">Descripción breve:</label>
+                        <textarea id="capitulo4_descripcion" placeholder="Ej: Análisis de sesgos, plagio, equidad, rol del docente, y nuevas metodologías de evaluación."></textarea>
+                    </li>
+                    <li>**5. Conclusiones** (Aquí se resumirán los hallazgos y se responderá a la pregunta de investigación)</li>
+                    <li>**6. Referencias Bibliográficas**</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Paso 7 -->
+        <div class="step" id="step7">
+            <h3>Paso 7: El Cronómetro – Planificando Tu Tiempo</h3>
+            <p>El tiempo es oro. Una buena planificación te ayudará a mantener el rumbo y a cumplir con los plazos.</p>
+            <p><strong>Explicación:</strong></p>
+            <ul>
+                <li>**Cronograma Preliminar:** Un desglose de las principales fases de tu monografía y el tiempo estimado para cada una. Te ayuda a gestionar tu tiempo de manera efectiva.</li>
+            </ul>
+            <div class="step-content">
+                <label>1. Fases Principales de Mi Monografía y Plazos Estimados:</label>
+                <ul>
+                    <li><label for="cronograma7_1">**Fase 1: Planificación y Recolección Inicial de Bibliografía:**</label> <textarea id="cronograma7_1" rows="1" placeholder="Ej: Semanas 1-3"></textarea></li>
+                    <li><label for="cronograma7_2">**Fase 2: Profundización en Marco Teórico y Recolección de Datos:**</label> <textarea id="cronograma7_2" rows="1" placeholder="Ej: Semanas 4-8"></textarea></li>
+                    <li><label for="cronograma7_3">**Fase 3: Análisis de Datos y Redacción de Borrador (Capítulos 1 y 2):**</label> <textarea id="cronograma7_3" rows="1" placeholder="Ej: Semanas 9-12"></textarea></li>
+                    <li><label for="cronograma7_4">**Fase 4: Redacción de Borrador (Capítulo 3 y Conclusiones):**</label> <textarea id="cronograma7_4" rows="1" placeholder="Ej: Semanas 13-15"></textarea></li>
+                    <li><label for="cronograma7_5">**Fase 5: Revisión, Edición y Formato Final:**</label> <textarea id="cronograma7_5" rows="1" placeholder="Ej: Semanas 16-17"></textarea></li>
+                    <li><label for="cronograma7_6">**Fecha Límite para Presentación (si aplica):**</label> <textarea id="cronograma7_6" rows="1" placeholder="Ej: 30 de noviembre de 2024"></textarea></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Paso 8 -->
+        <div class="step" id="step8">
+            <h3>Paso 8: La Biblioteca Inicial – Primeras Fuentes Clave</h3>
+            <p>Antes de sumergirte, identifica algunas fuentes esenciales que te servirán de punto de partida.</p>
+            <p><strong>Explicación:</strong></p>
+            <ul>
+                <li>**Bibliografía Preliminar:** Un listado de las principales obras, artículos, libros o recursos que ya conoces o que identificas como fundamentales para tu investigación. Esto demuestra que has comenzado a explorar el tema y que hay suficiente material para sustentarlo.</li>
+            </ul>
+            <div class="step-content">
+                <label>1. 3 a 5 Fuentes Clave Iniciales (libros, artículos, sitios web confiables, etc. con su título y autor):</label>
+                <ul>
+                    <li><textarea id="bibliografia8_1" placeholder="Ej: Russell, S. & Norvig, P. (2010). Artificial Intelligence: A Modern Approach. Pearson."></textarea></li>
+                    <li><textarea id="bibliografia8_2" placeholder="Ej: UNESCO. (2021). IA y educación: Guía para la formulación de políticas. UNESCO Publishing."></textarea></li>
+                    <li><textarea id="bibliografia8_3" placeholder="Ej: Susskind, R., & Susskind, D. (2015). The Future of the Professions: How Technology Will Transform the Work of Human Experts. Oxford University Press."></textarea></li>
+                    <li><textarea id="bibliografia8_4" placeholder="Ej: (Opcional) Nombre del Autor. (Año). Título del Libro/Artículo. Editorial/Revista."></textarea></li>
+                    <li><textarea id="bibliografia8_5" placeholder="Ej: (Opcional) Nombre del Autor. (Año). Título del Libro/Artículo. Editorial/Revista."></textarea>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sección de Proyecto Final -->
+        <div id="finalProject">
+            <h2>TU PROYECTO DE MONOGRAFÍA: El Resultado Final</h2>
+            <p>¡Excelente trabajo! Has construido los cimientos de tu monografía. Haz clic en el botón de abajo para generar tu propuesta completa.</p>
+            <button onclick="generateAndCopyFullProject()">Generar y Copiar Proyecto Completo</button>
+            <textarea id="finalOutput" readonly placeholder="Tu proyecto de monografía aparecerá aquí después de hacer clic en 'Generar y Copiar Proyecto Completo'. Luego podrás copiar el texto de esta caja y pegarlo en tu documento."></textarea>
+        </div>
+
+    </div>
+
+    <script>
+        const copyFeedbackDiv = document.getElementById('copyFeedback');
+
+        function showFeedback(message) {
+            copyFeedbackDiv.textContent = message;
+            copyFeedbackDiv.style.display = 'block';
+            setTimeout(() => {
+                copyFeedbackDiv.style.display = 'none';
+            }, 3000); // Ocultar el mensaje después de 3 segundos
+        }
+
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showFeedback('✅ ¡Copiado al portapapeles!');
+            } catch (err) {
+                // Fallback para navegadores antiguos o si writeText falla
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showFeedback('✅ ¡Copiado al portapapeles (modo compatibilidad)!');
+                } catch (err) {
+                    showFeedback('❌ Error al copiar. Por favor, copia manualmente.');
+                }
+                document.body.removeChild(textarea);
+            }
+        }
+
+        // Helper function to get value from textarea, or its example placeholder
+        function getValueOrExample(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) return ""; // Return empty string if element not found
+            const userValue = element.value.trim();
+            if (userValue !== '') {
+                return userValue;
+            }
+            const placeholder = element.placeholder.trim();
+            // Only return example if it's an actual example, not just "(Opcional)"
+            if (placeholder.startsWith("Ej:") && placeholder !== "Ej: (Opcional)") {
+                return placeholder;
+            }
+            return "[No especificado]"; // Default if no user input and no valid example placeholder
+        }
+
+        function generateAndCopyFullProject() {
+            const temaDelimitado = getValueOrExample('temaDelimitado1');
+            const capitulo2Titulo = getValueOrExample('capitulo2_titulo');
+            const capitulo3Titulo = getValueOrExample('capitulo3_titulo');
+            const capitulo4Titulo = getValueOrExample('capitulo4_titulo');
+
+            // Build bibliography section dynamically
+            let bibliografiaContent = '';
+            for (let i = 1; i <= 5; i++) {
+                const sourceElement = document.getElementById(`bibliografia8_${i}`);
+                const userValue = sourceElement.value.trim();
+                const placeholder = sourceElement.placeholder.trim();
+
+                if (userValue !== '') {
+                    bibliografiaContent += `*   ${userValue}\n`;
+                } else if (placeholder.startsWith("Ej:") && !placeholder.includes("(Opcional)")) { // Check for real examples
+                    bibliografiaContent += `*   ${placeholder}\n`;
+                }
+            }
+            if (bibliografiaContent === '') {
+                bibliografiaContent = "*   [Ninguna fuente preliminar ingresada]\n";
+            } else {
+                bibliografiaContent = bibliografiaContent.trim(); // Clean up trailing newline
+            }
+
+            const fullProjectText = `
+**Propuesta de Monografía: ${temaDelimitado}**
+
+**(Título Provisional: ${temaDelimitado})**
+
+**1. Delimitación del Objeto de Estudio**
+
+*   **Tema General:** ${getValueOrExample('temaGeneral1')}
+*   **Tema Delimitado:** ${temaDelimitado}
+*   **Problema/Pregunta de Investigación:** ${getValueOrExample('preguntaInvestigacion1')}
+
+**2. Objetivos de la Investigación**
+
+*   **Objetivo General:** ${getValueOrExample('objetivoGeneral2')}
+*   **Objetivos Específicos:**
+    *   ${getValueOrExample('objetivosEspecificos2_1')}
+    *   ${getValueOrExample('objetivosEspecificos2_2')}
+    *   ${getValueOrExample('objetivosEspecificos2_3')}
+
+**3. Justificación**
+
+*   ${getValueOrExample('justificacion3')}
+
+**4. Marco Teórico y Antecedentes**
+
+*   **Conceptos Clave o Teorías Principales:** ${getValueOrExample('conceptosClave4')}
+*   **Antecedentes Relevantes:** ${getValueOrExample('antecedentesRelevantes4')}
+
+**5. Metodología**
+
+*   **Tipo de Investigación:** ${getValueOrExample('tipoInvestigacion5')}
+*   **Enfoque:** ${getValueOrExample('enfoque5')}
+*   **Principales Instrumentos o Técnicas de Recolección de Datos:** ${getValueOrExample('instrumentosRecoleccion5')}
+
+**6. Estructura Preliminar de Contenido (Borrador de Índice)**
+
+*   **1. Introducción**
+*   **2. ${capitulo2Titulo}:** ${getValueOrExample('capitulo2_descripcion')}
+*   **3. ${capitulo3Titulo}:** ${getValueOrExample('capitulo3_descripcion')}
+*   **4. ${capitulo4Titulo}:** ${getValueOrExample('capitulo4_descripcion')}
+*   **5. Conclusiones**
+*   **6. Referencias Bibliográficas**
+
+**7. Cronograma Preliminar**
+
+*   **Fase 1: Planificación y Recolección Inicial de Bibliografía:** ${getValueOrExample('cronograma7_1')}
+*   **Fase 2: Profundización en Marco Teórico y Recolección de Datos:** ${getValueOrExample('cronograma7_2')}
+*   **Fase 3: Análisis de Datos y Redacción de Borrador (Capítulos 1 y 2):** ${getValueOrExample('cronograma7_3')}
+*   **Fase 4: Redacción de Borrador (Capítulo 3 y Conclusiones):** ${getValueOrExample('cronograma7_4')}
+*   **Fase 5: Revisión, Edición y Formato Final:** ${getValueOrExample('cronograma7_5')}
+*   **Fecha Límite para Presentación (si aplica):** ${getValueOrExample('cronograma7_6')}
+
+**8. Bibliografía Preliminar**
+
+${bibliografiaContent}
+`.trim();
+
+            document.getElementById('finalOutput').value = fullProjectText;
+            copyToClipboard(fullProjectText);
+        }
+    </script>
+
 </body>
 </html>
