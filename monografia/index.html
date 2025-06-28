@@ -115,19 +115,21 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             text-align: center; /* Centrar el botón */
         }
+        /* Estilo para el div con contenteditable */
         #finalOutput {
             width: calc(100% - 20px);
-            min-height: 500px; /* Aumentado para mejor visualización */
+            min-height: 500px;
             padding: 15px;
             border: 1px solid #b2dfdb;
             border-radius: 5px;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 0.95em;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Usar la misma fuente para coherencia */
+            font-size: 1em;
             background-color: #f0fdfc;
             color: #004d40;
             resize: vertical;
             margin-top: 15px;
-            text-align: left; /* Asegurar que el texto dentro del textarea sea normal */
+            text-align: left;
+            overflow-y: auto; /* Para scroll si el contenido es largo */
         }
         /* Estilo para los títulos de capítulo dentro del textarea */
         .step-content ul li textarea[id$="_titulo"] {
@@ -149,7 +151,7 @@
                 <li>Lee cada paso y su explicación.</li>
                 <li>Responde a las preguntas en el espacio indicado. Los **ejemplos** te ayudarán a entender qué tipo de información se espera; si dejas un campo vacío, el ejemplo se incluirá automáticamente en el resultado final.</li>
                 <li>Cuando hayas completado todos los pasos, desplázate hasta el final y haz clic en "Generar y Copiar Proyecto Completo". Todas tus respuestas se articularán en una propuesta coherente.</li>
-                <li><strong>Nota sobre el formato:</strong> Las negritas y el formato de lista (`*` y `-`) se aplican usando **Markdown**. Esto significa que el texto se verá plano dentro de la caja de resultado, pero cuando lo copies y lo pegues en un editor de texto (como Microsoft Word, Google Docs o un editor Markdown) que interprete este formato, las negritas y listas se visualizarán correctamente.</li>
+                <li><strong>Nota sobre el formato:</strong> El área de resultado final te mostrará el texto con **negritas** y formato de lista. Al copiar el contenido y pegarlo en un editor de texto (como Microsoft Word, Google Docs o un editor Markdown), este formato se mantendrá.</li>
                 <li>¡Disfruta el proceso!</li>
             </ol>
             <div class="copy-feedback" id="copyFeedback"></div>
@@ -161,9 +163,9 @@
             <p>Todo gran viaje comienza con una dirección clara. Aquí definirás el tema que te apasiona y la pregunta específica que tu monografía intentará responder.</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li>**Tema General:** Un área de interés amplia (ej. "La historia de Roma").</li>
-                <li>**Tema Delimitado:** Una porción específica y manejable de ese tema general (ej. "La influencia del Derecho Romano en la legislación argentina del siglo XIX"). Es crucial que sea algo que puedas investigar a fondo.</li>
-                <li>**Problema/Pregunta de Investigación:** La interrogante central que tu monografía abordará. Debe ser clara, concisa y soluble a través de la investigación. Es la columna vertebral de tu trabajo.</li>
+                <li><strong>Tema General:</strong> Un área de interés amplia (ej. "La historia de Roma").</li>
+                <li><strong>Tema Delimitado:</strong> Una porción específica y manejable de ese tema general (ej. "La influencia del Derecho Romano en la legislación argentina del siglo XIX"). Es crucial que sea algo que puedas investigar a fondo.</li>
+                <li><strong>Problema/Pregunta de Investigación:</strong> La interrogante central que tu monografía abordará. Debe ser clara, concisa y soluble a través de la investigación. Es la columna vertebral de tu trabajo.</li>
             </ul>
             <div class="step-content">
                 <label for="temaGeneral1">1. Mi Tema General (amplio):</label>
@@ -183,8 +185,8 @@
             <p>Una vez que sabes *qué* quieres investigar, necesitas saber *para qué*. Tus objetivos son los resultados que esperas alcanzar con tu monografía.</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li>**Objetivo General:** El propósito principal de tu investigación, lo que esperas lograr al final. Responde al "para qué" de tu problema. (Verbo en infinitivo + el qué + el cómo + el dónde/cuándo).</li>
-                <li>**Objetivos Específicos:** Los pasos concretos y medibles que te permitirán alcanzar el objetivo general. Son las tareas que debes cumplir para resolver tu problema de investigación.</li>
+                <li><strong>Objetivo General:</strong> El propósito principal de tu investigación, lo que esperas lograr al final. Responde al "para qué" de tu problema. (Verbo en infinitivo + el qué + el cómo + el dónde/cuándo).</li>
+                <li><strong>Objetivos Específicos:</strong> Los pasos concretos y medibles que te permitirán alcanzar el objetivo general. Son las tareas que debes cumplir para resolver tu problema de investigación.</li>
             </ul>
             <div class="step-content">
                 <label for="objetivoGeneral2">1. Mi Objetivo General:</label>
@@ -203,7 +205,7 @@
             <p>Aquí argumentarás la relevancia de tu estudio. ¿Por qué tu monografía es necesaria? ¿Qué aportará? ¿A quién le interesará?</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li>**Justificación:** Explica la importancia, la utilidad y la viabilidad de tu investigación. Responde a preguntas como: ¿Qué vacío de conocimiento llena? ¿Qué problema resuelve o ayuda a entender? ¿Quiénes se beneficiarán de sus resultados? Considera la relevancia teórica, práctica, social y/o metodológica.</li>
+                <li><strong>Justificación:</strong> Explica la importancia, la utilidad y la viabilidad de tu investigación. Responde a preguntas como: ¿Qué vacío de conocimiento llena? ¿Qué problema resuelve o ayuda a entender? ¿Quiénes se beneficiarán de sus resultados? Considera la relevancia teórica, práctica, social y/o metodológica.</li>
             </ul>
             <div class="step-content">
                 <label for="justificacion3">1. Mi Justificación (mínimo 3-5 líneas):</label>
@@ -217,7 +219,7 @@
             <p>Toda investigación se apoya en conocimientos previos. Aquí identificarás las teorías, conceptos y estudios anteriores que sustentan tu trabajo.</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li>**Marco Teórico y Antecedentes:** Consiste en presentar las teorías, modelos, conceptos y estudios previos (antecedentes) que existen sobre tu tema. Esto te ayuda a entender qué se ha investigado antes, qué perspectivas existen y dónde encaja tu propia investigación. No se trata solo de resumir, sino de conectar estos conocimientos con tu problema.</li>
+                <li><strong>Marco Teórico y Antecedentes:</strong> Consiste en presentar las teorías, modelos, conceptos y estudios previos (antecedentes) que existen sobre tu tema. Esto te ayuda a entender qué se ha investigado antes, qué perspectivas existen y dónde encaja tu propia investigación. No se trata solo de resumir, sino de conectar estos conocimientos con tu problema.</li>
             </ul>
             <div class="step-content">
                 <label for="conceptosClave4">1. Conceptos Clave o Teorías Principales que sustentarán mi investigación:</label>
@@ -234,7 +236,7 @@
             <p>¿Cómo vas a llevar a cabo tu investigación? Este paso describe los métodos, herramientas y el enfoque que utilizarás para recolectar y analizar la información.</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li>**Metodología:** Describe el "cómo" de tu investigación. Incluye el tipo de investigación (descriptiva, exploratoria, explicativa, etc.), el enfoque (cualitativo, cuantitativo o mixto), los métodos de recolección de datos (encuestas, entrevistas, análisis documental, experimentación, etc.) y cómo analizarás esos datos.</li>
+                <li><strong>Metodología:</strong> Describe el "cómo" de tu investigación. Incluye el tipo de investigación (descriptiva, exploratoria, explicativa, etc.), el enfoque (cualitativo, cuantitativo o mixto), los métodos de recolección de datos (encuestas, entrevistas, análisis documental, experimentación, etc.) y cómo analizarás esos datos.</li>
             </ul>
             <div class="step-content">
                 <label for="tipoInvestigacion5">1. Tipo de Investigación (ej. descriptiva, histórica, de caso, etc.):</label>
@@ -254,12 +256,12 @@
             <p>Ahora que tienes los pilares, es hora de imaginar la "arquitectura" de tu monografía. ¿Cómo se organizarían los capítulos o secciones?</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li>**Estructura Preliminar/Índice:** Un esbozo de los capítulos o secciones principales de tu monografía. Esto te ayuda a organizar lógicamente la información y a visualizar el flujo de tu argumento. No tiene que ser definitivo, pero sí un punto de partida.</li>
+                <li><strong>Estructura Preliminar/Índice:</strong> Un esbozo de los capítulos o secciones principales de tu monografía. Esto te ayuda a organizar lógicamente la información y a visualizar el flujo de tu argumento. No tiene que ser definitivo, pero sí un punto de partida.</li>
             </ul>
             <div class="step-content">
                 <label>1. Borrador de mi Índice / Capítulos Principales (al menos 3 secciones/capítulos además de Introducción y Conclusiones):</label>
                 <ul>
-                    <li>**1. Introducción** (Aquí iría la presentación del tema, problema, objetivos, justificación y estructura del trabajo)</li>
+                    <li><strong>1. Introducción</strong> (Aquí iría la presentación del tema, problema, objetivos, justificación y estructura del trabajo)</li>
                     <li>
                         <label for="capitulo2_titulo">2. Título del Primer Capítulo Principal:</label>
                         <textarea id="capitulo2_titulo" rows="1" placeholder="Ej: Fundamentos de los Modelos de Lenguaje Grandes (LLMs)"></textarea>
@@ -278,49 +280,28 @@
                         <label for="capitulo4_descripcion">Descripción breve:</label>
                         <textarea id="capitulo4_descripcion" placeholder="Ej: Análisis de sesgos, plagio, equidad, rol del docente, y nuevas metodologías de evaluación."></textarea>
                     </li>
-                    <li>**5. Conclusiones** (Aquí se resumirán los hallazgos y se responderá a la pregunta de investigación)</li>
-                    <li>**6. Referencias Bibliográficas**</li>
+                    <li><strong>5. Conclusiones</strong> (Aquí se resumirán los hallazgos y se responderá a la pregunta de investigación)</li>
+                    <li><strong>6. Referencias Bibliográficas</strong></li>
                 </ul>
             </div>
         </div>
 
-        <!-- Paso 7 -->
-        <div class="step" id="step7">
-            <h3>Paso 7: El Cronómetro – Planificando Tu Tiempo</h3>
-            <p>El tiempo es oro. Una buena planificación te ayudará a mantener el rumbo y a cumplir con los plazos.</p>
-            <p><strong>Explicación:</strong></p>
-            <ul>
-                <li>**Cronograma Preliminar:** Un desglose de las principales fases de tu monografía y el tiempo estimado para cada una. Te ayuda a gestionar tu tiempo de manera efectiva.</li>
-            </ul>
-            <div class="step-content">
-                <label>1. Fases Principales de Mi Monografía y Plazos Estimados:</label>
-                <ul>
-                    <li><label for="cronograma7_1">**Fase 1: Planificación y Recolección Inicial de Bibliografía:**</label> <textarea id="cronograma7_1" rows="1" placeholder="Ej: Semanas 1-3"></textarea></li>
-                    <li><label for="cronograma7_2">**Fase 2: Profundización en Marco Teórico y Recolección de Datos:**</label> <textarea id="cronograma7_2" rows="1" placeholder="Ej: Semanas 4-8"></textarea></li>
-                    <li><label for="cronograma7_3">**Fase 3: Análisis de Datos y Redacción de Borrador (Capítulos 1 y 2):**</label> <textarea id="cronograma7_3" rows="1" placeholder="Ej: Semanas 9-12"></textarea></li>
-                    <li><label for="cronograma7_4">**Fase 4: Redacción de Borrador (Capítulo 3 y Conclusiones):**</label> <textarea id="cronograma7_4" rows="1" placeholder="Ej: Semanas 13-15"></textarea></li>
-                    <li><label for="cronograma7_5">**Fase 5: Revisión, Edición y Formato Final:**</label> <textarea id="cronograma7_5" rows="1" placeholder="Ej: Semanas 16-17"></textarea></li>
-                    <li><label for="cronograma7_6">**Fecha Límite para Presentación (si aplica):**</label> <textarea id="cronograma7_6" rows="1" placeholder="Ej: 30 de noviembre de 2024"></textarea></li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Paso 8 -->
-        <div class="step" id="step8">
-            <h3>Paso 8: La Biblioteca Inicial – Primeras Fuentes Clave</h3>
+        <!-- Paso 7 (Nuevo número tras eliminar el cronograma) -->
+        <div class="step" id="step7_new">
+            <h3>Paso 7: La Biblioteca Inicial – Primeras Fuentes Clave</h3>
             <p>Antes de sumergirte, identifica algunas fuentes esenciales que te servirán de punto de partida.</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li>**Bibliografía Preliminar:** Un listado de las principales obras, artículos, libros o recursos que ya conoces o que identificas como fundamentales para tu investigación. Esto demuestra que has comenzado a explorar el tema y que hay suficiente material para sustentarlo.</li>
+                <li><strong>Bibliografía Preliminar:</strong> Un listado de las principales obras, artículos, libros o recursos que ya conoces o que identificas como fundamentales para tu investigación. Esto demuestra que has comenzado a explorar el tema y que hay suficiente material para sustentarlo.</li>
             </ul>
             <div class="step-content">
                 <label>1. 3 a 5 Fuentes Clave Iniciales (libros, artículos, sitios web confiables, etc. con su título y autor):</label>
                 <ul>
-                    <li><textarea id="bibliografia8_1" placeholder="Ej: Russell, S. & Norvig, P. (2010). Artificial Intelligence: A Modern Approach. Pearson."></textarea></li>
-                    <li><textarea id="bibliografia8_2" placeholder="Ej: UNESCO. (2021). IA y educación: Guía para la formulación de políticas. UNESCO Publishing."></textarea></li>
-                    <li><textarea id="bibliografia8_3" placeholder="Ej: Susskind, R., & Susskind, D. (2015). The Future of the Professions: How Technology Will Transform the Work of Human Experts. Oxford University Press."></textarea></li>
-                    <li><textarea id="bibliografia8_4" placeholder="Ej: (Opcional) Nombre del Autor. (Año). Título del Libro/Artículo. Editorial/Revista."></textarea></li>
-                    <li><textarea id="bibliografia8_5" placeholder="Ej: (Opcional) Nombre del Autor. (Año). Título del Libro/Artículo. Editorial/Revista."></textarea>
+                    <li><textarea id="bibliografia7_new_1" placeholder="Ej: Russell, S. & Norvig, P. (2010). Artificial Intelligence: A Modern Approach. Pearson."></textarea></li>
+                    <li><textarea id="bibliografia7_new_2" placeholder="Ej: UNESCO. (2021). IA y educación: Guía para la formulación de políticas. UNESCO Publishing."></textarea></li>
+                    <li><textarea id="bibliografia7_new_3" placeholder="Ej: Susskind, R., & Susskind, D. (2015). The Future of the Professions: How Technology Will Transform the Work of Human Experts. Oxford University Press."></textarea></li>
+                    <li><textarea id="bibliografia7_new_4" placeholder="Ej: (Opcional) Nombre del Autor. (Año). Título del Libro/Artículo. Editorial/Revista."></textarea></li>
+                    <li><textarea id="bibliografia7_new_5" placeholder="Ej: (Opcional) Nombre del Autor. (Año). Título del Libro/Artículo. Editorial/Revista."></textarea>
                     </li>
                 </ul>
             </div>
@@ -331,7 +312,10 @@
             <h2>TU PROYECTO DE MONOGRAFÍA: El Resultado Final</h2>
             <p>¡Excelente trabajo! Has construido los cimientos de tu monografía. Haz clic en el botón de abajo para generar tu propuesta completa.</p>
             <button onclick="generateAndCopyFullProject()">Generar y Copiar Proyecto Completo</button>
-            <textarea id="finalOutput" readonly placeholder="Tu proyecto de monografía aparecerá aquí después de hacer clic en 'Generar y Copiar Proyecto Completo'. Luego podrás copiar el texto de esta caja y pegarlo en tu documento."></textarea>
+            <div id="finalOutput" contenteditable="true">
+                <!-- El contenido se generará aquí. Las negritas se verán directamente. -->
+                Tu proyecto de monografía aparecerá aquí después de hacer clic en 'Generar y Copiar Proyecto Completo'. Podrás copiar este texto enriquecido para pegarlo en tu documento.
+            </div>
         </div>
 
     </div>
@@ -347,26 +331,6 @@
             }, 3000); // Ocultar el mensaje después de 3 segundos
         }
 
-        async function copyToClipboard(text) {
-            try {
-                await navigator.clipboard.writeText(text);
-                showFeedback('✅ ¡Copiado al portapapeles!');
-            } catch (err) {
-                // Fallback para navegadores antiguos o si writeText falla
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                try {
-                    document.execCommand('copy');
-                    showFeedback('✅ ¡Copiado al portapapeles (modo compatibilidad)!');
-                } catch (err) {
-                    showFeedback('❌ Error al copiar. Por favor, copia manualmente.');
-                }
-                document.body.removeChild(textarea);
-            }
-        }
-
         // Helper function to get value from textarea, or its example placeholder
         function getValueOrExample(elementId) {
             const element = document.getElementById(elementId);
@@ -377,8 +341,8 @@
             }
             const placeholder = element.placeholder.trim();
             // Only return example if it's an actual example, not just "(Opcional)"
-            if (placeholder.startsWith("Ej:") && placeholder !== "Ej: (Opcional)") {
-                return placeholder;
+            if (placeholder.startsWith("Ej:") && !placeholder.includes("(Opcional)")) {
+                return placeholder.substring(placeholder.indexOf(":") + 2).trim(); // Remove "Ej:"
             }
             return "[No especificado]"; // Default if no user input and no valid example placeholder
         }
@@ -390,25 +354,95 @@
             const capitulo4Titulo = getValueOrExample('capitulo4_titulo');
 
             // Build bibliography section dynamically
-            let bibliografiaContent = '';
+            let bibliografiaContentDisplay = ''; // For HTML display
+            let bibliografiaContentCopy = '';    // For Markdown copy
+
             for (let i = 1; i <= 5; i++) {
-                const sourceElement = document.getElementById(`bibliografia8_${i}`);
+                const sourceElement = document.getElementById(`bibliografia7_new_${i}`);
                 const userValue = sourceElement.value.trim();
                 const placeholder = sourceElement.placeholder.trim();
+                let itemText;
 
                 if (userValue !== '') {
-                    bibliografiaContent += `*   ${userValue}\n`;
-                } else if (placeholder.startsWith("Ej:") && !placeholder.includes("(Opcional)")) { // Check for real examples
-                    bibliografiaContent += `*   ${placeholder}\n`;
+                    itemText = userValue;
+                } else if (placeholder.startsWith("Ej:") && !placeholder.includes("(Opcional)")) {
+                    itemText = placeholder.substring(placeholder.indexOf(":") + 2).trim();
+                } else {
+                    itemText = ''; // Skip truly empty optional placeholders
+                }
+
+                if (itemText) {
+                    bibliografiaContentDisplay += `<li>${itemText}</li>\n`;
+                    bibliografiaContentCopy += `*   ${itemText}\n`;
                 }
             }
-            if (bibliografiaContent === '') {
-                bibliografiaContent = "*   [Ninguna fuente preliminar ingresada]\n";
+            if (bibliografiaContentDisplay === '') {
+                bibliografiaContentDisplay = "<li>[Ninguna fuente preliminar ingresada]</li>";
+                bibliografiaContentCopy = "*   [Ninguna fuente preliminar ingresada]\n";
             } else {
-                bibliografiaContent = bibliografiaContent.trim(); // Clean up trailing newline
+                bibliografiaContentDisplay = `<ul>${bibliografiaContentDisplay}</ul>`;
+                bibliografiaContentCopy = bibliografiaContentCopy.trim();
             }
 
-            const fullProjectText = `
+            // --- Generate HTML for display in the div ---
+            const htmlOutput = `
+                <h2>Propuesta de Monografía: ${temaDelimitado}</h2>
+
+                <p>(Título Provisional: ${temaDelimitado})</p>
+
+                <h3>1. Delimitación del Objeto de Estudio</h3>
+                <ul>
+                    <li><strong>Tema General:</strong> ${getValueOrExample('temaGeneral1')}</li>
+                    <li><strong>Tema Delimitado:</strong> ${temaDelimitado}</li>
+                    <li><strong>Problema/Pregunta de Investigación:</strong> ${getValueOrExample('preguntaInvestigacion1')}</li>
+                </ul>
+
+                <h3>2. Objetivos de la Investigación</h3>
+                <ul>
+                    <li><strong>Objetivo General:</strong> ${getValueOrExample('objetivoGeneral2')}</li>
+                    <li><strong>Objetivos Específicos:</strong>
+                        <ul>
+                            <li>${getValueOrExample('objetivosEspecificos2_1')}</li>
+                            <li>${getValueOrExample('objetivosEspecificos2_2')}</li>
+                            <li>${getValueOrExample('objetivosEspecificos2_3')}</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>3. Justificación</h3>
+                <p>${getValueOrExample('justificacion3')}</p>
+
+                <h3>4. Marco Teórico y Antecedentes</h3>
+                <ul>
+                    <li><strong>Conceptos Clave o Teorías Principales:</strong> ${getValueOrExample('conceptosClave4')}</li>
+                    <li><strong>Antecedentes Relevantes:</strong> ${getValueOrExample('antecedentesRelevantes4')}</li>
+                </ul>
+
+                <h3>5. Metodología</h3>
+                <ul>
+                    <li><strong>Tipo de Investigación:</strong> ${getValueOrExample('tipoInvestigacion5')}</li>
+                    <li><strong>Enfoque:</strong> ${getValueOrExample('enfoque5')}</li>
+                    <li><strong>Principales Instrumentos o Técnicas de Recolección de Datos:</strong> ${getValueOrExample('instrumentosRecoleccion5')}</li>
+                </ul>
+
+                <h3>6. Estructura Preliminar de Contenido (Borrador de Índice)</h3>
+                <ul>
+                    <li><strong>1. Introducción</strong> (Aquí iría la presentación del tema, problema, objetivos, justificación y estructura del trabajo)</li>
+                    <li><strong>2. ${capitulo2Titulo}:</strong> ${getValueOrExample('capitulo2_descripcion')}</li>
+                    <li><strong>3. ${capitulo3Titulo}:</strong> ${getValueOrExample('capitulo3_descripcion')}</li>
+                    <li><strong>4. ${capitulo4Titulo}:</strong> ${getValueOrExample('capitulo4_descripcion')}</li>
+                    <li><strong>5. Conclusiones</strong> (Aquí se resumirán los hallazgos y se responderá a la pregunta de investigación)</li>
+                    <li><strong>6. Referencias Bibliográficas</strong></li>
+                </ul>
+
+                <h3>7. Bibliografía Preliminar</h3>
+                ${bibliografiaContentDisplay}
+            `.trim();
+
+            document.getElementById('finalOutput').innerHTML = htmlOutput;
+
+            // --- Generate Markdown for copying to clipboard ---
+            const markdownOutput = `
 **Propuesta de Monografía: ${temaDelimitado}**
 
 **(Título Provisional: ${temaDelimitado})**
@@ -444,29 +478,19 @@
 
 **6. Estructura Preliminar de Contenido (Borrador de Índice)**
 
-*   **1. Introducción**
+*   **1. Introducción** (Aquí iría la presentación del tema, problema, objetivos, justificación y estructura del trabajo)
 *   **2. ${capitulo2Titulo}:** ${getValueOrExample('capitulo2_descripcion')}
 *   **3. ${capitulo3Titulo}:** ${getValueOrExample('capitulo3_descripcion')}
 *   **4. ${capitulo4Titulo}:** ${getValueOrExample('capitulo4_descripcion')}
-*   **5. Conclusiones**
+*   **5. Conclusiones** (Aquí se resumirán los hallazgos y se responderá a la pregunta de investigación)
 *   **6. Referencias Bibliográficas**
 
-**7. Cronograma Preliminar**
+**7. Bibliografía Preliminar**
 
-*   **Fase 1: Planificación y Recolección Inicial de Bibliografía:** ${getValueOrExample('cronograma7_1')}
-*   **Fase 2: Profundización en Marco Teórico y Recolección de Datos:** ${getValueOrExample('cronograma7_2')}
-*   **Fase 3: Análisis de Datos y Redacción de Borrador (Capítulos 1 y 2):** ${getValueOrExample('cronograma7_3')}
-*   **Fase 4: Redacción de Borrador (Capítulo 3 y Conclusiones):** ${getValueOrExample('cronograma7_4')}
-*   **Fase 5: Revisión, Edición y Formato Final:** ${getValueOrExample('cronograma7_5')}
-*   **Fecha Límite para Presentación (si aplica):** ${getValueOrExample('cronograma7_6')}
+${bibliografiaContentCopy}
+            `.trim();
 
-**8. Bibliografía Preliminar**
-
-${bibliografiaContent}
-`.trim();
-
-            document.getElementById('finalOutput').value = fullProjectText;
-            copyToClipboard(fullProjectText);
+            copyToClipboard(markdownOutput);
         }
     </script>
 
