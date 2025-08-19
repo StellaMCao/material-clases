@@ -173,7 +173,7 @@
       .editor { max-width: 99vw; }
       .cube { width: 120px; height: 120px;}
       .face { width: 120px; height: 120px;}
-      .f1, .f2, .f3, .f4, .f5, .f6 { transform: none !important; } /* fallback for mobile, no 3d */
+      .f1, .f2, .f3, .f4, .f5, .f6 { transform: none !important; }
     }
   </style>
 </head>
@@ -200,6 +200,18 @@
       "🗺️ ¿Qué estrategia usé hoy que me funcionó muy bien?",
       "🔎 ¿Qué nueva pregunta me surgió a partir de lo que aprendí?",
       "❤️ ¿Cómo me sentí mientras aprendía esto?"
+    ];
+
+    // Banco de preguntas extra (sin repeticiones)
+    const preguntasEjemplo = [
+      "🔗 ¿Qué conecta esto con otro saber?",
+      "🧠 ¿Cómo cambiaría mi opinión sobre esto?",
+      "📚 ¿Dónde podría aprender más sobre esto?",
+      "🌱 ¿Qué me gustaría explorar la próxima vez?",
+      "🎯 ¿Qué objetivo cumplí hoy?",
+      "😃 ¿Qué disfruté más del aprendizaje?",
+      "🚀 ¿Qué me desafió hoy?",
+      "💬 ¿Cómo explicaría esto a un amigo?"
     ];
 
     // Colores por cara
@@ -249,24 +261,19 @@
       lastX = e.clientX; lastY = e.clientY;
     });
     window.addEventListener('mouseup', ()=>{ dragging = false; });
-    // Rotar dado a cara random y agregar una nueva pregunta/cara random
+
+    // Rotar dado a cara random y agregar una nueva pregunta random NO repetida
     cube.onclick = function(e) {
       if (preguntas.length < 6) return; // No agregar si hay menos de 6
-      // Agregar cara random solo si hay menos de 20
+      // Solo agregar si hay preguntasEjemplo sin repetir
+      let alternativas = preguntasEjemplo.filter(q => !preguntas.includes(q));
+      let nueva;
       if (preguntas.length < 20) {
-        const preguntasEjemplo = [
-          "🔗 ¿Qué conecta esto con otro saber?",
-          "🧠 ¿Cómo cambiaría mi opinión sobre esto?",
-          "📚 ¿Dónde podría aprender más sobre esto?",
-          "🌱 ¿Qué me gustaría explorar la próxima vez?",
-          "🎯 ¿Qué objetivo cumplí hoy?",
-          "😃 ¿Qué disfruté más del aprendizaje?",
-          "🚀 ¿Qué me desafió hoy?",
-          "💬 ¿Cómo explicaría esto a un amigo?"
-        ];
-        // Elegir pregunta random que no esté ya
-        let alternativas = preguntasEjemplo.filter(q => !preguntas.includes(q));
-        let nueva = alternativas.length ? alternativas[Math.floor(Math.random()*alternativas.length)] : "Nueva pregunta";
+        if (alternativas.length) {
+          nueva = alternativas[Math.floor(Math.random()*alternativas.length)];
+        } else {
+          nueva = "Nueva pregunta";
+        }
         preguntas.push(nueva);
         if (carasColor.length < preguntas.length) {
           carasColor.push("#e3e3e3");
@@ -353,7 +360,7 @@
     };
     addQuestionBtn.onclick = () => {
       let val = newQuestion.value.trim();
-      if(val) {
+      if(val && !preguntas.includes(val)) {
         preguntas.push(val);
         if (carasColor.length < preguntas.length) carasColor.push("#e3e3e3");
         newQuestion.value = "";
