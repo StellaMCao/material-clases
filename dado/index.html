@@ -192,7 +192,7 @@
     <button class="add-btn" id="addQuestionBtn">Agregar pregunta</button>
   </div>
   <script>
-    // Preguntas por default (dado de 6 caras)
+    // Preguntas iniciales
     let preguntas = [
       "💡 Algo que entendí mejor hoy fue...",
       "⚙️ Una vez que me equivoqué y aprendí fue cuando...",
@@ -201,7 +201,6 @@
       "🔎 ¿Qué nueva pregunta me surgió a partir de lo que aprendí?",
       "❤️ ¿Cómo me sentí mientras aprendía esto?"
     ];
-
     // Banco de preguntas extra
     const preguntasEjemplo = [
       "🔗 ¿Qué conecta esto con otro saber?",
@@ -213,15 +212,12 @@
       "🚀 ¿Qué me desafió hoy?",
       "💬 ¿Cómo explicaría esto a un amigo?"
     ];
-
-    // Para evitar repeticiones:
-    let preguntasRestantes = [];
-
+    // Todas las posibles preguntas únicas: base + banco + agregadas por usuario
+    let historialPreguntas = [...preguntasEjemplo, ...preguntas];
     // Colores por cara
     const carasColor = [
       "#93e2ff", "#f7b6aa", "#ffe16b", "#b7f7c2", "#d3b6f7", "#ffd6e0"
     ];
-
     // Rotaciones para cada cara al frente
     const rotaciones = [
       {x: 0,    y: 0},      // 1: frente
@@ -231,6 +227,15 @@
       {x: -90,  y: 0},      // 5: arriba
       {x: 90,   y: 0}       // 6: abajo
     ];
+    // Para el ciclo de preguntas random no repetidas
+    let preguntasDisponibles = [];
+
+    function actualizarHistorialPreguntas() {
+      // Todas las preguntas únicas (base, banco y agregadas por usuario)
+      historialPreguntas = Array.from(new Set([...preguntasEjemplo, ...preguntas]));
+      // Elimina las que ya están en el dado actual
+      preguntasDisponibles = historialPreguntas.filter(q => !preguntas.includes(q));
+    }
 
     function renderCube() {
       const cube = document.getElementById('cube');
@@ -239,7 +244,7 @@
         let face = document.createElement('div');
         face.className = 'face f'+(i+1);
         face.style.background = carasColor[i % carasColor.length];
-        face.innerHTML = `<span>${preguntas[i]}</span>
+        face.innerHTML = `<span>${preguntas[i] || ''}</span>
           <button class="del-btn" onclick="removeQuestion(${i});event.stopPropagation();" title="Borrar">🗑</button>`;
         cube.appendChild(face);
       }
@@ -265,36 +270,24 @@
     });
     window.addEventListener('mouseup', ()=>{ dragging = false; });
 
-    // Inicializar preguntasRestantes (evita repetidos)
-    function resetPreguntasRestantes() {
-      preguntasRestantes = preguntasEjemplo.filter(q => !preguntas.includes(q));
-    }
-
-    // Rotar dado a cara random y agregar una nueva pregunta random NO repetida hasta agotar
+    // Rotar dado a cara random y agregar una nueva pregunta random NO repetida
     cube.onclick = function(e) {
       if (preguntas.length < 6) return; // No agregar si hay menos de 6
-
-      // Inicializa/restablece si están agotadas
-      if (preguntasRestantes.length === 0) {
-        resetPreguntasRestantes();
-      }
-
-      let nueva;
-      if (preguntas.length < 20) {
-        if (preguntasRestantes.length) {
-          // Elige una random de las que faltan
-          let idx = Math.floor(Math.random()*preguntasRestantes.length);
-          nueva = preguntasRestantes.splice(idx,1)[0];
-        } else {
-          nueva = "Nueva pregunta";
-        }
+      actualizarHistorialPreguntas();
+      // Si ya usamos todas las preguntas posibles
+      if (preguntasDisponibles.length === 0) {
+        preguntas.push("Nueva pregunta");
+      } else {
+        // Elegir una random de las disponibles
+        let idx = Math.floor(Math.random()*preguntasDisponibles.length);
+        let nueva = preguntasDisponibles.splice(idx,1)[0];
         preguntas.push(nueva);
-        if (carasColor.length < preguntas.length) {
-          carasColor.push("#e3e3e3");
-        }
-        renderCube();
-        renderQuestionsEditor();
       }
+      if (carasColor.length < preguntas.length) {
+        carasColor.push("#e3e3e3");
+      }
+      renderCube();
+      renderQuestionsEditor();
       // Rotar a una cara random
       let cara = Math.floor(Math.random() * Math.min(6, preguntas.length));
       rotX = rotaciones[cara].x;
@@ -306,7 +299,7 @@
     window.removeQuestion = function(idx) {
       if (preguntas.length <= 1) return;
       preguntas.splice(idx,1);
-      resetPreguntasRestantes();
+      actualizarHistorialPreguntas();
       renderCube();
       renderQuestionsEditor();
       updateRotation();
@@ -350,7 +343,7 @@
           inp.disabled = true;
           editB.style.display = "inline-block";
           saveB.style.display = "none";
-          resetPreguntasRestantes();
+          actualizarHistorialPreguntas();
           renderCube();
         };
         row.appendChild(saveB);
@@ -359,7 +352,7 @@
         delB.onclick = () => {
           if(preguntas.length <= 1) return;
           preguntas.splice(i,1);
-          resetPreguntasRestantes();
+          actualizarHistorialPreguntas();
           renderQuestionsEditor();
           renderCube();
         };
@@ -381,14 +374,14 @@
         preguntas.push(val);
         if (carasColor.length < preguntas.length) carasColor.push("#e3e3e3");
         newQuestion.value = "";
-        resetPreguntasRestantes();
+        actualizarHistorialPreguntas();
         renderQuestionsEditor();
         renderCube();
       }
     };
 
     // Inicial
-    resetPreguntasRestantes();
+    actualizarHistorialPreguntas();
     renderCube();
   </script>
 </body>
