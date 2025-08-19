@@ -202,7 +202,7 @@
       "❤️ ¿Cómo me sentí mientras aprendía esto?"
     ];
 
-    // Banco de preguntas extra (sin repeticiones)
+    // Banco de preguntas extra
     const preguntasEjemplo = [
       "🔗 ¿Qué conecta esto con otro saber?",
       "🧠 ¿Cómo cambiaría mi opinión sobre esto?",
@@ -213,6 +213,9 @@
       "🚀 ¿Qué me desafió hoy?",
       "💬 ¿Cómo explicaría esto a un amigo?"
     ];
+
+    // Para evitar repeticiones:
+    let preguntasRestantes = [];
 
     // Colores por cara
     const carasColor = [
@@ -262,15 +265,26 @@
     });
     window.addEventListener('mouseup', ()=>{ dragging = false; });
 
-    // Rotar dado a cara random y agregar una nueva pregunta random NO repetida
+    // Inicializar preguntasRestantes (evita repetidos)
+    function resetPreguntasRestantes() {
+      preguntasRestantes = preguntasEjemplo.filter(q => !preguntas.includes(q));
+    }
+
+    // Rotar dado a cara random y agregar una nueva pregunta random NO repetida hasta agotar
     cube.onclick = function(e) {
       if (preguntas.length < 6) return; // No agregar si hay menos de 6
-      // Solo agregar si hay preguntasEjemplo sin repetir
-      let alternativas = preguntasEjemplo.filter(q => !preguntas.includes(q));
+
+      // Inicializa/restablece si están agotadas
+      if (preguntasRestantes.length === 0) {
+        resetPreguntasRestantes();
+      }
+
       let nueva;
       if (preguntas.length < 20) {
-        if (alternativas.length) {
-          nueva = alternativas[Math.floor(Math.random()*alternativas.length)];
+        if (preguntasRestantes.length) {
+          // Elige una random de las que faltan
+          let idx = Math.floor(Math.random()*preguntasRestantes.length);
+          nueva = preguntasRestantes.splice(idx,1)[0];
         } else {
           nueva = "Nueva pregunta";
         }
@@ -292,6 +306,7 @@
     window.removeQuestion = function(idx) {
       if (preguntas.length <= 1) return;
       preguntas.splice(idx,1);
+      resetPreguntasRestantes();
       renderCube();
       renderQuestionsEditor();
       updateRotation();
@@ -335,6 +350,7 @@
           inp.disabled = true;
           editB.style.display = "inline-block";
           saveB.style.display = "none";
+          resetPreguntasRestantes();
           renderCube();
         };
         row.appendChild(saveB);
@@ -343,6 +359,7 @@
         delB.onclick = () => {
           if(preguntas.length <= 1) return;
           preguntas.splice(i,1);
+          resetPreguntasRestantes();
           renderQuestionsEditor();
           renderCube();
         };
@@ -364,12 +381,14 @@
         preguntas.push(val);
         if (carasColor.length < preguntas.length) carasColor.push("#e3e3e3");
         newQuestion.value = "";
+        resetPreguntasRestantes();
         renderQuestionsEditor();
         renderCube();
       }
     };
 
     // Inicial
+    resetPreguntasRestantes();
     renderCube();
   </script>
 </body>
