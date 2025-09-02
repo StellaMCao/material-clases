@@ -189,10 +189,10 @@
             <p><strong>Instrucciones Generales:</strong></p>
             <ol>
                 <li>Lee cada paso y su explicación detallada.</li>
-                <li>Responde a las preguntas en el espacio indicado. Los **ejemplos** te ayudarán a entender qué tipo de información se espera; si dejas un campo vacío, el ejemplo se incluirá automáticamente en el resultado final para que siempre tengas una referencia.</li>
-                <li>Utiliza los botones **"Agregar..."** para añadir más ítems en las secciones que lo permitan, o **"Ocultar/Mostrar..."** para la sección de Metodología, según lo necesites.</li>
+                <li>Responde a las preguntas en el espacio indicado. Los ejemplos te ayudarán a entender qué tipo de información se espera; si dejas un campo vacío, el ejemplo se incluirá automáticamente en el resultado final para que siempre tengas una referencia.</li>
+                <li>Utiliza los botones "Agregar..." para añadir más ítems en las secciones que lo permitan, o "Ocultar/Mostrar..." para la sección de Metodología, según lo necesites.</li>
                 <li>Cuando hayas completado todos los pasos, desplázate hasta el final y haz clic en "Generar y Copiar Proyecto Completo". Todas tus respuestas se articularán en una propuesta coherente, lista para ser pegada en tu documento.</li>
-                <li><strong>Nota sobre el formato:</strong> El área de resultado final te mostrará el texto con **negritas** y formato de lista. Al copiar el contenido y pegarlo en un editor de texto (como Microsoft Word, Google Docs o un editor Markdown), este formato se mantendrá.</li>
+                <li><strong>Nota sobre el formato:</strong> El área de resultado final te mostrará el texto con negritas y formato de lista. Al copiar el contenido y pegarlo en un editor de texto (como Microsoft Word, Google Docs o un editor Markdown), este formato se mantendrá.</li>
                 <li>¡Disfruta el proceso y la construcción de tu monografía!</li>
             </ol>
             <div class="copy-feedback" id="copyFeedback"></div>
@@ -612,15 +612,15 @@
 
             // Generate HTML for display in the div
             const htmlOutput = `
-                <h2>Propuesta de Monografía: ${temaDelimitado || "Sin Título Provisional"}</h2>
+                <h2>Propuesta de monografía: ${temaDelimitado || "Sin Título Provisional"}</h2>
 
                 <p>(Título Provisional: ${temaDelimitado || "Por Definir"})</p>
 
                 <h3>1. Introducción</h3>
                 <p>En esta sección se presentará el tema principal del estudio, <strong>${temaDelimitado}</strong>, y se expondrá claramente el problema de investigación: <strong>${preguntaInvestigacion}</strong>. Se detallará el objetivo general: <strong>${objetivoGeneral}</strong>, junto con los objetivos específicos que guiarán la investigación. Además, se justificará la relevancia de este estudio, destacando su importancia y contribuciones esperadas. Finalmente, se describirá la estructura general del trabajo, preparando al lector para el contenido.</p>
                 <ul>
-                    <li><strong>Tema General:</strong> ${temaGeneral}</li>
-                    <li><strong>Objetivos Específicos:</strong>
+                    <li><strong>Tema general:</strong> ${temaGeneral}</li>
+                    <li><strong>Objetivos específicos:</strong>
                         <ul>
                             ${objectivesHtmlList}
                         </ul>
@@ -631,10 +631,10 @@
                 <h3>2. Desarrollo</h3>
                 <p>Esta sección constituye el cuerpo central de la monografía, donde se profundizará en el análisis del tema. Se presentarán el <strong>Marco Teórico</strong> y los <strong>Antecedentes</strong> que sustentan el estudio:</p>
                 <ul>
-                    <li><strong>Marco Teórico y Antecedentes:</strong>
+                    <li><strong>Marco teórico y antecedentes:</strong>
                         <ul>
-                            <li><strong>Conceptos Clave o Teorías Principales:</strong> ${conceptosClave}</li>
-                            <li><strong>Antecedentes Relevantes:</strong> ${antecedentesRelevantes}</li>
+                            <li><strong>Conceptos clave o teorías principales:</strong> ${conceptosClave}</li>
+                            <li><strong>Antecedentes relevantes:</strong> ${antecedentesRelevantes}</li>
                         </ul>
                     </li>
                 </ul>
