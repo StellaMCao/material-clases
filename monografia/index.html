@@ -69,8 +69,8 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 1em;
-            box-sizing: border-box; /* Ensures padding doesn't increase width */
-            resize: vertical; /* Allow vertical resizing */
+            box-sizing: border-box;
+            resize: vertical;
         }
         .step-content ul {
             list-style: disc inside;
@@ -89,7 +89,7 @@
             font-size: 1.1em;
             transition: background-color 0.3s ease;
             margin-top: 20px;
-            display: block; /* Make button take full width if needed, or center it */
+            display: block;
             margin-left: auto;
             margin-right: auto;
         }
@@ -109,7 +109,7 @@
             background-color: #2980b9;
         }
         button.toggle-section-btn {
-            background-color: #e67e22; /* Naranja para toggle */
+            background-color: #e67e22;
             padding: 10px 20px;
             font-size: 1em;
             margin-top: 10px;
@@ -136,9 +136,8 @@
             padding: 25px;
             margin-top: 40px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            text-align: center; /* Centrar el botón */
+            text-align: center;
         }
-        /* Estilo para el div con contenteditable */
         #finalOutput {
             width: calc(100% - 20px);
             min-height: 500px;
@@ -152,13 +151,11 @@
             resize: vertical;
             margin-top: 15px;
             text-align: left;
-            overflow-y: auto; /* Para scroll si el contenido es largo */
+            overflow-y: auto;
         }
-        /* Asegurar que las negritas se vean dentro del contenteditable div */
         #finalOutput strong {
             font-weight: bold;
         }
-        /* Estilo para los títulos de capítulo dentro del textarea */
         .step-content ul li textarea[id$="_titulo"] {
             font-weight: bold;
             min-height: 30px;
@@ -170,12 +167,12 @@
         }
         .development-option {
             margin-bottom: 15px;
-            display: flex; /* Usar flexbox para alinear radio y label */
-            align-items: center; /* Centrar verticalmente */
-            gap: 8px; /* Espacio entre el radio y el label */
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .development-option input[type="radio"] {
-            margin: 0; /* Eliminar margen predeterminado */
+            margin: 0;
         }
     </style>
 </head>
@@ -183,16 +180,16 @@
 
     <div class="container">
         <h1>LA GUÍA DE LA MONOGRAFÍA EXITOSA: </h1>
- <h1>Tu proyecto paso a paso</h1>
+        <h1>Tu proyecto paso a paso</h1>
         <div class="instructions">
             <p>¡Bienvenido/a a tu hoja de ruta hacia una monografía brillante! Esta guía te orientará a través de cada etapa crucial, transformando ideas en un proyecto sólido.</p>
             <p><strong>Instrucciones Generales:</strong></p>
             <ol>
                 <li>Lee cada paso y su explicación detallada.</li>
-                <li>Responde a las preguntas en el espacio indicado. Los ejemplos te ayudarán a entender qué tipo de información se espera; si dejas un campo vacío, el ejemplo se incluirá automáticamente en el resultado final para que siempre tengas una referencia.</li>
+                <li>Responde a las preguntas en el espacio indicado. Los ejemplos te ayudarán a entender qué tipo de información se espera; si dejas un campo vacío, el ejemplo se incluirá automáticamente.</li>
                 <li>Utiliza los botones "Agregar..." para añadir más ítems en las secciones que lo permitan, o "Ocultar/Mostrar..." para la sección de Metodología, según lo necesites.</li>
-                <li>Cuando hayas completado todos los pasos, desplázate hasta el final y haz clic en "Generar y Copiar Proyecto Completo". Todas tus respuestas se articularán en una propuesta coherente, lista para ser pegada en tu documento.</li>
-                <li><strong>Nota sobre el formato:</strong> El área de resultado final te mostrará el texto con negritas y formato de lista. Al copiar el contenido y pegarlo en un editor de texto (como Microsoft Word, Google Docs o un editor Markdown), este formato se mantendrá.</li>
+                <li>Cuando hayas completado todos los pasos, desplázate hasta el final y haz clic en "Generar y Copiar Proyecto Completo". Todas tus respuestas se articularán en una propuesta coherente.</li>
+                <li><strong>Nota sobre el formato:</strong> El área de resultado final te mostrará el texto con negritas y formato de lista. Al copiar el contenido y pegarlo en un editor de texto (como Word), el formato se mantendrá.</li>
                 <li>¡Disfruta el proceso y la construcción de tu monografía!</li>
             </ol>
             <div class="copy-feedback" id="copyFeedback"></div>
@@ -231,7 +228,7 @@
             </ul>
             <div class="step-content">
                 <label for="objetivoGeneral2">1. Mi objetivo general:</label>
-                <textarea id="objetivoGeneral2" placeholder="Ej: Analizar el impacto de los modelos de lenguaje grandes (LLMs) en los métodos de enseñanza y aprendizaje de la educación superior latinoamericana durante el período 2020-2023, con el fin de identificar desafíos y oportunidades."></textarea>
+                <textarea id="objetivoGeneral2" placeholder="Ej: Analizar el impacto de los modelos de lenguaje grandes (LLMs) en los métodos de enseñanza y aprendizaje de la educación superior latinoamericana entre 2020 y 2023."></textarea>
 
                 <label>2. Mis objetivos específicos:</label>
                 <div id="objetivosEspecificosContainer">
@@ -249,11 +246,11 @@
             <p>En esta sección, debes argumentar y persuadir al lector (o a tu tutor) sobre la relevancia, pertinencia e importancia de tu monografía.</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li><strong>Justificación:</strong> Explica por qué tu investigación es necesaria y qué aportará al campo de estudio o a la sociedad. Considera la relevancia teórica, práctica, social y/o metodológica.</li>
+                <li><strong>Justificación:</strong> Explica por qué tu investigación es necesaria y qué aportará al campo de estudio o a la sociedad. Considera la relevancia teórica, práctica, social y personal.</li>
             </ul>
             <div class="step-content">
                 <label for="justificacion3">1. Mi justificación (mínimo 3-5 líneas):</label>
-                <textarea id="justificacion3" placeholder="Ej: Esta monografía es relevante porque el rápido avance de los LLMs está transformando el panorama educativo global, y es crucial comprender cómo estas tecnologías específicas están siendo adoptadas e impactando la educación superior en América Latina. Aportará una perspectiva regional sobre los desafíos y oportunidades, ofreciendo información valiosa para formuladores de políticas educativas, instituciones universitarias, docentes y estudiantes interesados en la integración tecnológica ética y efectiva."></textarea>
+                <textarea id="justificacion3" placeholder="Ej: Esta monografía es relevante porque el rápido avance de los LLMs está transformando el panorama educativo global, y es crucial comprender sus efectos en el ámbito latinoamericano, donde los desafíos y oportunidades pueden diferir respecto a otras regiones."></textarea>
             </div>
         </div>
 
@@ -268,10 +265,10 @@
             </ul>
             <div class="step-content">
                 <label for="conceptosClave4">1. Conceptos clave o teorías principales que sustentarán mi investigación:</label>
-                <textarea id="conceptosClave4" placeholder="Ej: Inteligencia rtificial, Modelos de Lenguaje Grandes (LLMs), Educación Superior, Tecnologías Educativas, Pedagogía Digital, Ética en IA."></textarea>
+                <textarea id="conceptosClave4" placeholder="Ej: Inteligencia artificial, Modelos de Lenguaje Grandes (LLMs), Educación Superior, Tecnologías Educativas, Pedagogía Digital, Ética en la IA."></textarea>
 
                 <label for="antecedentesRelevantes4">2. Algunos antecedentes relevantes (estudios o autores previos que abordaron temas similares):</label>
-                <textarea id="antecedentesRelevantes4" placeholder="Ej: Trabajos sobre la curva de adopción de tecnología en educación (Rogers), estudios sobre la integración de IA en aulas universitarias pre-LLMs, informes de UNESCO o bancos de desarrollo sobre digitalización educativa en América Latina."></textarea>
+                <textarea id="antecedentesRelevantes4" placeholder="Ej: Trabajos sobre la curva de adopción de tecnología en educación (Rogers), estudios sobre la integración de IA en aulas universitarias (García, 2021), etc."></textarea>
             </div>
         </div>
 
@@ -294,7 +291,7 @@
                 <textarea id="enfoque5" placeholder="Ej: Mixto (predominantemente cualitativo con elementos cuantitativos para contextualización)."></textarea>
 
                 <label for="instrumentosRecoleccion5">3. Principales instrumentos o técnicas de recolección de datos (ej. análisis de documentos, encuestas, entrevistas, observación):</label>
-                <textarea id="instrumentosRecoleccion5" placeholder="Ej: Encuestas a docentes y estudiantes, entrevistas semiestructuradas a expertos en tecnología educativa y análisis de documentos (planes de estudio, políticas universitarias, publicaciones sobre LLMs)."></textarea>
+                <textarea id="instrumentosRecoleccion5" placeholder="Ej: Encuestas a docentes y estudiantes, entrevistas semiestructuradas a expertos en tecnología educativa y análisis de documentos institucionales."></textarea>
             </div>
         </div>
 
@@ -304,7 +301,7 @@
             <p>Diseña la "arquitectura" de tu monografía. Este es el borrador de tu índice para el "Desarrollo", una hoja de ruta lógica para tu trabajo.</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li><strong>Estructura preliminar del desarrollo:</strong> un esquema detallado de los capítulos o secciones principales que conformarán el "Desarrollo" de tu monografía. Decide si esta sección se dividirá en capítulos temáticos o será un único apartado.</li>
+                <li><strong>Estructura preliminar del desarrollo:</strong> un esquema detallado de los capítulos o secciones principales que conformarán el "Desarrollo" de tu monografía. Decide si serán capítulos o un único apartado.</li>
             </ul>
             <div class="step-content">
                 <label>¿Cómo se estructurará el desarrollo de tu monografía?</label>
@@ -340,7 +337,7 @@
                     <label for="singleSection_titulo">Título del apartado principal del desarrollo:</label>
                     <textarea id="singleSection_titulo" rows="1" placeholder="Ej: Análisis y Discusión de Resultados"></textarea>
                     <label for="singleSection_descripcion">Descripción breve del contenido de este apartado:</label>
-                    <textarea id="singleSection_descripcion" placeholder="Ej: Este apartado consolidará el marco teórico, los antecedentes, la metodología y el análisis de datos en una discusión integrada sobre el impacto de los LLMs."></textarea>
+                    <textarea id="singleSection_descripcion" placeholder="Ej: Este apartado consolidará el marco teórico, los antecedentes, la metodología y el análisis de datos en una discusión integral."></textarea>
                 </div>
             </div>
         </div>
@@ -351,11 +348,11 @@
             <p>Pensar en las conclusiones al inicio te ayuda a mantener el enfoque y a dirigir tu investigación hacia los resultados deseados.</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li><strong>Conclusiones preliminares:</strong> un esbozo o anticipación de los principales hallazgos, respuestas clave a tu pregunta de investigación, o las implicaciones más importantes que esperas derivar de tu estudio.</li>
+                <li><strong>Conclusiones preliminares:</strong> un esbozo o anticipación de los principales hallazgos, respuestas clave a tu pregunta de investigación, o las implicaciones más importantes de tu futuro trabajo.</li>
             </ul>
             <div class="step-content">
                 <label for="preliminarConclusiones">1. Mis primeras ideas para las conclusiones (principales hallazgos esperados o implicaciones):</label>
-                <textarea id="preliminarConclusiones" placeholder="Ej: Los LLMs han impactado significativamente la personalización del aprendizaje y la evaluación formativa, pero también han generado desafíos éticos y de equidad en el acceso a la tecnología. Además, se anticipa la necesidad de políticas institucionales claras para su uso."></textarea>
+                <textarea id="preliminarConclusiones" placeholder="Ej: Los LLMs han impactado significativamente la personalización del aprendizaje y la evaluación formativa, pero también han generado desafíos en cuanto a ética y equidad."></textarea>
             </div>
         </div>
 
@@ -365,7 +362,7 @@
             <p>Identifica las fuentes bibliográficas esenciales para un punto de partida sólido.</p>
             <p><strong>Explicación:</strong></p>
             <ul>
-                <li><strong>Bibliografía preliminar:</strong> un listado inicial de las obras más relevantes (libros, artículos, tesis, etc.) que has identificado como fundamentales. Sirve para delimitar el campo y tener una base para futuras búsquedas.</li>
+                <li><strong>Bibliografía preliminar:</strong> un listado inicial de las obras más relevantes (libros, artículos, tesis, etc.) que has identificado como fundamentales. Sirve para delimitar el estado del arte sobre el tema.</li>
             </ul>
             <div class="step-content">
                 <label>1. Fuentes clave iniciales (libros, artículos, sitios web confiables, etc. con su título y autor):</label>
@@ -393,19 +390,18 @@
 
     <script>
         const copyFeedbackDiv = document.getElementById('copyFeedback');
-        let objectiveCounter = 3; // Start after initial 3
-        let bibliographyCounter = 3; // Start after initial 3
-        let chapterCounter = 3; // Start after initial 3 chapters
+        let objectiveCounter = 3;
+        let bibliographyCounter = 3;
+        let chapterCounter = 3;
 
         function showFeedback(message) {
             copyFeedbackDiv.textContent = message;
             copyFeedbackDiv.style.display = 'block';
             setTimeout(() => {
                 copyFeedbackDiv.style.display = 'none';
-            }, 3000); // Ocultar el mensaje después de 3 segundos
+            }, 3000);
         }
 
-        // Helper function to copy formatted content from a div
         async function copyFormattedContent(divId) {
             const div = document.getElementById(divId);
             if (!div) return;
@@ -429,7 +425,6 @@
             }
         }
 
-        // Helper function to get value from textarea, or its example placeholder
         function getValueOrExample(elementId) {
             const element = document.getElementById(elementId);
             if (!element) return "";
@@ -438,14 +433,12 @@
                 return userValue;
             }
             const placeholder = element.placeholder.trim();
-            // Only return example if it's an actual example, not just "(Opcional)"
             if (placeholder.startsWith("Ej:") && !placeholder.includes("(Opcional)")) {
-                return placeholder.substring(placeholder.indexOf(":") + 2).trim(); // Remove "Ej:" prefix
+                return placeholder.substring(placeholder.indexOf(":") + 2).trim();
             }
-            return ""; // Return empty string if no user input and no relevant example
+            return "";
         }
 
-        // Function to get all values from dynamic textareas
         function getAllValuesByClassName(containerId, className) {
             const container = document.getElementById(containerId);
             if (!container) return [];
@@ -465,7 +458,6 @@
             return values;
         }
 
-        // Dynamic Field Addition Functions
         function addObjectiveField() {
             objectiveCounter++;
             const container = document.getElementById('objetivosEspecificosContainer');
@@ -500,7 +492,6 @@
             document.getElementById(`capitulo${chapterCounter}_titulo`).focus();
         }
 
-        // Toggle Methodology Section
         function toggleMethodologySection() {
             const methodologyStep = document.getElementById('step5_methodology');
             const toggleButton = document.getElementById('toggleMethodologyBtn');
@@ -513,14 +504,12 @@
             }
         }
 
-        // Toggle Chapter/Single Section Input
         function toggleChapterInput() {
             const useChapters = document.getElementById('devChapters').checked;
             document.getElementById('chapterInputsContainer').style.display = useChapters ? 'block' : 'none';
             document.getElementById('singleSectionInputContainer').style.display = useChapters ? 'none' : 'block';
         }
 
-        // Main function to generate and copy the full project
         function generateAndCopyFullProject() {
             const temaGeneral = getValueOrExample('temaGeneral1');
             const temaDelimitado = getValueOrExample('temaDelimitado1');
@@ -534,7 +523,6 @@
             const specificObjectives = getAllValuesByClassName('objetivosEspecificosContainer', 'objective-input');
             const bibliographySources = getAllValuesByClassName('bibliografiaContainer', 'bibliography-input');
 
-            // Build Objectives HTML for the result
             let objectivesHtmlList = '';
             if (specificObjectives.length > 0) {
                 specificObjectives.forEach(obj => {
@@ -544,7 +532,6 @@
                 objectivesHtmlList = '<li>[Ningún objetivo específico ingresado]</li>';
             }
 
-            // Build Bibliography HTML for the result
             let bibliographyHtmlList = '';
             if (bibliographySources.length > 0) {
                 bibliographySources.forEach(source => {
@@ -554,7 +541,6 @@
                 bibliographyHtmlList = '<li>[Ninguna fuente preliminar ingresada]</li>';
             }
 
-            // Check if Methodology section is visible
             const methodologyStepVisible = document.getElementById('step5_methodology').style.display !== 'none';
 
             let methodologySectionInDevelopment = '';
@@ -569,24 +555,21 @@
                 `;
             }
 
-            // Build Development section content based on user choice
             let developmentContentHtml = '';
             const useChapters = document.getElementById('devChapters').checked;
 
             if (useChapters) {
                 const chapterTitles = [];
                 const chapterDescriptions = [];
-                // Get all chapter inputs, including dynamically added ones
                 const chapterTextareas = document.querySelectorAll('#chapterInputsContainer textarea[id$="_titulo"]');
                 chapterTextareas.forEach(textarea => {
                     const id = textarea.id;
-                    const num = id.match(/\d+/)[0]; // Extract number from ID
+                    const num = id.match(/\d+/)[0];
                     chapterTitles.push(getValueOrExample(`capitulo${num}_titulo`));
                     chapterDescriptions.push(getValueOrExample(`capitulo${num}_descripcion`));
                 });
 
                 chapterTitles.forEach((title, index) => {
-                    // Only add if title is not empty, allowing for removal of optional empty chapters
                     if (title && title !== "") {
                         developmentContentHtml += `
                             <li><strong>Capítulo ${index + 1}: ${title}</strong><br>
@@ -599,7 +582,7 @@
                     developmentContentHtml = `<li>[No se han definido capítulos temáticos. Considere definir al menos tres capítulos o cambiar a un apartado único para el desarrollo.]</li>`;
                 }
 
-            } else { // Single section development
+            } else {
                 const singleSectionTitulo = getValueOrExample('singleSection_titulo');
                 const singleSectionDescripcion = getValueOrExample('singleSection_descripcion');
                 developmentContentHtml = `
@@ -609,17 +592,17 @@
                 `;
             }
 
-
-            // Generate HTML for display in the div
+            // MODIFICADO: Ahora se incluye "Objetivo general" ANTES de los objetivos específicos
             const htmlOutput = `
                 <h2>Propuesta de monografía: ${temaDelimitado || "Sin Título Provisional"}</h2>
 
                 <p>(Título Provisional: ${temaDelimitado || "Por Definir"})</p>
 
                 <h3>1. Introducción</h3>
-                <p>En esta sección se presentará el tema principal del estudio, <strong>${temaDelimitado}</strong>, y se expondrá claramente el problema de investigación: <strong>${preguntaInvestigacion}</strong>. Se detallará el objetivo general: <strong>${objetivoGeneral}</strong>, junto con los objetivos específicos que guiarán la investigación. Además, se justificará la relevancia de este estudio, destacando su importancia y contribuciones esperadas. Finalmente, se describirá la estructura general del trabajo, preparando al lector para el contenido.</p>
+                <p>En esta sección se presentará el tema principal del estudio, <strong>${temaDelimitado}</strong>, y se expondrá claramente el problema de investigación: <strong>${preguntaInvestigacion}</strong>.</p>
                 <ul>
                     <li><strong>Tema general:</strong> ${temaGeneral}</li>
+                    <li><strong>Objetivo general:</strong> ${objetivoGeneral}</li>
                     <li><strong>Objetivos específicos:</strong>
                         <ul>
                             ${objectivesHtmlList}
@@ -629,7 +612,7 @@
                 </ul>
 
                 <h3>2. Desarrollo</h3>
-                <p>Esta sección constituye el cuerpo central de la monografía, donde se profundizará en el análisis del tema. Se presentarán el <strong>Marco Teórico</strong> y los <strong>Antecedentes</strong> que sustentan el estudio:</p>
+                <p>Esta sección constituye el cuerpo central de la monografía, donde se profundizará en el análisis del tema. Se presentarán el <strong>Marco Teórico</strong> y los <strong>Antecedentes</strong> que sustentan la investigación.</p>
                 <ul>
                     <li><strong>Marco teórico y antecedentes:</strong>
                         <ul>
@@ -645,7 +628,7 @@
                 </ul>
 
                 <h3>3. Conclusiones</h3>
-                <p>Este apartado presentará los hallazgos clave de la investigación, dando respuesta a la pregunta de investigación y a los objetivos planteados. Los principales hallazgos esperados incluyen:</p>
+                <p>Este apartado presentará los hallazgos clave de la investigación, dando respuesta a la pregunta de investigación y a los objetivos planteados. Los principales hallazgos esperados o implicaciones serían:</p>
                 <ul>
                     <li>${preliminarConclusiones}</li>
                 </ul>
@@ -660,11 +643,9 @@
 
             document.getElementById('finalOutput').innerHTML = htmlOutput;
 
-            // Copy the formatted content (HTML will be copied)
             copyFormattedContent('finalOutput');
         }
 
-        // Initialize development structure on load
         document.addEventListener('DOMContentLoaded', toggleChapterInput);
     </script>
 
