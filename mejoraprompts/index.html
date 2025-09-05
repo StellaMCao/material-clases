@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optimizador Inteligente de Prompts de IA para Educación (Argentina)</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.7;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            flex: 1;
+        }
+        h1 {
+            color: #1a2a6c;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.6em;
+            letter-spacing: -1px;
+            font-weight: 700;
+        }
+        .subtitle {
+            text-align: center;
+            color: #555;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        h2 {
+            color: #007bff;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.7em;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 8px;
+            font-weight: 600;
+        }
+        h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.05em;
+        }
+        textarea, select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        textarea:focus, select:focus, input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .field-group {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
+        }
+        .field-group h2 {
+            margin-top: 0;
+            text-align: center;
+            font-size: 1.5em;
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 20px;
+            color: #1a2a6c;
+        }
+        .explanation {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 16px 35px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+        }
+        .copy-button {
+            background-color: #007bff;
+            margin-top: 10px;
+            font-size: 1em;
+            padding: 12px 25px;
+            width: auto;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+        .results-section {
+            margin-top: 35px;
+            background-color: #e9ecef;
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 8px solid #007bff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .results-section h2 {
+            margin-top: 0;
+            font-size: 1.9em;
+            border-bottom: none;
+            color: #0056b3;
+            text-align: center;
+        }
+        .prompt-display-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        .original-prompt-display, .optimized-prompt-display {
+            font-family: 'Source Code Pro', monospace;
+            background-color: #fdfdfe;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 1em;
+            line-height: 1.8;
+            border-left: 8px solid #6c757d;
+            position: relative;
+            padding-right: 70px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .optimized-prompt-display {
+            background-color: #d4edda;
+            border-left: 8px solid #28a745;
+            font-weight: bold;
+            color: #155724;
+            border-color: #28a745;
+        }
+        .hidden {
+            display: none;
+        }
+        .footer {
+            margin-top: auto;
+            padding: 30px;
+            background-color: #e9ecef;
+            text-align: center;
+            font-size: 0.9em;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+        .footer .copyright {
+             display: block;
+        }
+        .info-box {
+            background-color: #e7f3ff;
+            border-left: 5px solid #007bff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            color: #004085;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .info-box h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #0056b3;
+            font-weight: 700;
+        }
+        .info-box ul {
+            margin-left: 20px;
+            margin-bottom: 0;
+            padding-left: 5px;
+        }
+        .info-box li {
+            margin-bottom: 8px;
+        }
+        .suggestion-item {
+            margin-bottom: 12px;
+            font-size: 0.98em;
+            color: #495057;
+            line-height: 1.8;
+        }
+        /* Estilos para los títulos principales H1 */
+        h1.title-case {
+             /* El texto del H1 ya está escrito con la capitalización correcta */
+        }
+        /* Adaptaciones para móviles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            button {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title-case">Optimizador inteligente de prompts de IA para Educación (Argentina)</h1>
+        <p class="subtitle">Crea instrucciones precisas y efectivas para modelos de lenguaje con esta herramienta interactiva.</p>
+
+        <div id="prompt-input-section">
+            <h2>Define la tarea principal</h2>
+            <label for="initial-prompt">¿Qué quieres que haga la IA?</label>
+            <p class="explanation">Describe la acción principal o el contenido que necesitas. Sé lo más directo posible.</p>
+            <textarea id="initial-prompt" placeholder="Ej: Crea un plan de lección sobre el ciclo del agua para tercer grado." rows="3"></textarea>
+
+            <div class="field-group">
+                <h2>Añade detalles y refinamientos educativos (Argentina)</h2>
+
+                <label for="prompt-goal">Objetivo educativo específico:</label>
+                <p class="explanation">El propósito principal de la tarea educativa. ¿Qué resultado de aprendizaje buscas?</p>
+                <select id="prompt-goal">
+                    <option value="">-- Selecciona el objetivo de aprendizaje --</option>
+                    <option value="generar_plan_leccion">generar un plan de lección detallado</option>
+                    <option value="crear_actividad_evaluacion">crear una actividad o evaluación (examen, quiz, proyecto)</option>
+                    <option value="explicar_concepto">explicar un concepto complejo de forma sencilla</option>
+                    <option value="diseñar_ejercicios">diseñar ejercicios prácticos o de refuerzo</option>
+                    <option value="desarrollar_material_didactico">desarrollar material didáctico (guía, infografía, presentación)</option>
+                    <option value="simular_dialogo">simular un diálogo o debate educativo</option>
+                    <option value="generar_ideas_proyecto">generar ideas para proyectos estudiantiles</option>
+                    <option value="adaptar_contenido">adaptar contenido para diferentes niveles educativos</option>
+                    <option value="otro_objetivo_educativo">otro (especificar)</option>
+                </select>
+                <input type="text" id="prompt-goal-other" class="hidden" placeholder="Describe tu objetivo educativo específico aquí">
+
+                <label for="prompt-context">Contexto educativo relevante:</label>
+                <p class="explanation">Información de fondo sobre el curso, tema, estudiantes o recursos disponibles.</p>
+                <textarea id="prompt-context" placeholder="Ej: La lección es para estudiantes de 3er grado (8-9 años). Los estudiantes ya tienen conocimientos básicos sobre el agua. El objetivo es que comprendan las fases del ciclo. Se dispondrá de pizarra y materiales visuales."></textarea>
+
+                <label for="prompt-role-select">Rol del IA como Educador:</label>
+                <p class="explanation">Define el rol que la IA debe asumir (ej. 'Profesor de física', 'Tutor de matemáticas').</p>
+                <select id="prompt-role-select">
+                    <option value="">-- Selecciona un rol educativo o escribe uno --</option>
+                    <option value="profesor_experto">un profesor experto en la materia</option>
+                    <option value="diseñador_curricular">un diseñador curricular</option>
+                    <option value="tutor_personalizado">un tutor personalizado</option>
+                    <option value="creador_contenido_educativo">un creador de contenido educativo</option>
+                    <option value="evaluador_experto">un experto en evaluación educativa</option>
+                    <option value="guia_estudios">un guía de estudios</option>
+                    <option value="otro_rol_educativo">otro (especificar)</option>
+                </select>
+                <input type="text" id="prompt-role-other" class="hidden" placeholder="Ej: Profesor de historia antigua especializado en Egipto...">
+
+                <label for="prompt-audience-select">Nivel y Perfil del Estudiante (Argentina):</label>
+                <p class="explanation">Especifica el nivel educativo según el sistema argentino y características de los estudiantes.</p>
+                <select id="prompt-audience-select">
+                    <option value="">-- Selecciona el nivel/perfil o describe --</option>
+                    <option value="educacion_inicial">educación inicial (sala de 3, 4 y 5 años)</option>
+                    <option value="educacion_primaria">educación primaria (1º a 6º/7º grado)</option>
+                    <option value="educacion_secundaria_obligatoria">educación secundaria (1º a 5º/6º año - EGB/Polimodal/Secundaria)</option>
+                    <option value="educacion_superior_terciaria">educación superior (terciaria/institutos)</option>
+                    <option value="educacion_superior_universitaria">educación superior (universitaria - grado)</option>
+                    <option value="educacion_superior_posgrado">educación superior (posgrado)</option>
+                    <option value="educacion_adultos">educación para adultos (CEFA / FINES)</option>
+                    <option value="estudiantes_capacitacion_laboral">estudiantes de capacitación laboral</option>
+                    <option value="estudiantes_necesidades_especiales">estudiantes con necesidades educativas especiales</option>
+                    <option value="otro_perfil_estudiante_arg">otro (especificar)</option>
+                </select>
+                <input type="text" id="prompt-audience-other" class="hidden" placeholder="Ej: Estudiantes de primer año de ingeniería con conocimientos básicos de cálculo...">
+
+                <label for="prompt-format-select">Formato del material educativo:</label>
+                <p class="explanation">Cómo debe presentarse el resultado (ej. lección estructurada, quiz de opción múltiple).</p>
+                <select id="prompt-format-select">
+                    <option value="">-- Selecciona el formato o describe uno --</option>
+                    <option value="plan_leccion_estructurado">un plan de lección estructurado (objetivos, actividades, evaluación)</option>
+                    <option value="actividad_interactiva">una actividad interactiva (ej. juego de roles, simulación)</option>
+                    <option value="examen_opcion_multiple">un examen/quiz de opción múltiple</option>
+                    <option value="examen_respuesta_corta">un examen/quiz con preguntas de respuesta corta</option>
+                    <option value="rubrica_evaluacion">una rúbrica de evaluación</option>
+                    <option value="lista_recursos">una lista de recursos educativos (libros, webs, vídeos)</option>
+                    <option value="presentacion_diapositivas">un esquema para presentación de diapositivas</option>
+                    <option value="infografia_esquema">un esquema para infografía</option>
+                    <option value="explicacion_paso_a_paso">una explicación paso a paso</option>
+                    <option value="otro_formato_educativo">otro (especificar)</option>
+                </select>
+                <input type="text" id="prompt-format-other" class="hidden" placeholder="Ej: Tabla comparativa de teorías, mapa conceptual...">
+
+                <label for="prompt-tone-select">Tono y estilo pedagógico:</label>
+                <p class="explanation">El estilo de comunicación apropiado para el contexto educativo.</p>
+                <select id="prompt-tone-select">
+                    <option value="">-- Selecciona el tono o describe uno --</option>
+                    <option value="pedagogico_claro">pedagógico y claro</option>
+                    <option value="inspirador_motivador">inspirador y motivador</option>
+                    <option value="formal_academico">formal y académico</option>
+                    <option value="ameno_interesante">divertido y ameno</option>
+                    <option value="neutral_informativo">neutral e informativo</option>
+                    <option value="critico_reflexivo">fomentando el pensamiento crítico y reflexivo</option>
+                    <option value="pragmatico_aplicado">enfocado en la aplicación práctica</option>
+                    <option value="otro_tono_educativo">otro (especificar)</option>
+                </select>
+                <input type="text" id="prompt-tone-other" class="hidden" placeholder="Ej: Entusiasta y cercano...">
+
+                <label for="prompt-length-select">Duración o extensión estimada:</label>
+                <p class="explanation">Indica la duración de la lección, el número de páginas, o la extensión deseada.</p>
+                <select id="prompt-length-select">
+                    <option value="">-- Selecciona la duración o indica una medida --</option>
+                    <option value="corta_sesion">corta (ej. 30 minutos, 1 página)</option>
+                    <option value="sesion_estandar">estándar (ej. 45-60 minutos, 2-3 páginas)</option>
+                    <option value="modulo_completo">módulo completo (ej. varias sesiones, 5-10 páginas)</option>
+                    <option value="unidad_didactica">unidad didáctica (varios módulos)</option>
+                    <option value="puntos_clave">solo puntos clave</option>
+                    <option value="nivel_detalle">nivel de detalle específico (ej. 500 palabras)</option>
+                    <option value="cualquier_duracion">cualquier duración / no especificado</option>
+                    <option value="otra_longitud_educativa">otra (especificar)</option>
+                </select>
+                <input type="text" id="prompt-length-other" class="hidden" placeholder="Ej: Aproximadamente 90 minutos, un documento de 15 páginas...">
+
+                <label for="prompt-include-keywords">Conceptos clave a incluir:</label>
+                <p class="explanation">Términos o conceptos que deben ser cubiertos en el material. Separar por comas.</p>
+                <input type="text" id="prompt-include-keywords" placeholder="Ej: Ciclo del agua, evaporación, condensación, precipitación, colección, importancia del agua">
+
+                <label for="prompt-exclude-keywords">Conceptos o enfoques a evitar:</label>
+                <p class="explanation">Temas o enfoques que no deben incluirse. Separar por comas.</p>
+                <input type="text" id="prompt-exclude-keywords" placeholder="Ej: Complejidad química del agua, aspectos económicos, contaminación (a menos que sea el foco)">
+
+                <label for="prompt-examples">Ejemplos de actividades o preguntas (Few-Shot):</label>
+                <p class="explanation">Proporciona ejemplos del tipo de actividad, pregunta o ejercicio que buscas.</p>
+                <textarea id="prompt-examples" placeholder="Formato:\nEjemplo de actividad: Pregunta de reflexión sobre la importancia del agua en la vida diaria.\nEjemplo de pregunta: ¿Qué pasaría si la lluvia dejara de caer por un mes?\n---\nEjemplo de actividad: Realizar un dibujo del ciclo del agua."></textarea>
+            </div>
+
+            <button onclick="generateOptimizedPrompt()">Generar Prompt Optimizado</button>
+        </div>
+
+        <div id="results-section" class="results-section hidden">
+            <h2>Tu prompt optimizado</h2>
+
+            <div class="prompt-display-container">
+                <h3>Instrucción completa generada:</h3>
+                <div id="optimized-prompt-display" class="optimized-prompt-display"></div>
+                <button class="copy-button" onclick="copyToClipboard()">Copiar Prompt</button>
+            </div>
+
+            <h3>Consejos para refinar</h3>
+            <ul id="tips-list" style="padding-left: 20px;">
+                <!-- Las sugerencias se añadirán aquí -->
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h4>¿Qué es el Few-Shot Prompting?</h4>
+            <p>El <strong>Few-Shot Prompting</strong> es una técnica donde proporcionas a la IA algunos ejemplos (pocos 'shots') de lo que esperas como salida, junto con tu instrucción principal. Esto ayuda a la IA a entender mejor el formato, estilo o tipo de respuesta deseada, especialmente para tareas complejas o cuando buscas un resultado muy específico.</p>
+            <p>En esta herramienta, el campo 'Ejemplos (Few-Shot Prompting)' te permite introducir estos pares de entrada/salida o ejemplos de actividades/preguntas. Los saltos de línea (`\n`) que uses en este campo se respetarán en el prompt final, lo cual es útil para separar claramente los ejemplos.</p>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <span class="copyright">Copyright © 2025 Stella M. Cao. Herramienta creada para la optimización de interacciones con IA.</span>
+    </footer>
+
+    <script>
+        // Función para capitalizar la primera letra de una cadena
+        function capitalizeFirstLetterOfSentence(string) {
+            if (!string) return "";
+            string = string.trim();
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Función para formatear una oración: capitalizar inicio y añadir punto final si es necesario.
+        function formatSentenceProperly(sentence) {
+            if (!sentence) return "";
+            sentence = sentence.trim();
+
+            let processedSentence = sentence;
+
+            // Capitalizar solo si la oración empieza con una letra y no con un artículo o pronombre que ya esté bien capitalizado.
+            if (processedSentence.length > 0 && !processedSentence.match(/^([Ee]l|[Ll]a|[Ll]os|[Ll]as|[Uu]n|[Uu]na|[Uu]nos|[Uu]nas|[Mm]i|[Tt]u|[Ss]u|[Mm]is|[Tt]us|[Ss]us|[Nn]uestro|[Nn]uestra|[Nn]uestros|[Nn]uestras|[Vv]uestro|[Vv]uestra|[Vv]uestros|[Vv]uestras|[Ee]ste|[Ee]sta|[Ee]stos|[Ee]stas|[Aa]quel|[Aa]quella|[Aa]quellos|[Aa]quellas|[Cc]ada|[Aa]lgún|[Aa]lguna|[Aa]lgunos|[Aa]lgunas|[Nn]ingún|[Nn]inguna|[Nn]ingunos|[Nn]ingunas|[Tt]odo|[Tt]oda|[Tt]odos|[Tt]odas|[Qq]ue|[Qq]uien|[Qq]uienes|[Cc]omo|[Cc]uando|[Dd]onde|[Cc]ual|[Cc]uales|[Aa]ctúa|[Cc]onsidera)$/i)) {
+                processedSentence = capitalizeFirstLetterOfSentence(processedSentence);
+            }
+
+            // Asegurar que la oración termine con un punto si no tiene signos de puntuación finales.
+            if (processedSentence.length > 0 && !processedSentence.match(/[.!?]$/)) {
+                processedSentence += '.';
+            }
+            return processedSentence;
+        }
+
+
+        // Función para obtener el artículo correcto (el/la/los/las) basado en la primera palabra
+        function getDefiniteArticleForWord(word) {
+            if (!word) return "";
+            word = word.trim().toLowerCase();
+
+            // Eliminar artículos iniciales si ya existen para analizar la palabra base
+            if (word.startsWith('el ') || word.startsWith('la ') || word.startsWith('los ') || word.startsWith('las ') || word.startsWith('un ') || word.startsWith('una ') || word.startsWith('unos ') || word.startsWith('unas ')) {
+                word = word.split(' ').slice(1).join(' ');
+            }
+
+            const firstWord = word.split(' ')[0];
+
+            // Lógica simplificada para determinar género y número
+            if (firstWord.endsWith('a') || firstWord.endsWith('ad') || firstWord.endsWith('ión') || firstWord.endsWith('ie') || firstWord.endsWith('z') || firstWord.endsWith('dad') || firstWord.endsWith('tad') || firstWord.endsWith('umbre') || firstWord.endsWith('cia') || firstWord.endsWith('gia') || firstWord.endsWith('sis')) {
+                // Femenino
+                 if (firstWord.endsWith('as') || firstWord.endsWith('ades') || firstWord.endsWith('iones') || firstWord.endsWith('dades') || firstWord.endsWith('tades') || firstWord.endsWith('umbres') || firstWord.endsWith('cias') || firstWord.endsWith('gias') || firstWord.endsWith('ses')) return 'las';
+                 return 'la';
+            } else if (firstWord.endsWith('o') || firstWord.endsWith('or') || firstWord.endsWith('án') || firstWord.endsWith('ín') || firstWord.endsWith('e') || firstWord.endsWith('u') || firstWord.endsWith('l') || firstWord.endsWith('r') || firstWord.endsWith('n') || firstWord.endsWith('s')) {
+                // Masculino
+                 if (firstWord.endsWith('os') || firstWord.endsWith('ores') || firstWord.endsWith('anes') || firstWord.endsWith('ines') || firstWord.endsWith('es') || firstWord.endsWith('ls') || firstWord.endsWith('rs') || firstWord.endsWith('ns') || firstWord.endsWith('is')) return 'los';
+                 // Casos especiales como 'el estudiante' o 'el docente' que terminan en 'e'
+                 if (firstWord.length > 1 && (firstWord.endsWith('e') || firstWord.endsWith('u') || firstWord.endsWith('l') || firstWord.endsWith('r') || firstWord.endsWith('n'))) return 'el';
+                 return 'el';
+            } else if (firstWord.endsWith('s')) { // Si termina en 's' y no encaja en reglas anteriores
+                 // Podría ser plural. Asumimos femenino plural como default si termina en 's'
+                 return 'las';
+            }
+            else {
+                return 'el'; // Por defecto, o si no se puede determinar
+            }
+        }
+
+
+        function generateOptimizedPrompt() {
+            const initialPrompt = document.getElementById('initial-prompt').value.trim();
+            const promptGoal = document.getElementById('prompt-goal').value;
+            const promptGoalOther = document.getElementById('prompt-goal-other').value.trim();
+            const promptContext = document.getElementById('prompt-context').value.trim();
+            const promptRoleSelect = document.getElementById('prompt-role-select').value;
+            const promptRoleOther = document.getElementById('prompt-role-other').value.trim();
+            const promptAudienceSelect = document.getElementById('prompt-audience-select').value;
+            const promptAudienceOther = document.getElementById('prompt-audience-other').value.trim();
+            const promptFormatSelect = document.getElementById('prompt-format-select').value;
+            const promptFormatOther = document.getElementById('prompt-format-other').value.trim();
+            const promptToneSelect = document.getElementById('prompt-tone-select').value;
+            const promptToneOther = document.getElementById('prompt-tone-other').value.trim();
+            const promptLengthSelect = document.getElementById('prompt-length-select').value;
+            const promptLengthOther = document.getElementById('prompt-length-other').value.trim();
+            const promptIncludeKeywords = document.getElementById('prompt-include-keywords').value.trim();
+            const promptExcludeKeywords = document.getElementById('prompt-exclude-keywords').value.trim();
+            const promptExamples = document.getElementById('prompt-examples').value.trim();
+
+            let promptSections = [];
+            let tips = [];
+
+            // --- Construcción del prompt optimizado ---
+
+            // 1. Rol (si existe)
+            let finalRole = "";
+            if (promptRoleSelect === "otro_rol_educativo" && promptRoleOther) {
+                finalRole = promptRoleOther;
+            } else if (promptRoleSelect && promptRoleSelect !== "") {
+                finalRole = document.querySelector(`#prompt-role-select option[value="${promptRoleSelect}"]`).textContent;
+            }
+            if (finalRole) {
+                promptSections.push(`Actúa como ${finalRole}`);
+                tips.push("Definir el rol de la IA ayuda a enfocar su conocimiento y estilo pedagógico.");
+            }
+
+            // 2. Objetivo Principal
+            let goalDescription = "";
+            if (promptGoal === "otro_objetivo_educativo" && promptGoalOther) {
+                goalDescription = promptGoalOther;
+            } else if (promptGoal && promptGoal !== "") {
+                goalDescription = document.querySelector(`#prompt-goal option[value="${promptGoal}"]`).textContent;
+            }
+            if (goalDescription) {
+                promptSections.push(`mi objetivo es ${goalDescription}`);
+                tips.push("Sé específico con el objetivo de aprendizaje. ¿Qué deben saber o poder hacer los estudiantes al final?");
+            } else {
+                tips.push("Es crucial definir un objetivo de aprendizaje claro para guiar la creación del material.");
+            }
+
+            // 3. Tarea Principal (Prompt Base)
+            if (initialPrompt) {
+                promptSections.push(initialPrompt);
+            }
+
+            // 4. Contexto (si existe)
+            if (promptContext) {
+                promptSections.push(`Considera el siguiente contexto educativo: ${promptContext}`);
+                tips.push("El contexto es fundamental. Añade detalles sobre el nivel, tema, recursos y conocimientos previos de los estudiantes.");
+            }
+
+            // 5. Audiencia (si existe)
+            let finalAudience = "";
+            if (promptAudienceSelect === "otro_perfil_estudiante_arg" && promptAudienceOther) {
+                finalAudience = promptAudienceOther;
+            } else if (promptAudienceSelect && promptAudienceSelect !== "") {
+                finalAudience = document.querySelector(`#prompt-audience-select option[value="${promptAudienceSelect}"]`).textContent;
+            }
+            if (finalAudience) {
+                // Asegurarse de que la frase introductoria sea correcta para el artículo
+                let audiencePhrase = `el material debe ser adecuado para ${finalAudience}`;
+                promptSections.push(audiencePhrase);
+                tips.push("Especificar el nivel y perfil del estudiante ayuda a adaptar el lenguaje y la complejidad.");
+            }
+
+            // 6. Palabras Clave a Incluir (si existen)
+            if (promptIncludeKeywords) {
+                promptSections.push(`asegúrate de cubrir los siguientes conceptos clave: ${promptIncludeKeywords}`);
+                tips.push("Incluir conceptos clave asegura que el material aborde los temas esenciales.");
+            }
+
+            // 7. Palabras Clave a Evitar (si existen)
+            if (promptExcludeKeywords) {
+                promptSections.push(`evita centrarte en o incluir: ${promptExcludeKeywords}`);
+                tips.push("Indicar qué evitar ayuda a mantener el enfoque en los objetivos de aprendizaje.");
+            }
+
+            // 8. Formato de Salida (si existe)
+            let finalFormat = "";
+            if (promptFormatSelect === "otro_formato_educativo" && promptFormatOther) {
+                finalFormat = promptFormatOther;
+            } else if (promptFormatSelect && promptFormatSelect !== "") {
+                finalFormat = document.querySelector(`#prompt-format-select option[value="${promptFormatSelect}"]`).textContent;
+            }
+            if (finalFormat) {
+                promptSections.push(`el formato del material educativo debe ser ${finalFormat}`);
+                tips.push("Pedir un formato específico asegura que el material sea útil y fácil de usar.");
+            }
+
+            // 9. Tono y Estilo (si existe)
+            let finalTone = "";
+            if (promptToneSelect === "otro_tono_educativo" && promptToneOther) {
+                finalTone = promptToneOther;
+            } else if (promptToneSelect && promptToneSelect !== "") {
+                finalTone = document.querySelector(`#prompt-tone-select option[value="${promptToneSelect}"]`).textContent;
+            }
+            if (finalTone) {
+                promptSections.push(`el tono y estilo pedagógico deben ser ${finalTone}`);
+                tips.push("El tono pedagógico adecuado facilita la conexión con los estudiantes.");
+            }
+
+            // 10. Longitud (si existe)
+            let finalLength = "";
+            if (promptLengthSelect === "otra_longitud_educativa" && promptLengthOther) {
+                finalLength = promptLengthOther;
+            } else if (promptLengthSelect && promptLengthSelect !== "") {
+                finalLength = document.querySelector(`#prompt-length-select option[value="${promptLengthSelect}"]`).textContent;
+            }
+            if (finalLength) {
+                promptSections.push(`la duración o extensión estimada es ${finalLength}`);
+                tips.push("Indicar la duración o extensión ayuda a planificar la lección o actividad.");
+            }
+
+            // 11. Ejemplos (Few-Shot) (si existen)
+            if (promptExamples) {
+                promptSections.push(`Aquí tienes ejemplos de actividades o preguntas deseadas:\n${promptExamples}`);
+                tips.push("Los ejemplos (few-shot) son muy útiles para guiar la IA en la creación de actividades o preguntas específicas.");
+            }
+
+            // Unir todas las secciones, formateando cada una como una oración
+            let optimizedPrompt = promptSections.map(section => {
+                // Simplemente capitalizamos el inicio de cada sección y añadimos un punto al final si falta.
+                return formatSentenceProperly(section);
+            }).join(' ');
+
+            // Limpieza final de caracteres extraños
+            optimizedPrompt = optimizedPrompt.replace(/\.\s*\./g, '.');
+            optimizedPrompt = optimizedPrompt.replace(/\s{2,}/g, ' ');
+            optimizedPrompt = optimizedPrompt.replace(/ \. /g, '. ');
+
+            // Mensaje si no se ingresó nada o muy poco
+            if (optimizedPrompt.length < 20 && !initialPrompt) {
+                 optimizedPrompt = "Por favor, proporciona más detalles o tu prompt base para generar una instrucción optimizada.";
+            }
+
+            // --- Mostrar resultados ---
+            document.getElementById('optimized-prompt-display').textContent = optimizedPrompt;
+
+            const tipsList = document.getElementById('tips-list');
+            tipsList.innerHTML = ''; // Limpiar sugerencias anteriores
+
+            // Añadir consejos generales si faltan
+            if (tips.length < 3) {
+                 tips.push("Considera usar el campo de 'Ejemplos' para mostrar el formato exacto de una pregunta o actividad.");
+                 tips.push("Asegúrate de que los conceptos clave y el contexto sean lo suficientemente específicos para el nivel educativo.");
+                 tips.push("Revisa si el tono y el formato elegidos son apropiados para la edad y el nivel de los estudiantes.");
+            }
+
+            tips.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                li.className = 'suggestion-item';
+                tipsList.appendChild(li);
+            });
+
+            document.getElementById('results-section').classList.remove('hidden');
+        }
+
+        // Funciones para manejar la visibilidad de los campos "otro"
+        function setupCustomInput(selectId, otherInputId) {
+            const selectElement = document.getElementById(selectId);
+            const otherInput = document.getElementById(otherInputId);
+
+            if (!selectElement || !otherInput) return;
+
+            const toggleOtherInput = () => {
+                const triggerValues = ['otro', 'otro_objetivo_educativo', 'otro_rol_educativo', 'otro_perfil_estudiante_arg', 'otro_formato_educativo', 'otro_tono_educativo', 'otra_longitud_educativa'];
+                if (triggerValues.includes(selectElement.value)) {
+                    otherInput.classList.remove('hidden');
+                    otherInput.focus();
+                } else {
+                    otherInput.classList.add('hidden');
+                    otherInput.value = '';
+                }
+            };
+
+            selectElement.addEventListener('change', toggleOtherInput);
+            document.addEventListener('DOMContentLoaded', toggleOtherInput);
+        }
+
+        // Inicializar para todos los campos "otro"
+        setupCustomInput('prompt-goal', 'prompt-goal-other');
+        setupCustomInput('prompt-role-select', 'prompt-role-other');
+        setupCustomInput('prompt-audience-select', 'prompt-audience-other');
+        setupCustomInput('prompt-format-select', 'prompt-format-other');
+        setupCustomInput('prompt-tone-select', 'prompt-tone-other');
+        setupCustomInput('prompt-length-select', 'prompt-length-other');
+
+        // Función para copiar al portapapeles
+        function copyToClipboard() {
+            const promptText = document.getElementById('optimized-prompt-display').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const button = document.querySelector('.copy-button');
+                const originalText = button.textContent;
+                button.textContent = '¡Copiado!';
+                button.style.backgroundColor = '#28a745';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = '#007bff';
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar: ', err);
+                alert('No se pudo copiar el texto. Inténtalo manualmente.');
+            });
+        }
+    </script>
+</body>
+</html>
