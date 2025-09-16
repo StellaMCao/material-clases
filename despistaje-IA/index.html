@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de verificación de producción académica</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 850px; margin: 20px auto; padding: 20px; background-color: #f9f9f9; }
+        h1, h2, h3 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .container { background-color: white; border: 1px solid #ddd; padding: 25px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        fieldset { border: 1px solid #ccc; border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+        legend { font-weight: bold; font-size: 1.1em; color: #3498db; padding: 0 10px; }
+        label { display: block; margin-bottom: 12px; cursor: pointer; font-weight: bold; }
+        .explanation { font-size: 0.9em; color: #555; margin-left: 25px; margin-top: -8px; margin-bottom: 15px; font-weight: normal; }
+        input[type="text"], textarea { width: calc(100% - 22px); padding: 10px; border-radius: 4px; border: 1px solid #ccc; margin-top: 5px; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .results { background-color: #eaf5ff; border-left: 5px solid #3498db; padding: 20px; border-radius: 8px; }
+        .results h3 { border: none; margin-top: 0; }
+        #interpretation { font-weight: bold; font-size: 1.1em; color: #1a5276; }
+        .warning { background-color: #fff3cd; border-left: 5px solid #ffeeba; color: #856404; padding: 15px; border-radius: 5px; margin-top: 20px; }
+        .protocol-item { border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px; }
+        @media print {
+            button, .no-print { display: none !important; }
+            body { margin: 0; box-shadow: none; background-color: white; }
+            .container { box-shadow: none; border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Ficha de verificación de producción académica</h1>
+    <p class="no-print"><i>Esta ficha interactiva está diseñada para ser un recurso completo. Las explicaciones detalladas te ayudarán a identificar posibles usos de IA no declarados y a tomar decisiones pedagógicas informadas. El objetivo no es sancionar, sino guiar y formar en la honestidad académica.</i></p>
+
+    <div class="container">
+        <h2>1. Datos generales</h2>
+        <div class="grid-container">
+            <div><label>Asignatura: <input type="text"></label></div>
+            <div><label>Profesor/a: <input type="text"></label></div>
+            <div><label>Estudiante: <input type="text"></label></div>
+            <div><label>Comisión: <input type="text"></label></div>
+            <div><label>Fecha: <input type="text" value new Date().toLocaleDateString('es-ES')></label></div>
+            <div><label>Trabajo: <input type="text"></label></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>2. Checklist de indicios (cada marca suma 1 punto)</h2>
+        <form id="ia-checklist">
+            <fieldset>
+                <legend>A. Forma y ortotipografía</legend>
+                <label><input type="checkbox" class="indicator"> Título con mayúsculas de estilo inglés (Title Case).</label>
+                <div class="explanation"><b>Qué observar:</b> títulos como "La Importancia de la Educación en el Aula". En español, lo correcto es el "tipo frase": "La importancia de la educación en el aula". Las IAs entrenadas con textos en inglés a menudo replican este formato.</div>
+                
+                <label><input type="checkbox" class="indicator"> Mayúscula después de dos puntos en una oración corrida.</label>
+                <div class="explanation"><b>Qué observar:</b> frases como "El problema es simple: La solución no lo es". En español, después de dos puntos se usa minúscula, salvo que se inicie una cita. Es un calco directo de la norma inglesa.</div>
+
+                <label><input type="checkbox" class="indicator"> Listas con viñetas excesivamente simétricas o parejas.</label>
+                <div class="explanation"><b>Qué observar:</b> cada ítem de una lista tiene casi la misma longitud y sigue la misma estructura gramatical (ej: todos empiezan con un verbo en infinitivo, todos son frases de 10-12 palabras). La escritura humana tiende a ser más variable.</div>
+
+                <label><input type="checkbox" class="indicator"> Emojis o tono “amable” en un contexto formal.</label>
+                <div class="explanation"><b>Qué observar:</b> el uso de emojis (👍, ✨) o un tono conversacional ("¡Claro!", "Espero que esto te sea de ayuda") en un trabajo académico que no lo pide. Las IAs generativas están programadas para ser serviciales y a veces ese tono se filtra.</div>
+                
+                <label><input type="checkbox" class="indicator"> Comillas/puntuación de estilo anglosajón.</label>
+                <div class="explanation"><b>Qué observar:</b> el uso de comillas rectas (" ") en lugar de las angulares (« ») o curvas (“ ”) más comunes en español. También el uso del punto y coma (;) como conector fuerte entre oraciones, más propio del estilo formal inglés.</div>
+
+                <label><input type="checkbox" class="indicator"> Uso de Ampersand (&) en lugar de "y".</label>
+                <div class="explanation"><b>Qué observar:</b> en la bibliografía o en el cuerpo del texto, ver "Smith & Jones" en lugar de "Smith y Jones". Es una convención casi exclusiva del inglés.</div>
+
+                <label><input type="checkbox" class="indicator"> Coma antes de la conjunción en enumeraciones.</label>
+                <div class="explanation"><b>Qué observar:</b> una enumeración como "elegí la opción A, la B, o la C". En español, la RAE no recomienda esa coma antes de las conjunciones finales (y, e, o, u), salvo en casos de ambigüedad. Su presencia sistemática (conocida como "coma de Oxford") es un calco del inglés.</div>
+            </fieldset>
+
+            <fieldset>
+                <legend>B. Marcas discursivas y léxico comodín</legend>
+                <label><input type="checkbox" class="indicator"> Abundancia de comodines.</label>
+                <div class="explanation"><b>Qué observar:</b> uso repetitivo de palabras que suenan sofisticadas pero son vagas: <i>impacto, desafío, complejidad, transformación, panorama, entramado, significativo, robusto</i>. La IA las usa para dar un aire de profundidad sin aportar un análisis concreto.</div>
+                
+                <label><input type="checkbox" class="indicator"> Muletillas de ensamblado.</label>
+                <div class="explanation"><b>Qué observar:</b> conectores que la IA usa para unir ideas de distintas fuentes sin una transición lógica real: <i>por un lado/por otro, en este sentido, cabe destacar, a nivel de, en definitiva</i>. El texto parece un "Frankenstein" de párrafos.</div>
+
+                <label><input type="checkbox" class="indicator"> Cierres estandarizados (“en conclusión”) sin argumento previo.</label>
+                <div class="explanation"><b>Qué observar:</b> un párrafo final que empieza con "En conclusión" o "En resumen" pero que no sintetiza un argumento desarrollado por el estudiante, sino que simplemente repite las ideas iniciales de forma genérica. La conclusión se siente "pegada" y no ganada.</div>
+            </fieldset>
+
+            <fieldset>
+                <legend>C. Contenido verificable</legend>
+                <label><input type="checkbox" class="indicator"> Bibliografía perfecta pero dudosa.</label>
+                <div class="explanation"><b>Qué observar:</b> referencias formateadas impecablemente pero con DOIs/ISBNs que no existen (verificar en doi.org o Google Books), números de página imposibles o títulos que suenan plausibles pero no se encuentran en ningún lado. La IA conoce el formato, pero "alucina" el contenido.</div>
+
+                <label><input type="checkbox" class="indicator"> Datos verificables sin fuente o descontextualizados.</label>
+                <div class="explanation"><b>Qué observar:</b> se mencionan estadísticas, fechas o hechos específicos (ej. "el 73% de los encuestados...") sin citar la fuente. Una búsqueda rápida revela que el dato existe, pero fue extraído de un contexto que no corresponde al del trabajo.</div>
+                
+                <label><input type="checkbox" class="indicator"> Alucinaciones.</label>
+                <div class="explanation"><b>Qué observar:</b> afirmaciones específicas, citas de autores o eventos que parecen creíbles pero que, tras una breve búsqueda, resultan ser completamente falsos. La IA los "inventa" para completar una idea de manera coherente.</div>
+            </fieldset>
+
+            <fieldset>
+                <legend>D. Consistencia autoral</legend>
+                <label><input type="checkbox" class="indicator"> Salto abrupto respecto a trabajos previos.</label>
+                <div class="explanation"><b>Qué observar:</b> una mejora drástica e inexplicable en la sintaxis, la densidad léxica y la cohesión del texto en comparación con trabajos, correos o intervenciones en foros del mismo estudiante. La "voz" del autor es completamente diferente.</div>
+                
+                <label><input type="checkbox" class="indicator"> Uniformidad estilística anómala.</label>
+                <div class="explanation"><b>Qué observar:</b> el texto es "demasiado perfecto". No hay errores de tipeo, ni frases reformuladas, ni ejemplos personales o locales. Carece de la personalidad y las "costuras" propias de un proceso de escritura humano.</div>
+
+                <label><input type="checkbox" class="indicator"> Traduccionalidad encubierta (calcos del inglés).</label>
+                <div class="explanation"><b>Qué observar:</b> el uso de estructuras gramaticales traducidas literalmente del inglés. Ejemplos: "aplicar para un trabajo" (en vez de "postularse a"), "basado en evidencia" (en vez de "basándose en la evidencia"), "soportar una teoría" (en vez de "respaldar/apoyar").</div>
+            </fieldset>
+        </form>
+    </div>
+
+    <div class="container results">
+        <h2>3. Rúbrica orientativa de puntuación</h2>
+        <h3>Puntaje total: <span id="score">0</span> / 16</h3>
+        <p><strong>Interpretación y siguientes pasos:</strong></p>
+        <div id="interpretation"><b>Señales bajas.</b> Probable autoría genuina. No se requieren acciones adicionales.</div>
+        <div class="warning">
+            <strong>¡Atención a los falsos positivos!</strong>
+            <p>Recordá que algunos indicios pueden deberse a: estudiantes muy prolijos que usan gestores bibliográficos (ej. Zotero), plantillas de Word, un estilo formal aprendido de papers, o estudiantes bilingües que transfieren patrones del inglés.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>4. Protocolo de verificación aplicado (solo con 4+ puntos)</h2>
+        <div class="protocol-item">
+            <label>1. Minidefensa oral (3-4 min)</label>
+            <div class="explanation"><b>Acción:</b> pedirle al estudiante: “Explicame con tus palabras qué sostienen el 2.º y 3.º párrafo, y dame un ejemplo concreto de nuestra cursada”.<br>
+            <b>Qué buscar:</b> fluidez, vocabulario propio, capacidad para conectar el texto con ejemplos de clase, detalles situados (actividad, fecha, autor del programa).<br>
+            <b>Falla típica:</b> vacilación, repetición casi literal de las frases del texto, incapacidad para ejemplificar o conectar con la materia.</div>
+            <input type="radio" name="res1"> Suficiente <input type="radio" name="res1"> Insuficiente
+        </div>
+        <div class="protocol-item">
+            <label>2. Reformulación situada (2-3 min)</label>
+            <div class="explanation"><b>Acción:</b> decir: "Reescribí este párrafo aplicándolo a [tema local del curso], y citá un autor del programa y una página específica".<br>
+            <b>Qué buscar:</b> integración genuina de conceptos locales, cita correcta de la bibliografía de la cátedra, capacidad de adaptar el lenguaje.<br>
+            <b>Falla típica:</b> la reformulación sigue sonando genérica, la cita es incorrecta (página errónea, idea vaga) o no hay anclaje local.</div>
+            <input type="radio" name="res2"> Suficiente <input type="radio" name="res2"> Insuficiente
+        </div>
+        <div class="protocol-item">
+            <label>3. Chequeo de referencias (2-3 min)</label>
+            <div class="explanation"><b>Acción:</b> elegir dos citas al azar y pedir: "Decime la página, editorial, año y dos ideas clave del texto citado". Verificar un DOI/ISBN en vivo.<br>
+            <b>Qué buscar:</b> el estudiante demuestra haber leído y comprendido las fuentes que cita. Conoce las ideas principales más allá del título.<br>
+            <b>Falla típica:</b> no recuerda el contenido del texto, solo el autor/título. El DOI/ISBN resulta ser inexistente.</div>
+            <input type="radio" name="res3"> Suficiente <input type="radio" name="res3"> Insuficiente
+        </div>
+        <div class="protocol-item">
+            <label>4. Microtarea en vivo (2-3 min)</label>
+            <div class="explanation"><b>Acción:</b> pedir: “A partir de este párrafo, derivá una implicancia práctica para [actividad de la cátedra] y justificala con un concepto visto en clase".<br>
+            <b>Qué buscar:</b> se observa el idiolecto del estudiante y su capacidad para hacer conexiones lógicas con los materiales de la cursada.<br>
+            <b>Falla típica:</b> la respuesta es vaga, superficial o repite los comodines y muletillas del texto original sin aportar un análisis nuevo.</div>
+            <input type="radio" name="res4"> Suficiente <input type="radio" name="res4"> Insuficiente
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>5. Conclusión y decisiones pedagógicas</h2>
+        <label>Descripción breve de los criterios observados y el resultado del protocolo:</label>
+        <textarea rows="4"></textarea>
+        <label>Decisiones pedagógicas (p. ej., reelaboración con guía, entrevista, instancia evaluativa alternativa, derivación a taller de escritura, etc.):</label>
+        <textarea rows="4"></textarea>
+    </div>
+
+    <button onclick="window.print()" class="no-print" style="width: 100%; padding: 15px; font-size: 16px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Imprimir o guardar como PDF</button>
+
+    <script>
+        const checkboxes = document.querySelectorAll('.indicator');
+        const scoreElement = document.getElementById('score');
+        const interpretationElement = document.getElementById('interpretation');
+
+        function updateScore() {
+            let score = 0;
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    score++;
+                }
+            });
+
+            scoreElement.textContent = score;
+
+            if (score <= 3) {
+                interpretationElement.innerHTML = '<b>Señales bajas.</b> Probable autoría genuina. No se requieren acciones adicionales más allá de las correcciones habituales.';
+            } else if (score >= 4 && score <= 7) {
+                interpretationElement.innerHTML = '<b>Señales moderadas.</b> Conviene pedir aclaraciones al estudiante. Considerá una breve conversación informal o una solicitud de revisión de un párrafo específico.';
+            } else if (score >= 8 && score <= 11) {
+                interpretationElement.innerHTML = '<b>Señales altas.</b> Se recomienda aplicar el protocolo de verificación (defensa oral, reformulación, chequeo de referencias) para confirmar la autoría.';
+            } else {
+                interpretationElement.innerHTML = '<b>Señales muy altas.</b> Alta probabilidad de uso de IA sin declarar. Es fundamental documentar los indicios, aplicar el protocolo y abordar la situación pedagógicamente.';
+            }
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateScore);
+        });
+        
+        // Initial call to set the score on page load
+        updateScore();
+    </script>
+
+</body>
+</html>
