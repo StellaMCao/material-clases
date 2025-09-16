@@ -1,0 +1,292 @@
+:root {
+    --bg-gradient: radial-gradient(circle at 20% 20%, #eef2ff 0%, #f9fbff 45%, #eef3ff 100%);
+    --primary: #1f3c88;
+    --accent: #ff9f1c;
+    --text: #1b1d29;
+    --panel-bg: rgba(255, 255, 255, 0.92);
+    --panel-border: rgba(23, 47, 102, 0.2);
+    --shadow: 0 22px 45px -25px rgba(21, 40, 90, 0.4);
+    --font-sans: "Rubik", "Segoe UI", "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--bg-gradient);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+.page {
+    width: min(1200px, 100%);
+    padding: 3rem clamp(1.2rem, 3vw, 3rem) 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.hero {
+    background: var(--panel-bg);
+    border-radius: 24px;
+    padding: clamp(1.8rem, 4vw, 2.6rem);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--panel-border);
+}
+
+.hero h1 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    color: var(--primary);
+}
+
+.hero p {
+    margin: 0;
+    font-size: clamp(1.05rem, 2.4vw, 1.2rem);
+    line-height: 1.6;
+}
+
+.map-section {
+    display: flex;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.map-wrapper {
+    position: relative;
+    flex: 1 1 55%;
+    min-width: min(550px, 100%);
+    aspect-ratio: 1 / 1;
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 28px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(31, 60, 136, 0.12);
+    overflow: hidden;
+}
+
+.map-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(31, 60, 136, 0.12), transparent 65%);
+    pointer-events: none;
+}
+
+.connections {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    stroke: rgba(31, 60, 136, 0.35);
+    stroke-width: 2;
+}
+
+.connection-line {
+    stroke: rgba(31, 60, 136, 0.38);
+    stroke-width: 2.4;
+    stroke-dasharray: 8 10;
+}
+
+.node {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 160px;
+    max-width: 210px;
+    padding: 0.85rem 1.2rem;
+    border-radius: 18px;
+    border: 2px solid var(--panel-border);
+    background: var(--panel-bg);
+    backdrop-filter: blur(8px);
+    color: var(--text);
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 20px 35px -25px rgba(23, 47, 102, 0.55);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease,
+        background-color 0.25s ease, color 0.25s ease;
+}
+
+.node:hover,
+.node:focus-visible {
+    transform: translate(-50%, -50%) scale(1.06);
+    box-shadow: 0 30px 50px -28px rgba(23, 47, 102, 0.6);
+    border-color: rgba(31, 60, 136, 0.55);
+}
+
+.node:focus-visible {
+    outline: 3px solid rgba(255, 159, 28, 0.8);
+    outline-offset: 4px;
+}
+
+.node-central {
+    font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+    padding: 1.2rem 1.4rem;
+    max-width: 260px;
+    background: linear-gradient(135deg, rgba(31, 60, 136, 0.92), rgba(76, 110, 231, 0.9));
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 25px 45px -25px rgba(31, 60, 136, 0.7);
+}
+
+.node--active:not(.node-central) {
+    background: linear-gradient(135deg, rgba(255, 159, 28, 0.95), rgba(255, 197, 94, 0.92));
+    color: #2b1b08;
+    border-color: rgba(255, 159, 28, 0.7);
+    box-shadow: 0 25px 45px -20px rgba(255, 159, 28, 0.55);
+}
+
+.node-principios {
+    top: 8%;
+    left: 50%;
+}
+
+.node-redes {
+    top: 24%;
+    left: 18%;
+}
+
+.node-estrategias {
+    top: 26%;
+    left: 82%;
+}
+
+.node-planificacion {
+    top: 52%;
+    left: 14%;
+}
+
+.node-tecnologia {
+    top: 55%;
+    left: 86%;
+}
+
+.node-evaluacion {
+    top: 85%;
+    left: 30%;
+}
+
+.node-beneficios {
+    top: 82%;
+    left: 72%;
+}
+
+.info-panel {
+    flex: 1 1 35%;
+    min-width: min(320px, 100%);
+    background: var(--panel-bg);
+    border-radius: 28px;
+    padding: clamp(1.6rem, 3vw, 2.4rem);
+    border: 1px solid var(--panel-border);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.info-title {
+    margin: 0;
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    color: var(--primary);
+}
+
+.info-summary {
+    margin: 0;
+    line-height: 1.65;
+    font-size: clamp(1.02rem, 2.2vw, 1.15rem);
+}
+
+.info-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.6rem;
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+}
+
+.info-list li {
+    line-height: 1.5;
+}
+
+.credits {
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(27, 29, 41, 0.72);
+}
+
+@media (max-width: 1024px) {
+    .map-wrapper {
+        min-width: min(450px, 100%);
+        padding: 1.6rem;
+    }
+
+    .node {
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 860px) {
+    .map-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .map-wrapper {
+        width: 100%;
+        aspect-ratio: auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+        padding: clamp(1.5rem, 5vw, 2.2rem);
+    }
+
+    .connections {
+        display: none;
+    }
+
+    .node {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        width: 100%;
+        min-height: 110px;
+        display: grid;
+        place-items: center;
+    }
+
+    .node:hover,
+    .node:focus-visible {
+        transform: scale(1.03);
+    }
+
+    .node-central {
+        order: -1;
+    }
+}
+
+@media (max-width: 540px) {
+    .page {
+        padding: 2.5rem 1rem 3rem;
+    }
+
+    .hero,
+    .info-panel {
+        border-radius: 20px;
+    }
+
+    .map-wrapper {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.2rem;
+    }
+}

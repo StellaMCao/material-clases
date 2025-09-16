@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mapa Conceptual Interactivo: Diseño Universal para el Aprendizaje</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <main class="page">
+        <header class="hero">
+            <h1>Mapa conceptual interactivo</h1>
+            <p>
+                Explora los elementos clave del <strong>Diseño Universal para el Aprendizaje (DUA)</strong>
+                seleccionando cada nodo del mapa. Haz clic en los conceptos para descubrir recomendaciones,
+                estrategias y ejemplos para poner en práctica.
+            </p>
+        </header>
+        <section class="map-section">
+            <div class="map-wrapper" aria-label="Mapa conceptual sobre el Diseño Universal para el Aprendizaje">
+                <svg class="connections" aria-hidden="true"></svg>
+                <button class="node node-central" data-node="central" aria-pressed="true">
+                    Diseño Universal para el Aprendizaje
+                </button>
+                <button class="node node-principios" data-node="principios" aria-pressed="false">
+                    Principios flexibles
+                </button>
+                <button class="node node-redes" data-node="redes" aria-pressed="false">
+                    Bases neurocientíficas
+                </button>
+                <button class="node node-estrategias" data-node="estrategias" aria-pressed="false">
+                    Estrategias didácticas
+                </button>
+                <button class="node node-planificacion" data-node="planificacion" aria-pressed="false">
+                    Planificación docente
+                </button>
+                <button class="node node-tecnologia" data-node="tecnologia" aria-pressed="false">
+                    Recursos y tecnología
+                </button>
+                <button class="node node-evaluacion" data-node="evaluacion" aria-pressed="false">
+                    Evaluación inclusiva
+                </button>
+                <button class="node node-beneficios" data-node="beneficios" aria-pressed="false">
+                    Impacto en el aula
+                </button>
+            </div>
+            <aside class="info-panel" aria-live="polite">
+                <h2 class="info-title">Diseño Universal para el Aprendizaje (DUA)</h2>
+                <p class="info-summary">
+                    Marco pedagógico que planifica la enseñanza desde la diversidad, eliminando barreras y
+                    ofreciendo múltiples alternativas para que todas las personas aprendan.
+                </p>
+                <ul class="info-list">
+                    <li>Proporciona flexibilidad en objetivos, métodos, materiales y evaluación.</li>
+                    <li>Se apoya en los aportes de la neurociencia sobre cómo aprendemos.</li>
+                </ul>
+            </aside>
+        </section>
+        <footer class="credits">
+            <p>
+                Elaborado como material de apoyo educativo. Puedes incorporar nuevos nodos y personalizarlo
+                para adaptarlo a las características de tu grupo.
+            </p>
+        </footer>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
