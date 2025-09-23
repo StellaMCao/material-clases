@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantilla de Rúbrica</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            border-right: 1px solid #eee;
+        }
+        
+        .preview-section {
+            flex: 2;
+            min-width: 500px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            color: var(--secondary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .item-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .rubric-preview {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .rubric-header {
+            background-color: var(--secondary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .rubric-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .rubric-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .info-item {
+            margin: 5px 15px;
+        }
+        
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .rubric-table th {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .rubric-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        
+        .rubric-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .rubric-table tr:hover {
+            background-color: #f1f9ff;
+        }
+        
+        .criterion-cell {
+            text-align: left;
+            font-weight: 600;
+            background-color: #e3f2fd;
+        }
+        
+        .descriptor-cell {
+            text-align: left;
+            min-width: 150px;
+        }
+        
+        .observations {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .observations h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .observations textarea {
+            min-height: 120px;
+        }
+        
+        .export-section {
+            text-align: center;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        
+        .export-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .export-btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+        
+        .descriptor-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plantilla de Rúbrica</h1>
+            <p class="subtitle">Cree una plantilla para generar rúbricas de evaluación</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="form-section">
+                <h2 class="section-title">Información de la Plantilla</h2>
+                
+                <div class="form-group">
+                    <label for="teacher-name">Nombre del Docente:</label>
+                    <input type="text" id="teacher-name" placeholder="Ingrese su nombre">
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Materia:</label>
+                    <input type="text" id="subject" placeholder="Nombre de la materia">
+                </div>
+                
+                <div class="form-group">
+                    <label for="work">Trabajo a Evaluar:</label>
+                    <input type="text" id="work" placeholder="Nombre del trabajo o actividad">
+                </div>
+                
+                <h2 class="section-title">Niveles de Desempeño</h2>
+                
+                <div class="form-group">
+                    <label for="level-name">Nombre del Nivel:</label>
+                    <input type="text" id="level-name" placeholder="Ej: Excelente, Bueno, Regular...">
+                </div>
+                
+                <button id="add-level" class="btn">Agregar Nivel</button>
+                
+                <div class="item-list" id="levels-list">
+                    <!-- Niveles se agregarán aquí -->
+                </div>
+                
+                <h2 class="section-title">Criterios de Evaluación</h2>
+                
+                <div class="form-group">
+                    <label for="criterion-name">Nombre del Criterio:</label>
+                    <input type="text" id="criterion-name" placeholder="Ej: Claridad, Ortografía, Creatividad...">
+                </div>
+                
+                <button id="add-criterion" class="btn">Agregar Criterio</button>
+                
+                <div class="item-list" id="criteria-list">
+                    <!-- Criterios se agregarán aquí -->
+                </div>
+                
+                <div class="btn-group">
+                    <button id="generate-btn" class="btn btn-success">Generar Plantilla</button>
+                    <button id="reset-btn" class="btn btn-danger">Reiniciar</button>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <h2 class="section-title">Vista Previa de la Plantilla</h2>
+                
+                <div class="rubric-preview" id="rubric-preview">
+                    <div class="rubric-header">
+                        <h2 class="rubric-title">Plantilla de Rúbrica</h2>
+                        <div class="rubric-info">
+                            <div class="info-item"><strong>Docente:</strong> <span id="preview-teacher">-</span></div>
+                            <div class="info-item"><strong>Materia:</strong> <span id="preview-subject">-</span></div>
+                            <div class="info-item"><strong>Trabajo:</strong> <span id="preview-work">-</span></div>
+                        </div>
+                    </div>
+                    
+                    <table class="rubric-table" id="rubric-table">
+                        <thead>
+                            <tr>
+                                <th>Criterios</th>
+                                <!-- Niveles se insertarán aquí -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Criterios se insertarán aquí -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="observations">
+                        <h3>Observaciones Generales</h3>
+                        <textarea id="observations" placeholder="Instrucciones generales para el uso de la rúbrica..."></textarea>
+                    </div>
+                </div>
+                
+                <div class="export-section">
+                    <h2 class="section-title">Exportar Plantilla</h2>
+                    <div class="export-buttons">
+                        <button id="export-html" class="btn export-btn">Exportar a HTML</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let levels = [];
+        let criteria = [];
+        let descriptors = {};
+        
+        // Elementos del DOM
+        const teacherNameInput = document.getElementById('teacher-name');
+        const subjectInput = document.getElementById('subject');
+        const workInput = document.getElementById('work');
+        const levelNameInput = document.getElementById('level-name');
+        const criterionNameInput = document.getElementById('criterion-name');
+        const levelsList = document.getElementById('levels-list');
+        const criteriaList = document.getElementById('criteria-list');
+        const rubricTable = document.getElementById('rubric-table');
+        const observationsInput = document.getElementById('observations');
+        
+        // Agregar nivel
+        function addLevel(name) {
+            if (!name) {
+                alert("Por favor ingrese un nombre para el nivel");
+                return;
+            }
+            
+            const level = {name, id: Date.now()};
+            levels.push(level);
+            renderLevelsList();
+            levelNameInput.value = "";
+        }
+        
+        // Agregar criterio
+        function addCriterion(name) {
+            if (!name) {
+                alert("Por favor ingrese un nombre para el criterio");
+                return;
+            }
+            
+            const criterion = {name, id: Date.now()};
+            criteria.push(criterion);
+            renderCriteriaList();
+            criterionNameInput.value = "";
+        }
+        
+        // Renderizar lista de niveles
+        function renderLevelsList() {
+            levelsList.innerHTML = "";
+            levels.forEach((level, index) => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <span>${level.name}</span>
+                    <button class="btn btn-danger btn-sm" onclick="removeLevel(${index})">Eliminar</button>
+                `;
+                levelsList.appendChild(item);
+            });
+        }
+        
+        // Renderizar lista de criterios
+        function renderCriteriaList() {
+            criteriaList.innerHTML = "";
+            criteria.forEach((criterion, index) => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <span>${criterion.name}</span>
+                    <button class="btn btn-danger btn-sm" onclick="removeCriterion(${index})">Eliminar</button>
+                `;
+                criteriaList.appendChild(item);
+            });
+        }
+        
+        // Eliminar nivel
+        function removeLevel(index) {
+            levels.splice(index, 1);
+            renderLevelsList();
+            generateTemplate();
+        }
+        
+        // Eliminar criterio
+        function removeCriterion(index) {
+            criteria.splice(index, 1);
+            renderCriteriaList();
+            generateTemplate();
+        }
+        
+        // Generar plantilla
+        function generateTemplate() {
+            // Actualizar información del encabezado
+            document.getElementById('preview-teacher').textContent = teacherNameInput.value || "-";
+            document.getElementById('preview-subject').textContent = subjectInput.value || "-";
+            document.getElementById('preview-work').textContent = workInput.value || "-";
+            
+            // Limpiar tabla
+            const thead = rubricTable.querySelector('thead tr');
+            const tbody = rubricTable.querySelector('tbody');
+            
+            // Mantener la primera celda (Criterios)
+            thead.innerHTML = '<th>Criterios</th>';
+            
+            // Agregar niveles al encabezado
+            levels.forEach(level => {
+                const th = document.createElement('th');
+                th.textContent = level.name;
+                thead.appendChild(th);
+            });
+            
+            // Agregar criterios al cuerpo
+            tbody.innerHTML = '';
+            criteria.forEach((criterion, criterionIndex) => {
+                const row = document.createElement('tr');
+                
+                // Celda del criterio
+                const criterionCell = document.createElement('td');
+                criterionCell.className = 'criterion-cell';
+                criterionCell.textContent = criterion.name;
+                row.appendChild(criterionCell);
+                
+                // Celdas de niveles con descriptores editables
+                levels.forEach((level, levelIndex) => {
+                    const cell = document.createElement('td');
+                    cell.className = 'descriptor-cell';
+                    
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'descriptor-input';
+                    textarea.placeholder = `Descriptor para ${level.name}`;
+                    textarea.dataset.criterion = criterion.id;
+                    textarea.dataset.level = level.id;
+                    
+                    // Recuperar descriptor guardado si existe
+                    const key = `${criterion.id}-${level.id}`;
+                    if (descriptors[key]) {
+                        textarea.value = descriptors[key];
+                    }
+                    
+                    // Guardar cambios en descriptores
+                    textarea.addEventListener('input', function() {
+                        descriptors[key] = this.value;
+                    });
+                    
+                    cell.appendChild(textarea);
+                    row.appendChild(cell);
+                });
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Exportar a HTML
+        function exportToHTML() {
+            const teacher = teacherNameInput.value || "Docente";
+            const subject = subjectInput.value || "Materia";
+            const work = workInput.value || "Trabajo";
+            const observations = observationsInput.value || "";
+            
+            // Crear contenido HTML de la plantilla
+            let htmlContent = `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rúbrica de Evaluación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .info-item {
+            margin: 5px 15px;
+        }
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .rubric-table th {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .rubric-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .rubric-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .criterion-cell {
+            text-align: left;
+            font-weight: 600;
+            background-color: #e3f2fd;
+        }
+        .descriptor-cell {
+            text-align: left;
+            min-width: 150px;
+        }
+        .observations {
+            margin: 30px 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .observations h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .student-info {
+            margin: 20px;
+            padding: 15px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+        }
+        .student-info label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .student-info input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .signature {
+            margin: 30px 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .signature div {
+            text-align: center;
+            width: 45%;
+        }
+        .signature-line {
+            margin-top: 50px;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Rúbrica de Evaluación</h1>
+            <div class="info">
+                <div class="info-item"><strong>Docente:</strong> ${teacher}</div>
+                <div class="info-item"><strong>Materia:</strong> ${subject}</div>
+                <div class="info-item"><strong>Trabajo:</strong> ${work}</div>
+            </div>
+        </div>
+        
+        <div class="student-info">
+            <label for="student-name">Nombre del Estudiante:</label>
+            <input type="text" id="student-name" placeholder="Nombre completo del estudiante">
+            
+            <label for="date">Fecha:</label>
+            <input type="date" id="date">
+        </div>
+        
+        <table class="rubric-table">
+            <thead>
+                <tr>
+                    <th>Criterios</th>
+`;
+
+            // Agregar encabezados de niveles
+            levels.forEach(level => {
+                htmlContent += `                    <th>${level.name}</th>
+`;
+            });
+
+            htmlContent += `                </tr>
+            </thead>
+            <tbody>
+`;
+
+            // Agregar filas de criterios con descriptores
+            criteria.forEach(criterion => {
+                htmlContent += `                <tr>
+                    <td class="criterion-cell">${criterion.name}</td>
+`;
+                
+                levels.forEach(level => {
+                    const key = `${criterion.id}-${level.id}`;
+                    const descriptor = descriptors[key] || "";
+                    htmlContent += `                    <td class="descriptor-cell">${descriptor}</td>
+`;
+                });
+                
+                htmlContent += `                </tr>
+`;
+            });
+
+            htmlContent += `            </tbody>
+        </table>
+        
+        <div class="observations">
+            <h3>Observaciones Generales</h3>
+            <p>${observations}</p>
+        </div>
+        
+        <div class="signature">
+            <div>
+                <div class="signature-line">Firma del Docente</div>
+            </div>
+            <div>
+                <div class="signature-line">Firma del Estudiante</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Establecer fecha actual
+        document.getElementById('date').valueAsDate = new Date();
+    <\/script>
+</body>
+</html>`;
+
+            // Crear y descargar archivo
+            const blob = new Blob([htmlContent], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'rubrica.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Reiniciar formulario
+        function resetForm() {
+            if (confirm("¿Está seguro de que desea reiniciar todo el formulario?")) {
+                teacherNameInput.value = "";
+                subjectInput.value = "";
+                workInput.value = "";
+                observationsInput.value = "";
+                levels = [];
+                criteria = [];
+                descriptors = {};
+                renderLevelsList();
+                renderCriteriaList();
+                generateTemplate();
+            }
+        }
+        
+        // Eventos
+        document.getElementById('add-level').addEventListener('click', () => {
+            addLevel(levelNameInput.value);
+        });
+        
+        document.getElementById('add-criterion').addEventListener('click', () => {
+            addCriterion(criterionNameInput.value);
+        });
+        
+        document.getElementById('generate-btn').addEventListener('click', generateTemplate);
+        
+        document.getElementById('export-html').addEventListener('click', exportToHTML);
+        
+        document.getElementById('reset-btn').addEventListener('click', resetForm);
+        
+        // Inicializar con datos de ejemplo
+        window.onload = function() {
+            teacherNameInput.value = "María González";
+            subjectInput.value = "Lengua y Literatura";
+            workInput.value = "Ensayo argumentativo";
+            
+            addLevel("Excelente");
+            addLevel("Bueno");
+            addLevel("Regular");
+            addLevel("Insuficiente");
+            
+            addCriterion("Claridad del mensaje");
+            addCriterion("Ortografía y gramática");
+            addCriterion("Creatividad");
+            addCriterion("Organización");
+            addCriterion("Cumplimiento de requisitos");
+            
+            generateTemplate();
+        };
+    </script>
+</body>
+</html>
