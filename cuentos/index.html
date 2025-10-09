@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Cuentos Rioplatenses</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #f7f9fc;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 25px 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        #formulario-palabras {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px 25px;
+            margin-bottom: 30px;
+        }
+        .campo {
+            display: flex;
+            flex-direction: column;
+        }
+        .campo label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.9em;
+        }
+        .campo input, .campo select {
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #bdc3c7;
+            transition: all 0.2s ease-in-out;
+            background-color: #fff;
+        }
+        .campo input:focus, .campo select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+        }
+        .campo input.error, .campo select.error {
+            border: 2px solid #e74c3c;
+            background-color: #fdedec;
+        }
+        .boton {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            margin-top: 10px;
+        }
+        .boton:hover { transform: translateY(-2px); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+        .boton-principal { background-color: #27ae60; }
+        .boton-principal:hover { background-color: #2ecc71; }
+        .boton-secundario { background-color: #3498db; }
+        .boton-secundario:hover { background-color: #5dade2; }
+        .boton-copiar { background-color: #f39c12; }
+        .boton-copiar:hover { background-color: #f1c40f; }
+        .boton-reset { background-color: #e74c3c; }
+        .boton-reset:hover { background-color: #f1948a; }
+
+        #selector-cuento, #cuento-resultado { display: none; }
+        .cuento-generado {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .palabra-insertada {
+            font-weight: bold;
+            color: #c0392b;
+            text-decoration: underline;
+            text-decoration-style: wavy;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="seccion-entrada">
+            <h1>¡Armá tu cuento loco!</h1>
+            <p>Llená todos los casilleros con las palabras que se te ocurran. Cuando termines, apretá el botón verde para elegir una historia.</p>
+            <div id="formulario-palabras">
+                <div class="campo"><label for="p1">1. Exclamación completa</label><input type="text" id="p1" placeholder="Ej: ¡Por las barbas de Neptuno!"></div>
+                <div class="campo"><label for="p2">2. Nombre de un amigo/a</label><input type="text" id="p2" placeholder="Ej: Susana, Roberto"></div>
+                <div class="campo">
+                    <label for="p2_genero">3. Género del amigo/a</label>
+                    <select id="p2_genero">
+                        <option value="femenino">Femenino</option>
+                        <option value="masculino">Masculino</option>
+                    </select>
+                </div>
+                <div class="campo"><label for="p3">4. Un lugar improbable</label><input type="text" id="p3" placeholder="Ej: la Antártida, el living de mi tía"></div>
+                <div class="campo"><label for="p4">5. Adjetivo (plural)</label><input type="text" id="p4" placeholder="Ej: caóticos, somnolientos, brillantes"></div>
+                <div class="campo"><label for="p5">6. Verbo de acción (infinitivo)</label><input type="text" id="p5" placeholder="Ej: catapultar, digerir, conspirar"></div>
+                <div class="campo"><label for="p6">7. Comida (plural)</label><input type="text" id="p6" placeholder="Ej: tuercas con mayonesa, nubes fritas"></div>
+                <div class="campo"><label for="p7">8. Adjetivo raro (femenino, singular)</label><input type="text" id="p7" placeholder="Ej: fosforescente, puntiaguda"></div>
+                <div class="campo"><label for="p8">9. Parte del cuerpo (fem, sin artículo)</label><input type="text" id="p8" placeholder="Ej: ceja, rodilla, oreja"></div>
+                <div class="campo"><label for="p9">10. Objeto (masc, sin artículo)</label><input type="text" id="p9" placeholder="Ej: clip, pasaporte vencido"></div>
+                <div class="campo"><label for="p10">11. Un famoso o famosa</label><input type="text" id="p10" placeholder="Ej: Taylor Swift, Lionel Messi"></div>
+                <div class="campo"><label for="p11">12. Verbo en pasado (3ra persona)</label><input type="text" id="p11" placeholder="Ej: bostezó, levitó, declamó"></div>
+                <div class="campo"><label for="p12">13. Animal (masc, sin artículo)</label><input type="text" id="p12" placeholder="Ej: ornitorrinco, calamar"></div>
+                <div class="campo"><label for="p13">14. Adjetivo exagerado (masc, sing.)</label><input type="text" id="p13" placeholder="Ej: estratosférico, prehistórico"></div>
+            </div>
+            <button class="boton boton-principal" onclick="validarYMostrarSelector()">¡Listo! Quiero elegir mi cuento</button>
+        </div>
+
+        <div id="selector-cuento">
+            <h2>¡Perfecto! Ahora elegí qué historia querés armar:</h2>
+            <button class="boton boton-secundario" onclick="mostrarCuento(1)">1. Un finde cualquiera</button>
+            <button class="boton boton-secundario" onclick="mostrarCuento(2)">2. El partido del siglo</button>
+            <button class="boton boton-secundario" onclick="mostrarCuento(3)">3. Una aventura espacial</button>
+            <button class="boton boton-secundario" onclick="mostrarCuento(4)">4. El misterio en la oficina</button>
+            <button class="boton boton-secundario" onclick="mostrarCuento(5)">5. El show de cocina desastroso</button>
+            <button class="boton boton-secundario" onclick="mostrarCuento(6)">6. Misión súper secreta</button>
+        </div>
+
+        <div id="cuento-resultado">
+            <h2 id="cuento-titulo"></h2>
+            <div class="cuento-generado">
+                <p id="cuento-texto"></p>
+            </div>
+            <button class="boton boton-copiar" id="botonCopiar" onclick="copiarCuento()">Copiar Cuento</button>
+            <button class="boton boton-reset" onclick="location.reload()">Jugar de nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        let palabrasGlobales = [];
+        let generoAmigoGlobal = '';
+
+        function validarYMostrarSelector() {
+            let formularioValido = true;
+            const camposIds = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9', 'p10', 'p11', 'p12', 'p13'];
+            
+            camposIds.forEach(id => {
+                const input = document.getElementById(id);
+                if (input.value.trim() === '') {
+                    input.classList.add('error');
+                    formularioValido = false;
+                } else {
+                    input.classList.remove('error');
+                }
+            });
+
+            if (!formularioValido) {
+                alert('¡Ups! Te faltó llenar los campos marcados en rojo.');
+                return;
+            }
+            
+            palabrasGlobales = camposIds.map(id => document.getElementById(id).value);
+            generoAmigoGlobal = document.getElementById('p2_genero').value;
+
+            document.getElementById('seccion-entrada').style.display = 'none';
+            document.getElementById('selector-cuento').style.display = 'block';
+        }
+
+        function mostrarCuento(numero) {
+            const p = palabrasGlobales.map(palabra => `<span class="palabra-insertada">${palabra}</span>`);
+            let titulo = '';
+            let texto = '';
+            
+            const esMasc = (generoAmigoGlobal === 'masculino');
+            const amigo_a = esMasc ? 'amigo' : 'amiga';
+            const conocido_a = esMasc ? 'conocido' : 'conocida';
+            const el_la_agente = esMasc ? 'el' : 'la';
+            const lo_la = esMasc ? 'lo' : 'la';
+            const nervioso_a = esMasc ? 'nervioso' : 'nerviosa';
+            const montado_a = esMasc ? 'montado' : 'montada';
+            const el_la_astronauta = esMasc ? 'El' : 'La';
+
+
+            switch (numero) {
+                case 1:
+                    titulo = 'Un finde cualquiera';
+                    texto = `—${p[0]} —me gritó mi ${amigo_a} ${p[1]} en ${p[2]}. Estábamos todos muy ${p[3]} porque no sabíamos qué hacer. La idea era juntarnos a ${p[4]}, pero al final nos quedamos sin plan. Para levantar el ánimo, pedimos unas ${p[5]}. De repente, a mi hermana se le ocurrió una idea bastante ${p[6]}. Dijo que podíamos jugar a adivinar personajes y, sin que nadie entendiera por qué, se tocó la ${p[7]}. Acto seguido, agarró el ${p[8]} y empezó a imitar a ${p[9]}. ¡No lo podíamos creer! Mi viejo, que justo pasaba por ahí, ${p[10]} tan fuerte que parecía un ${p[11]} afónico. Fue, sin dudas, el momento más ${p[12]} de la semana.`;
+                    break;
+                case 2:
+                    titulo = 'El partido del siglo';
+                    texto = `—${p[0]} ¡No lo puedo creer! —gritaba el relator. En medio de ${p[2]}, mi ${amigo_a} ${p[1]} estaba por patear el penal decisivo. Los jugadores rivales se veían ${p[3]} y no paraban de ${p[4]} para poner${lo_la} ${nervioso_a}. La hinchada, mientras tanto, revoleaba ${p[5]}. La situación era realmente ${p[6]}. ${p[1]} se acomodó, le guiñó la ${p[7]} al arquero y sacó un remate con el ${p[8]}. La pelota hizo una comba idéntica a la que hacía ${p[9]} en sus mejores tiempos. El arquero ${p[10]} para el otro lado y la pelota entró. El estadio explotó como si un ${p[11]} hubiera metido el gol. Fue un final de campeonato totalmente ${p[12]}.`;
+                    break;
+                case 3:
+                    titulo = 'Una aventura espacial';
+                    texto = `—${p[0]} ¡Cuidado! —alertó el robot de a bordo. ${el_la_astronauta} astronauta ${p[1]} y yo estábamos navegando por ${p[2]}. Los sensores indicaban que estábamos ${p[3]} por una lluvia de asteroides. Teníamos que ${p[4]} rápidamente o la nave se convertiría en un millón de ${p[5]}. De pronto, una luz ${p[6]} iluminó toda la cabina. Una extraña criatura se pegó al vidrio. Tenía la ${p[7]} gigante y sostenía un ${p[8]} brillante. Se parecía un poco a ${p[9]}, pero con más tentáculos. De repente, la criatura ${p[10]} una canción de cuna y un ${p[11]} salió de su espalda. Fue el encuentro alienígena más ${p[12]} de la historia galáctica.`;
+                    break;
+                case 4:
+                    titulo = 'El misterio en la oficina';
+                    texto = `—${p[0]} —exclamó el jefe al aparecer en ${p[2]}. Todos los empleados estaban ${p[3]}, sin ganas de ${p[4]}. El gran misterio del día era quién se había comido las ${p[5]} de la heladera. El principal sospechoso era ${p[1]}, de contaduría, ${conocido_a} por su memoria ${p[6]}. Un testigo dijo que ${lo_la} vio con un bigote de salsa en la ${p[7]}. Para resolver el caso, el gerente agarró el ${p[8]} y lo usó como un micrófono para interrogar a todos, imitando a ${p[9]}. Nadie confesaba, hasta que de pronto el cadete ${p[10]} y confesó todo, diciendo que lo hizo por órdenes de un ${p[11]} parlante. Fue el día de trabajo más ${p[12]} que recordamos.`;
+                    break;
+                case 5:
+                    titulo = 'El show de cocina desastroso';
+                    texto = `—${p[0]} ¡Esto es un caos! —exclamó el presentador. Mi ${amigo_a} ${p[1]} estaba en la final de "Maestros de la Cocina", compitiendo en ${p[2]}. Los otros cocineros parecían ${p[3]} y no paraban de ${p[4]} por todos lados. El desafío era preparar ${p[5]} con una salsa ${p[6]}. ${p[1]} se secó el sudor de la ${p[7]} y, en un acto de desesperación, usó el ${p[8]} como amasadora. El jurado, que era nada menos que ${p[9]}, ${lo_la} miraba fijamente. De repente, ${p[1]} ${p[10]} un ingrediente secreto: un ${p[11]} marinado en jugo de limón. El plato final fue un logro ${p[12]} que dejó a todos sin palabras.`;
+                    break;
+                case 6:
+                    titulo = 'Misión súper secreta';
+                    texto = `—${p[0]} ¡Entendido, base! —susurró ${el_la_agente} agente ${p[1]} en su comunicador. La misión era infiltrarse en ${p[2]} para recuperar el legendario ${p[8]}. Los guardias eran increíblemente ${p[3]} y la única forma de entrar era ${p[4]} por el techo. Una vez dentro, ${p[1]} se disfrazó usando unas ${p[5]} como sombrero. La operación era de una dificultad ${p[6]}. El liderazgo de la organización estaba en manos de la temible figura de ${p[9]}, quien apareció de la nada. Su único punto débil era su ${p[7]}. Para escapar, ${p[1]} ${p[10]} con valentía y huyó ${montado_a} en un ${p[11]} a toda velocidad. Fue un acto de espionaje verdaderamente ${p[12]}.`;
+                    break;
+            }
+
+            document.getElementById('selector-cuento').style.display = 'none';
+            document.getElementById('cuento-titulo').innerText = titulo;
+            document.getElementById('cuento-texto').innerHTML = texto;
+            document.getElementById('cuento-resultado').style.display = 'block';
+        }
+
+        function copiarCuento() {
+            const textoCuento = document.getElementById('cuento-texto').innerText;
+            const boton = document.getElementById('botonCopiar');
+            
+            navigator.clipboard.writeText(textoCuento).then(() => {
+                const textoOriginal = boton.innerText;
+                boton.innerText = '¡Copiado!';
+                setTimeout(() => {
+                    boton.innerText = textoOriginal;
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar el texto: ', err);
+                alert('Hubo un error al intentar copiar. Es posible que tu navegador no sea compatible.');
+            });
+        }
+    </script>
+
+</body>
+</html>```
