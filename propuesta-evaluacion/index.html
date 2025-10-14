@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clase: De la evaluación al criterio</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <style>
+        /* --- Paleta de Colores y Variables --- */
+        :root {
+            --primary-color: #2c3e50; /* Azul Pizarra Oscuro */
+            --secondary-color: #00897B; /* Teal */
+            --accent-color: #FFA726; /* Ámbar */
+            --bg-light: #F5F7FA;
+            --text-color: #34495e; /* Gris Oscuro */
+            --border-color: #E0E0E0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+        }
+        h1, h2, h3 {
+            color: var(--primary-color);
+            line-height: 1.3;
+            font-weight: 600;
+        }
+        h2 {
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .cover {
+            text-align: center;
+            border-bottom: none;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .cover ul {
+            display: inline-block;
+            margin-top: 20px;
+            padding-left: 0;
+        }
+        .cover li {
+            text-align: left;
+            list-style-position: inside;
+        }
+        .cover h1 {
+            font-size: 2.7em;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        .cover p {
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+        .chapter {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .interactive-activity {
+            background-color: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        .quote, .analogy, .tension-box {
+            margin: 25px 0;
+            padding: 15px 20px;
+            border-left: 4px solid;
+            border-radius: 0 8px 8px 0;
+        }
+        .quote, .analogy {
+            font-style: italic;
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            background-color: #E0F2F1;
+        }
+        .tension-box {
+            background-color: #FFF3E0;
+            border-color: var(--accent-color);
+        }
+        .final-quote {
+            font-style: italic;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-color);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #777;
+        }
+        .export-button {
+            display: block;
+            width: 280px;
+            margin: 40px auto;
+            padding: 14px 22px;
+            background: linear-gradient(45deg, var(--secondary-color), #00695C);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .export-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .example-box {
+            background-color: #E3F2FD;
+            border: 1px solid #90CAF9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        #drag-container { display: flex; flex-wrap: wrap; justify-content: space-around; }
+        .drop-zone { border: 2px dashed var(--border-color); padding: 20px; margin: 10px; flex: 1; min-width: 250px; min-height: 150px; text-align: center; border-radius: 8px; transition: background-color 0.2s; }
+        .drop-zone:hover { background-color: #fafafa; }
+        .draggable { background-color: var(--primary-color); color: white; padding: 10px; margin: 5px; cursor: move; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        #drag-options { text-align: center; margin-bottom: 20px; }
+        .card-container { display: flex; flex-wrap: wrap; justify-content: space-around; }
+        .flip-card { background-color: transparent; width: 200px; height: 100px; perspective: 1000px; margin: 10px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-weight: 500; cursor: pointer; }
+        .flip-card-front { background-color: var(--accent-color); color: white; }
+        .flip-card-back { background-color: var(--secondary-color); color: white; transform: rotateY(180deg); }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 167, 38, 0.2);
+        }
+        textarea { min-height: 140px; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="clase-contenido">
+        
+        <div class="cover chapter">
+            <h1>📘 De la evaluación al criterio: medios, técnicas e instrumentos en psicología</h1>
+            <p>En esta clase vas a explorar cómo se construye una evaluación verdaderamente formativa, un proceso que ilumina el aprendizaje en lugar de solo medirlo.</p>
+            <p>A partir del texto de Hamodi, López Pastor y López (2015) y de la plantilla de rúbrica, vas a:</p>
+            <ul>
+                <li>Elegir un tema de psicología para nivel secundario.</li>
+                <li>Definir el medio, la técnica y el instrumento de evaluación.</li>
+                <li>Crear una rúbrica como herramienta final, explorando sus múltiples usos.</li>
+            </ul>
+            <p><strong>🌿 Evaluar es también aprender.</strong></p>
+        </div>
+
+        <div class="chapter">
+            <h2>📖 Capítulo 1 – Evaluar no es calificar: una tensión fundamental</h2>
+            <p>Comencemos por desmantelar una idea común: que "evaluar" y "calificar" son lo mismo. En la práctica docente, representan dos fuerzas que, a menudo, tiran en direcciones opuestas.</p>
+            <div class="tension-box">
+                <h3>La tensión: el aprendizaje vs. el sistema</h3>
+                <p><strong>Evaluar es un acto pedagógico, interpersonal y procesual.</strong> Su hogar es la <strong>comunidad de aprendizaje</strong>. Su objetivo es el diálogo y la retroalimentación. La evaluación pregunta: "¿cómo puedo ayudarte a seguir aprendiendo?". Es formativa por naturaleza.</p>
+                <p><strong>Calificar es un acto administrativo, institucional y final.</strong> Su hogar es el <strong>sistema educativo</strong>. Responde a la necesidad de certificar y comunicar un resultado. La calificación responde: "¿qué nivel de logro alcanzaste?". Es sumativa por naturaleza.</p>
+            </div>
+            <div class="interactive-activity">
+                <h3>🧩 Arrastrar y soltar: ¿dónde pertenece cada concepto?</h3>
+                <p><strong>Consigna:</strong> arrastrá cada concepto a la dimensión que mejor lo representa.</p>
+                <div id="drag-options"><div class="draggable" draggable="true" data-target="evaluar">Diálogo y proceso</div><div class="draggable" draggable="true" data-target="calificar">Requisito institucional</div><div class="draggable" draggable="true" data-target="evaluar">Comunidad de aprendizaje</div><div class="draggable" draggable="true" data-target="calificar">Certificación de saberes</div><div class="draggable" draggable="true" data-target="evaluar">Retroalimentación para la mejora</div></div>
+                <div id="drag-container"><div class="drop-zone" data-zone="evaluar"><h4>Dimensión de la evaluación</h4></div><div class="drop-zone" data-zone="calificar"><h4>Dimensión de la calificación</h4></div></div>
+                <p id="feedback-drag" style="text-align:center; margin-top:15px;"></p>
+            </div>
+        </div>
+        
+        <div class="chapter">
+            <h2>🧠 Capítulo 2 – Medios, técnicas e instrumentos: el kit del evaluador</h2>
+            <p>Para construir una evaluación coherente, necesitamos organizar nuestras herramientas. Imaginá que sos un detective investigando un aprendizaje: necesitás saber qué evidencia buscar (el medio), cómo analizarla (la técnica) y dónde anotar tus hallazgos (el instrumento).</p>
+            <div class="analogy"><p>El <strong>medio</strong> es la huella digital en la escena (la evidencia). La <strong>técnica</strong> es el análisis en el laboratorio (el procedimiento). El <strong>instrumento</strong> es el informe final que registra las conclusiones (el registro sistemático).</p></div>
+            <div class="interactive-activity">
+                <h3>📚 Tarjetas desplegables: ¿medio, técnica o instrumento?</h3>
+                <p>Hacé clic en cada tarjeta para descubrir a qué categoría pertenece.</p>
+                <div class="card-container"><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Portafolio</div><div class="flip-card-back">Medio</div></div></div><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Observación sistemática</div><div class="flip-card-back">Técnica</div></div></div><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Lista de control</div><div class="flip-card-back">Instrumento</div></div></div><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Debate oral</div><div class="flip-card-back">Medio</div></div></div><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Autoevaluación</div><div class="flip-card-back">Técnica</div></div></div><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front">Rúbrica</div><div class="flip-card-back">Instrumento</div></div></div></div>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <h2>🕵️ Capítulo 3 – Análisis de un caso práctico</h2>
+            <p>Ahora vas a poner a prueba tu mirada de detective. Leé el siguiente escenario y luego respondé a las preguntas.</p>
+            <div class="example-box">
+                <h3>El caso del profesor David</h3>
+                <p>El profesor David, de psicología, quiere evaluar la unidad sobre "Inteligencia emocional". Su objetivo es que sus estudiantes sean capaces de aplicar los conceptos de autoconciencia y empatía para resolver un conflicto interpersonal.</p>
+                <p>Llegado el día de la evaluación, David les entrega una prueba de opción múltiple de 20 preguntas que se enfocan en memorizar las definiciones exactas del libro de texto.</p>
+            </div>
+            <div class="interactive-activity">
+                <h3>Tu análisis del caso</h3>
+                <label for="analisis-caso"><strong>1. ¿Cuál es la incoherencia principal en este plan de evaluación?</strong><br><strong>2. Usando los conceptos de medio, técnica e instrumento, ¿qué propondrías para alinear la evaluación con el objetivo?</strong><br><strong>3. ¿Cómo te asegurarías de que el foco esté en la evaluación formativa y no solo en la calificación?</strong></label>
+                <textarea id="analisis-caso" placeholder="Escribí aquí tu análisis respondiendo a las tres preguntas..."></textarea>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <h2>🧩 Capítulo 4 – Tu turno: diseñando una evaluación</h2>
+            <p>Inspirado por el análisis anterior, ahora te toca a vos diseñar una evaluación coherente desde cero. Sé creativo y asegurate de que tus tres elementos respondan lógicamente al tema que elegiste.</p>
+            <div class="interactive-activity">
+                 <table class="fill-in-table" style="width:100%;">
+                    <tr><td style="width: 30%;"><strong>Tema de psicología:</strong></td><td><input type="text" id="tema-psicologia" placeholder="Ej: Memoria, motivación, emociones..."></td></tr>
+                    <tr><td><strong>Medio de evaluación:</strong></td><td><input type="text" id="medio-evaluacion" placeholder="¿Qué producto concreto presentará el estudiante?"></td></tr>
+                    <tr><td><strong>Técnica de evaluación:</strong></td><td><input type="text" id="tecnica-evaluacion" placeholder="¿Cómo vas a observar o analizar esa evidencia?"></td></tr>
+                    <tr><td><strong>Instrumento de evaluación:</strong></td><td><input type="text" id="instrumento-evaluacion" placeholder="¿Con qué herramienta registrarás tu análisis?"></td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <h2>🧭 Capítulo 5 – La rúbrica: una herramienta versátil</h2>
+            <p>La rúbrica es uno de los instrumentos más potentes porque hace explícitos los criterios de éxito. Esto la convierte en una hoja de ruta tanto para quien aprende como para quien enseña.</p>
+            <div class="quote" style="border-color:#e74c3c; background-color:#fbe9e7; font-style: normal;"><p><strong>¡Atención!</strong> aquí es donde se cierra el círculo. Al ponderar y sumar puntos para obtener una nota, estamos usando la rúbrica para <strong>calificar</strong>. Hemos cruzado el puente desde lo puramente formativo (diálogo) hacia lo sumativo (certificación).</p></div>
+            <h3 style="margin-top: 30px;">Una herramienta, múltiples miradas</h3>
+            <p>La misma rúbrica puede ser usada por diferentes actores:</p>
+            <ul>
+                <li><strong>Autoevaluación (yo me evalúo):</strong> el estudiante usa la rúbrica para autorregularse. Cambia la pregunta de "¿qué nota me van a poner?" a "¿qué necesito mejorar para alcanzar el siguiente nivel?".</li>
+                <li><strong>Coevaluación (nos evaluamos entre pares):</strong> los estudiantes aprenden a dar y recibir retroalimentación constructiva, basándose en criterios objetivos y no en opiniones personales.</li>
+                <li><strong>Heteroevaluación (el docente evalúa):</strong> es el uso tradicional, pero al compartir la rúbrica de antemano, la evaluación se vuelve transparente, justa y mucho más formativa.</li>
+            </ul>
+            <div class="interactive-activity">
+                <h3>Ahora, a construir tu rúbrica</h3>
+                <p>Seguí estos pasos usando la plantilla para crear la rúbrica que valorarará el medio que elegiste.</p>
+                <ol style="padding-left: 20px;">
+                    <li>Abrir la plantilla generadora.</li>
+                    <li>Definir 3 o 4 criterios de evaluación claros y relevantes.</li>
+                    <li>Describir los niveles de logro (ej: inicial, en proceso, logrado).</li>
+                    <li>Considerar si es necesario ponderar algún criterio para reflejar su importancia.</li>
+                    <li>Guardar o exportar la rúbrica para adjuntarla a tu plan.</li>
+                </ol>
+                <a href="https://stellamcao.github.io/material-clases/plantilla-rubrica/" target="_blank" class="export-button" style="width:300px; margin: 20px 0 0 0; background: linear-gradient(45deg, #2196F3, #1976D2);">🔗 Ir a la plantilla generadora de rúbricas</a>
+            </div>
+        </div>
+
+        <div class="chapter">
+            <h2>💬 Capítulo 6 – Cierre reflexivo</h2>
+            <p>Recorrimos un camino desde la teoría hasta la construcción práctica de un instrumento. Ahora es momento de conectar todo esto con tu propia experiencia.</p>
+            <div class="interactive-activity">
+                <h3>✏️ Reflexión final</h3>
+                <label for="reflexion">Pensá en tu propia trayectoria como estudiante. Describí una experiencia de evaluación que realmente te ayudó a aprender y otra que sentiste solo como una nota. Usando los conceptos de la clase, ¿qué creés que las diferenció fundamentalmente?</label>
+                <textarea id="reflexion" placeholder="Escribí aquí tu reflexión, comparando ambas experiencias..."></textarea>
+            </div>
+             <div class="final-quote"><p>“Cuando transformamos la evaluación en diálogo, dejamos de medir para empezar a comprender.”</p></div>
+        </div>
+
+        <div class="chapter">
+            <h2>💡 Capítulo 7 – Recursos y bibliografía</h2>
+            <ul>
+                <li>Hamodi, C., López Pastor, V. M. y López, A. T. (2015). Medios, técnicas e instrumentos de evaluación formativa y compartida del aprendizaje en educación superior. <em>Perfiles Educativos, XXXVII</em>(147), 146–161.</li>
+                <li>Plantilla de rúbricas (Stella M. Cao). Recuperado de: https://stellamcao.github.io/material-clases/plantilla-rubrica/</li>
+            </ul>
+        </div>
+    </div>
+
+    <button id="export-pdf" class="export-button">Exportar mis respuestas a PDF</button>
+
+    <div class="footer"><p>&copy; Stella M. Cao - 2025</p></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // --- Lógica para actividades interactivas (sin cambios) ---
+    const draggables = document.querySelectorAll('.draggable');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const feedbackDrag = document.getElementById('feedback-drag');
+    draggables.forEach(draggable => {
+        draggable.addEventListener('dragstart', () => { draggable.classList.add('dragging'); });
+        draggable.addEventListener('dragend', () => { draggable.classList.remove('dragging'); });
+    });
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', e => { e.preventDefault(); });
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            const draggable = document.querySelector('.dragging');
+            if (draggable.dataset.target === zone.dataset.zone) {
+                zone.appendChild(draggable);
+                feedbackDrag.textContent = "¡Correcto!";
+                feedbackDrag.style.color = 'green';
+            } else {
+                feedbackDrag.textContent = "Intenta de nuevo.";
+                feedbackDrag.style.color = 'red';
+            }
+            setTimeout(() => { feedbackDrag.textContent = ''; }, 2000);
+        });
+    });
+    const cards = document.querySelectorAll('.flip-card');
+    cards.forEach(card => {
+        card.addEventListener('click', () => { card.classList.toggle('flipped'); });
+    });
+
+    // --- Lógica de exportación a PDF (SOLUCIÓN DEFINITIVA) ---
+    const exportButton = document.getElementById('export-pdf');
+    exportButton.addEventListener('click', () => {
+        exportButton.textContent = 'Generando PDF...';
+        exportButton.disabled = true;
+
+        const analisisCaso = document.getElementById('analisis-caso').value;
+        const tema = document.getElementById('tema-psicologia').value;
+        const medio = document.getElementById('medio-evaluacion').value;
+        const tecnica = document.getElementById('tecnica-evaluacion').value;
+        const instrumento = document.getElementById('instrumento-evaluacion').value;
+        const reflexion = document.getElementById('reflexion').value;
+        
+        let respuestasHTML = `<div style="font-family: sans-serif; padding: 20px; width: 700px;">
+            <h1 style="color:#2c3e50;">Respuestas de la actividad</h1>
+            <p style="color:#555;"><em>De la evaluación al criterio</em></p><hr>
+            <h2 style="color:#2c3e50; margin-top: 30px;">Capítulo 3 – Análisis de un caso práctico</h2>
+            <p>${analisisCaso.replace(/\n/g, '<br>') || '<em>No completado</em>'}</p>
+            <h2 style="color:#2c3e50; margin-top: 30px;">Capítulo 4 – Tu turno: diseñando una evaluación</h2>
+            <p><strong>Tema de psicología:</strong> ${tema || '<em>No completado</em>'}</p>
+            <p><strong>Medio de evaluación:</strong> ${medio || '<em>No completado</em>'}</p>
+            <p><strong>Técnica de evaluación:</strong> ${tecnica || '<em>No completado</em>'}</p>
+            <p><strong>Instrumento de evaluación:</strong> ${instrumento || '<em>No completado</em>'}</p>
+            <h2 style="color:#2c3e50; margin-top: 30px;">Capítulo 6 – Cierre reflexivo</h2>
+            <p>${reflexion.replace(/\n/g, '<br>') || '<em>No completado</em>'}</p>
+        </div>`;
+        
+        const elementToExport = document.createElement('div');
+        elementToExport.innerHTML = respuestasHTML;
+        document.body.appendChild(elementToExport);
+        
+        const opt = {
+            margin: [1, 1, 1, 1],
+            filename: 'Respuestas_Evaluacion_Criterio.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        
+        html2pdf().from(elementToExport).set(opt).save().then(() => {
+            document.body.removeChild(elementToExport);
+            exportButton.textContent = 'Exportar mis respuestas a PDF';
+            exportButton.disabled = false;
+        }).catch((err) => {
+            console.error("Hubo un error al generar el PDF:", err);
+            document.body.removeChild(elementToExport);
+            exportButton.textContent = 'Error al exportar. Intentá de nuevo.';
+            exportButton.disabled = false;
+        });
+    });
+});
+</script>
+
+</body>
+</html>```
