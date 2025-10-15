@@ -6,195 +6,28 @@
 <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 <title>Markmap</title>
 <style>
-* { margin: 0; padding: 0; }
+* {
+  margin: 0;
+  padding: 0;
+}
 html {
   font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
-#mindmap { display: block; width: 100vw; height: 100vh; }
-.markmap-dark { background: #27272a; color: white; }
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+.markmap-dark {
+  background: #27272a;
+  color: white;
+}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
 </head>
 <body>
 <svg id="mindmap"></svg>
-<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script>
-
-<script>(()=>{setTimeout(()=>{const{markmap:S,mm:Q}=window,tb=new S.Toolbar;tb.attach(Q);const el=tb.render();el.setAttribute("style","position:absolute;bottom:20px;right:20px"),document.body.append(el)})})()</script>
-
-<script>
-((mmv, derive, data, opts) => {
-  const api = mmv();
-  window.mm = api.Markmap.create("svg#mindmap", (derive || api.deriveOptions)(opts), data);
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    document.documentElement.classList.add("markmap-dark");
-  }
-})(
-  () => window.markmap,
-  null,
-  {
-    "content": "🌍 Teoría de Vigotsky",
-    "children": [
-      {
-        "content": "🧠 1. Procesos Psicológicos",
-        "children": [
-          {
-            "content": "🌱 1.1 Procesos Psicológicos Elementales (PPE)",
-            "children": [
-              { "content": "<strong>Definición:</strong> funciones naturales, de base biológica, compartidas con los animales." },
-              { "content": "<strong>Origen:</strong> filogenético (heredado)." },
-              {
-                "content": "<strong>Características:</strong>",
-                "children": [
-                  { "content": "Automáticos, involuntarios, poco flexibles." },
-                  { "content": "No mediados por signos culturales." },
-                  { "content": "Respuestas inmediatas al entorno." }
-                ]
-              },
-              {
-                "content": "<strong>Ejemplos:</strong>",
-                "children": [
-                  { "content": "👀 Percepción simple (formas/colores sin categorización)." },
-                  { "content": "🔊 Atención involuntaria (reaccionar a un ruido fuerte)." },
-                  { "content": "🧠 Memoria mecánica (repetición sin organización)." },
-                  { "content": "🤲 Imitación refleja (copiar gestos sin comprender su sentido)." }
-                ]
-              }
-            ]
-          },
-          {
-            "content": "🌾 1.2 Procesos Psicológicos Superiores (PPS)",
-            "children": [
-              { "content": "<strong>Definición:</strong> funciones específicamente humanas, construidas por mediación cultural e interacción social." },
-              {
-                "content": "<strong>Características generales:</strong>",
-                "children": [
-                  { "content": "Conscientes, voluntarias y flexibles." },
-                  { "content": "Mediadas por signos y herramientas simbólicas." },
-                  { "content": "Se desarrollan por <em>internalización</em>." }
-                ]
-              },
-              {
-                "content": "🌾🔹 Procesos Superiores <em>Rudimentarios</em>",
-                "children": [
-                  { "content": "<strong>Plano:</strong> interpsicológico (entre personas)." },
-                  { "content": "<strong>Rasgos:</strong> uso externo/práctico del lenguaje; requiere guía o apoyo." },
-                  {
-                    "content": "<strong>Ejemplos:</strong>",
-                    "children": [
-                      { "content": "🗣️ Recordar repitiendo en voz alta." },
-                      { "content": "🤝 Resolver un problema con ayuda del docente o un par más capaz." },
-                      { "content": "💬 Hablar mientras se actúa (“acá va el rojo…”)." },
-                      { "content": "👂 Seguir instrucciones externas (“esperá”, “no toques”)." }
-                    ]
-                  }
-                ]
-              },
-              {
-                "content": "🌾🔸 Procesos Superiores <em>Avanzados</em>",
-                "children": [
-                  { "content": "<strong>Plano:</strong> intrapsicológico (dentro del sujeto)." },
-                  { "content": "<strong>Rasgos:</strong> mediación internalizada; uso consciente y estratégico de signos." },
-                  {
-                    "content": "<strong>Ejemplos:</strong>",
-                    "children": [
-                      { "content": "🧮 Resolver mentalmente un problema." },
-                      { "content": "🧭 Planificar una acción antes de ejecutarla." },
-                      { "content": "🧘‍♀️ Autorregular impulsos/emociones mediante lenguaje interior." },
-                      { "content": "🧳 Recordar con estrategias propias (asociaciones, categorías)." }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "content": "🔁 2. Ley de la Internalización",
-        "children": [
-          {
-            "content": "<strong>Enunciado:</strong> toda función aparece dos veces",
-            "children": [
-              { "content": "🌐 Social — <em>interpsicológica</em>." },
-              { "content": "🧠 Individual — <em>intrapsicológica</em>." }
-            ]
-          },
-          { "content": "<strong>Ejemplo:</strong> contar con ayuda → luego contar mentalmente, en soledad." }
-        ]
-      },
-      {
-        "content": "🔄 3. Ley de la Doble Formación",
-        "children": [
-          { "content": "Primero acción compartida (externa) → luego función internalizada (interna)." },
-          { "content": "<strong>Ejemplo:</strong> regulación por la voz del adulto → autorregulación mediante pensamiento." }
-        ]
-      },
-      {
-        "content": "🧰 4. Mediación y Herramientas Psicológicas",
-        "children": [
-          { "content": "<strong>Principio:</strong> actuamos a través de herramientas/signos." },
-          {
-            "content": "<strong>Tipos:</strong>",
-            "children": [
-              { "content": "🔧 Herramientas materiales → transforman el entorno." },
-              { "content": "🔤 Signos → transforman la mente (palabras, números, escritura)." }
-            ]
-          },
-          { "content": "<strong>Ejemplo:</strong> contar con objetos → luego con números (simbólico)." }
-        ]
-      },
-      {
-        "content": "🎯 5. Zona de Desarrollo Próximo (ZDP)",
-        "children": [
-          {
-            "content": "<strong>Definición:</strong> distancia entre nivel real y potencial",
-            "children": [
-              { "content": "🧍‍♀️ Nivel real: lo que ya domina solo." },
-              { "content": "👩‍🏫 Nivel potencial: lo que logra con guía/colaboración." }
-            ]
-          },
-          { "content": "<strong>Principio:</strong> el aprendizaje más fértil ocurre en la ZDP." },
-          { "content": "<strong>Ejemplo:</strong> lectura autónoma de frases → comprensión de textos con andamiaje." }
-        ]
-      },
-      {
-        "content": "💬 6. Lenguaje y Pensamiento",
-        "children": [
-          { "content": "<strong>Relación:</strong> el lenguaje organiza la acción y se vuelve pensamiento." },
-          {
-            "content": "<strong>Etapas:</strong>",
-            "children": [
-              { "content": "🗣️ Lenguaje social." },
-              { "content": "💭 Lenguaje egocéntrico." },
-              { "content": "🧘 Lenguaje interior." }
-            ]
-          },
-          { "content": "<strong>Ejemplo:</strong> “ahora pongo el azul acá” → luego lo piensa en silencio." }
-        ]
-      },
-      {
-        "content": "🎭 7. El Juego",
-        "children": [
-          { "content": "Situación imaginaria; reglas/roles; impulsa autorregulación y abstracción." },
-          { "content": "<strong>Ejemplo:</strong> “esta escoba es un caballo”; jugar a ser docente/médico." }
-        ]
-      },
-      {
-        "content": "🏫 8. Implicancias Educativas",
-        "children": [
-          { "content": "La enseñanza debe anticiparse al desarrollo (estimula nuevas funciones)." },
-          { "content": "El diálogo y la colaboración son motores del pensamiento." },
-          { "content": "Rol docente: mediar, acompañar, construir significados compartidos." },
-          { "content": "Frase clave: “lo que hoy puede con ayuda, mañana podrá hacerlo solo”." }
-        ]
-      }
-    ]
-  },
-  { "maxWidth": 350, "initialExpandLevel": 2 }
-);
-</script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script><script>(()=>{setTimeout(()=>{const{markmap:S,mm:Q}=window,$=new S.Toolbar;$.attach(Q);const I=$.render();I.setAttribute("style","position:absolute;bottom:20px;right:20px"),document.body.append(I)})})()</script><script>((l,U,M,R)=>{const N=l();window.mm=N.Markmap.create("svg#mindmap",(U||N.deriveOptions)(R),M),window.matchMedia("(prefers-color-scheme: dark)").matches&&document.documentElement.classList.add("markmap-dark")})(()=>window.markmap,null,{"content":"&#x1f30d; Teor&#xed;a de Vigotsky","children":[{"content":"&#x1f9e0; Procesos Psicol&#xf3;gicos","children":[{"content":"&#x1f331; Elementales (PPE)","children":[{"content":"<strong>Definici&#xf3;n:</strong> funciones naturales, de base biol&#xf3;gica, compartidas con los animales.","children":[],"payload":{"tag":"li","lines":"10,11"}},{"content":"<strong>Rasgos:</strong>","children":[{"content":"Autom&#xe1;ticos e involuntarios.","children":[],"payload":{"tag":"li","lines":"12,13"}},{"content":"No mediados por signos culturales.","children":[],"payload":{"tag":"li","lines":"13,14"}},{"content":"Respuesta inmediata al entorno.","children":[],"payload":{"tag":"li","lines":"14,15"}}],"payload":{"tag":"li","lines":"11,15"}},{"content":"<strong>Ejemplos:</strong>","children":[{"content":"&#x1f440; Percepci&#xf3;n simple (formas/colores sin categorizaci&#xf3;n).","children":[],"payload":{"tag":"li","lines":"16,17"}},{"content":"&#x1f50a; Atenci&#xf3;n involuntaria (ruido s&#xfa;bito &#x2192; orientaci&#xf3;n).","children":[],"payload":{"tag":"li","lines":"17,18"}},{"content":"&#x1f9e0; Memoria mec&#xe1;nica (repetici&#xf3;n sin organizaci&#xf3;n).","children":[],"payload":{"tag":"li","lines":"18,19"}},{"content":"&#x1f932; Imitaci&#xf3;n refleja (copiar gestos sin comprender su sentido).","children":[],"payload":{"tag":"li","lines":"19,21"}}],"payload":{"tag":"li","lines":"15,21"}}],"payload":{"tag":"h3","lines":"9,10"}},{"content":"&#x1f33e; Superiores (PPS)","children":[{"content":"&#x1f33e;&#x1f539; Rudimentarios (dentro de PPS)","children":[{"content":"<strong>Plano:</strong> <strong>interpsicol&#xf3;gico</strong> (entre personas).","children":[],"payload":{"tag":"li","lines":"30,31"}},{"content":"<strong>Rasgos:</strong>","children":[{"content":"Uso <strong>externo</strong> del lenguaje y de los signos.","children":[],"payload":{"tag":"li","lines":"32,33"}},{"content":"Requieren gu&#xed;a, modelado o colaboraci&#xf3;n.","children":[],"payload":{"tag":"li","lines":"33,34"}}],"payload":{"tag":"li","lines":"31,34"}},{"content":"<strong>Ejemplos:</strong>","children":[{"content":"&#x1f5e3;&#xfe0f; Recordar repitiendo en voz alta.","children":[],"payload":{"tag":"li","lines":"35,36"}},{"content":"&#x1f91d; Resolver una tarea con ayuda de un adulto o un par m&#xe1;s capaz.","children":[],"payload":{"tag":"li","lines":"36,37"}},{"content":"&#x1f4ac; Hablar mientras se act&#xfa;a (&#x201c;ac&#xe1; va el rojo&#x201d;).","children":[],"payload":{"tag":"li","lines":"37,38"}},{"content":"&#x1f442; Seguir instrucciones externas (&#x201c;esper&#xe1;&#x201d;, &#x201c;no toques&#x201d;).","children":[],"payload":{"tag":"li","lines":"38,40"}}],"payload":{"tag":"li","lines":"34,40"}}],"payload":{"tag":"h4","lines":"29,30"}},{"content":"&#x1f33e;&#x1f538; Avanzados (dentro de PPS)","children":[{"content":"<strong>Plano:</strong> <strong>intrapsicol&#xf3;gico</strong> (dentro del sujeto).","children":[],"payload":{"tag":"li","lines":"41,42"}},{"content":"<strong>Rasgos:</strong>","children":[{"content":"Mediaci&#xf3;n <strong>internalizada</strong>; uso consciente y estrat&#xe9;gico de signos.","children":[],"payload":{"tag":"li","lines":"43,44"}},{"content":"Integran varias funciones (atenci&#xf3;n, memoria, lenguaje, razonamiento).","children":[],"payload":{"tag":"li","lines":"44,45"}}],"payload":{"tag":"li","lines":"42,45"}},{"content":"<strong>Ejemplos:</strong>","children":[{"content":"&#x1f9ee; Resolver mentalmente un problema.","children":[],"payload":{"tag":"li","lines":"46,47"}},{"content":"&#x1f9ed; Planificar antes de ejecutar.","children":[],"payload":{"tag":"li","lines":"47,48"}},{"content":"&#x1f9d8; Autorregular impulsos con lenguaje interior.","children":[],"payload":{"tag":"li","lines":"48,49"}},{"content":"&#x1f9f3; Recordar con estrategias propias (asociaciones, categor&#xed;as).","children":[],"payload":{"tag":"li","lines":"49,51"}}],"payload":{"tag":"li","lines":"45,51"}}],"payload":{"tag":"h4","lines":"40,41"}}],"payload":{"tag":"h3","lines":"21,22"}}],"payload":{"tag":"h2","lines":"8,9"}},{"content":"&#x1f501; Ley de la Internalizaci&#xf3;n","children":[{"content":"Toda funci&#xf3;n aparece <strong>dos veces</strong>:","children":[{"content":"&#x1f310; Social &#x2014; <em>interpsicol&#xf3;gica</em>.","children":[],"payload":{"tag":"li","lines":"55,56"}},{"content":"&#x1f9e0; Individual &#x2014; <em>intrapsicol&#xf3;gica</em>.","children":[],"payload":{"tag":"li","lines":"56,57"}}],"payload":{"tag":"li","lines":"54,57"}},{"content":"<strong>Ejemplo:</strong> contar con ayuda &#x2192; luego contar mentalmente.","children":[],"payload":{"tag":"li","lines":"57,59"}}],"payload":{"tag":"h2","lines":"53,54"}},{"content":"&#x1f504; Ley de la Doble Formaci&#xf3;n","children":[{"content":"Primero <strong>acci&#xf3;n compartida</strong> (externa) &#x2192; despu&#xe9;s <strong>funci&#xf3;n internalizada</strong> (interna).","children":[],"payload":{"tag":"li","lines":"60,61"}},{"content":"<strong>Ejemplo:</strong> regulaci&#xf3;n por la voz del adulto &#x2192; autorregulaci&#xf3;n mediante pensamiento.","children":[],"payload":{"tag":"li","lines":"61,63"}}],"payload":{"tag":"h2","lines":"59,60"}},{"content":"&#x1f9f0; Mediaci&#xf3;n y Herramientas Psicol&#xf3;gicas","children":[{"content":"<strong>Principio:</strong> actuamos a trav&#xe9;s de <strong>herramientas</strong> (transforman el entorno) y <strong>signos</strong> (transforman la mente).","children":[],"payload":{"tag":"li","lines":"64,65"}},{"content":"&#x1f527; Herramientas materiales: regla, calculadora, computadora.","children":[],"payload":{"tag":"li","lines":"65,66"}},{"content":"&#x1f524; Signos: palabras, n&#xfa;meros, escritura, esquemas.","children":[],"payload":{"tag":"li","lines":"66,68"}}],"payload":{"tag":"h2","lines":"63,64"}},{"content":"&#x1f3af; Zona de Desarrollo Pr&#xf3;ximo (ZDP)","children":[{"content":"<strong>Definici&#xf3;n:</strong> distancia entre lo que se hace <strong>solo</strong> (nivel real) y lo que se logra <strong>con ayuda</strong> (nivel potencial).","children":[],"payload":{"tag":"li","lines":"69,70"}},{"content":"<strong>Principio:</strong> el aprendizaje m&#xe1;s f&#xe9;rtil ocurre en la ZDP.","children":[],"payload":{"tag":"li","lines":"70,71"}},{"content":"<strong>Ejemplo:</strong> leer frases solo &#x2192; comprender textos con andamiaje docente.","children":[],"payload":{"tag":"li","lines":"71,73"}}],"payload":{"tag":"h2","lines":"68,69"}},{"content":"&#x1f4ac; Lenguaje y Pensamiento","children":[{"content":"<strong>Etapas:</strong> lenguaje social &#x2192; lenguaje egoc&#xe9;ntrico &#x2192; lenguaje interior.","children":[],"payload":{"tag":"li","lines":"74,75"}},{"content":"<strong>Ejemplo:</strong> &#x201c;ahora pongo el azul ac&#xe1;&#x201d; (egoc&#xe9;ntrico) &#x2192; luego lo piensa en silencio (interior).","children":[],"payload":{"tag":"li","lines":"75,77"}}],"payload":{"tag":"h2","lines":"73,74"}},{"content":"&#x1f3ad; El Juego","children":[{"content":"<strong>Funci&#xf3;n:</strong> situaci&#xf3;n imaginaria con reglas y roles; impulsa autorregulaci&#xf3;n y abstracci&#xf3;n.","children":[],"payload":{"tag":"li","lines":"78,79"}},{"content":"<strong>Ejemplo:</strong> &#x201c;esta escoba es un caballo&#x201d;; jugar a ser docente o m&#xe9;dico.","children":[],"payload":{"tag":"li","lines":"79,81"}}],"payload":{"tag":"h2","lines":"77,78"}},{"content":"&#x1f3eb; Implicancias Educativas","children":[{"content":"La ense&#xf1;anza debe <strong>anticiparse al desarrollo</strong> y expandir la ZDP.","children":[],"payload":{"tag":"li","lines":"82,83"}},{"content":"Rol docente: <strong>mediar, acompa&#xf1;ar, construir significados compartidos</strong>.","children":[],"payload":{"tag":"li","lines":"83,84"}},{"content":"Frase clave: &#x201c;Lo que hoy puede con ayuda, ma&#xf1;ana podr&#xe1; hacerlo solo.&#x201d;","children":[],"payload":{"tag":"li","lines":"84,86"}}],"payload":{"tag":"h2","lines":"81,82"}}],"payload":{"tag":"h1","lines":"6,7"}},{"initialExpandLevel":2,"maxWidth":350})</script>
 </body>
 </html>
