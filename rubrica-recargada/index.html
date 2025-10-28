@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantilla de Rúbrica Avanzada</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .form-section {
+            flex: 1;
+            min-width: 320px;
+            padding: 20px;
+            border-right: 1px solid #eee;
+        }
+        
+        .preview-section {
+            flex: 2;
+            min-width: 600px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            color: var(--secondary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 5px;
+        }
+        
+        .btn:hover { background-color: #2980b9; }
+        .btn-success { background-color: var(--success); }
+        .btn-success:hover { background-color: #219653; }
+        .btn-danger { background-color: var(--danger); }
+        .btn-danger:hover { background-color: #c0392b; }
+        .btn-secondary { background-color: var(--dark); }
+        .btn-secondary:hover { background-color: var(--secondary); }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .item-list {
+            margin-top: 15px;
+            max-height: 280px; /* Aumentado */
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .list-item:last-child { border-bottom: none; }
+        .list-item-buttons { display: flex; gap: 5px; }
+        .list-item-buttons .btn { padding: 5px 10px; font-size: 0.8rem; }
+        
+        .rubric-preview { background-color: white; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.05); overflow: hidden; }
+        .rubric-header { background-color: var(--secondary); color: white; padding: 20px; text-align: center; }
+        .rubric-table-container { overflow-x: auto; }
+        .rubric-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .rubric-table th { background-color: var(--primary); color: white; padding: 15px; text-align: center; }
+        .rubric-table td { padding: 12px; border: 1px solid #ddd; vertical-align: top; }
+        .criterion-cell { text-align: left; font-weight: 600; background-color: #e3f2fd; }
+        .descriptor-cell { text-align: left; }
+        .descriptor-input { width: 100%; min-height: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .observations { padding: 20px; background-color: #f8f9fa; }
+
+        .qualify-options { display: flex; gap: 20px; align-items: center; }
+        .radio-group { display: flex; align-items: center; gap: 5px; }
+        .qualify-options label { margin-bottom: 0; font-weight: normal; }
+        
+        .hidden { display: none; }
+
+        .tooltip-trigger {
+            position: relative; display: inline-block; cursor: help; color: #fff;
+            background-color: var(--primary); border-radius: 50%; width: 18px; height: 18px;
+            font-size: 12px; text-align: center; line-height: 18px;
+        }
+        .tooltip-text {
+            visibility: hidden; width: 220px; background-color: var(--secondary); color: #fff;
+            text-align: center; border-radius: 6px; padding: 8px; position: absolute;
+            z-index: 1; bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
+            transition: opacity 0.3s; font-size: 13px; font-weight: normal;
+        }
+        .tooltip-trigger:hover .tooltip-text { visibility: visible; opacity: 1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Plantilla de rúbrica de evaluación</h1>
+        </header>
+        
+        <div class="main-content">
+            <div class="form-section">
+                <h2 class="section-title">1. Configuración de la rúbrica</h2>
+                
+                <div class="form-group">
+                    <label>¿La rúbrica usará puntajes?
+                        <span class="tooltip-trigger">(?)<span class="tooltip-text">Elige 'Sí' para una evaluación cuantitativa (con notas) o 'No' para una evaluación puramente cualitativa (solo comentarios).</span></span>
+                    </label>
+                    <div class="qualify-options">
+                        <div class="radio-group"><input type="radio" id="qualify-yes" name="qualify" value="yes" checked><label for="qualify-yes">Sí</label></div>
+                        <div class="radio-group"><input type="radio" id="qualify-no" name="qualify" value="no"><label for="qualify-no">No</label></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacher-name">Nombre del docente:
+                         <span class="tooltip-trigger">(?)<span class="tooltip-text">Tu nombre completo. Aparecerá en la cabecera de la rúbrica final.</span></span>
+                    </label>
+                    <input type="text" id="teacher-name" placeholder="Ej: Ana Martínez">
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Materia:
+                        <span class="tooltip-trigger">(?)<span class="tooltip-text">El nombre de la asignatura o curso.</span></span>
+                    </label>
+                    <input type="text" id="subject" placeholder="Ej: Lengua y literatura">
+                </div>
+                
+                <div class="form-group">
+                    <label for="work">Trabajo a evaluar:
+                        <span class="tooltip-trigger">(?)<span class="tooltip-text">El nombre de la actividad específica. Ej: "Análisis de cuento corto".</span></span>
+                    </label>
+                    <input type="text" id="work" placeholder="Ej: Análisis de cuento corto">
+                </div>
+                
+                <h2 class="section-title">2. Niveles de desempeño</h2>
+                <div class="form-group">
+                    <label for="level-name">Nombre del nivel:
+                        <span class="tooltip-trigger">(?)<span class="tooltip-text">Define las columnas de tu rúbrica. Ej: "Excelente", "Bueno", "Aceptable", "Insuficiente".</span></span>
+                    </label>
+                    <input type="text" id="level-name" placeholder="Ej: Excelente">
+                </div>
+                <div class="form-group score-related">
+                    <label for="level-value">Valor relativo:
+                        <span class="tooltip-trigger">(?)<span class="tooltip-text">Asigna un peso numérico a cada nivel (ej: 4 para el mejor, 1 para el peor). Esto se usa para calcular el puntaje final del criterio.</span></span>
+                    </label>
+                    <input type="number" id="level-value" min="0" value="0" placeholder="Ej: 4">
+                </div>
+                <button id="add-level" class="btn">Agregar nivel</button>
+                <div class="item-list" id="levels-list"></div>
+                
+                <h2 class="section-title">3. Criterios de evaluación</h2>
+                <div class="form-group">
+                    <label for="criterion-name">Nombre del criterio:
+                         <span class="tooltip-trigger">(?)<span class="tooltip-text">Define las filas: los aspectos o habilidades que vas a evaluar. Ej: "Comprensión del tema".</span></span>
+                    </label>
+                    <input type="text" id="criterion-name" placeholder="Ej: Comprensión del tema">
+                </div>
+                <div class="form-group score-related">
+                    <label for="criterion-max-points">Puntaje máximo del criterio:
+                        <span class="tooltip-trigger">(?)<span class="tooltip-text">¿Cuántos puntos vale este criterio en la nota final? La suma de todos los criterios será el puntaje total del trabajo.</span></span>
+                    </label>
+                    <input type="number" id="criterion-max-points" min="0" value="0" placeholder="Ej: 25">
+                </div>
+                <button id="add-criterion" class="btn">Agregar criterio</button>
+                <div class="item-list" id="criteria-list"></div>
+
+                <h2 class="section-title">4. Acciones</h2>
+                <div class="btn-group">
+                    <button id="save-btn" class="btn btn-success">Guardar plantilla</button>
+                    <button id="load-btn" class="btn btn-secondary">Cargar plantilla</button>
+                    <button id="reset-btn" class="btn btn-danger">Reiniciar formulario</button>
+                    <input type="file" id="import-file" class="hidden" accept=".json">
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <h2 class="section-title">Vista previa de la rúbrica</h2>
+                <div class="rubric-preview">
+                    <div id="rubric-header-preview"></div>
+                    <div class="rubric-table-container" id="rubric-table-preview"></div>
+                    <div class="observations">
+                        <h3>Observaciones generales de la rúbrica
+                            <span class="tooltip-trigger">(?)<span class="tooltip-text">Añade aquí cualquier aclaración o nota general que deba aparecer en la rúbrica final.</span></span>
+                        </h3>
+                        <textarea id="observations" placeholder="Instrucciones generales..."></textarea>
+                    </div>
+                </div>
+                <div class="export-section">
+                    <h2 class="section-title">Exportar rúbrica final</h2>
+                    <div class="btn-group">
+                        <button id="export-html" class="btn">Exportar a HTML (Interactivo)</button>
+                        <button id="export-pdf" class="btn btn-warning">Exportar a PDF (Imprimible)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Variables Globales y Elementos del DOM ---
+        let levels = [];
+        let criteria = [];
+        let descriptors = {};
+        let isQualifiable = true;
+        
+        const teacherNameInput = document.getElementById('teacher-name');
+        const subjectInput = document.getElementById('subject');
+        const workInput = document.getElementById('work');
+        const levelNameInput = document.getElementById('level-name');
+        const levelValueInput = document.getElementById('level-value');
+        const criterionNameInput = document.getElementById('criterion-name');
+        const criterionMaxPointsInput = document.getElementById('criterion-max-points');
+        const levelsList = document.getElementById('levels-list');
+        const criteriaList = document.getElementById('criteria-list');
+        const rubricHeaderPreview = document.getElementById('rubric-header-preview');
+        const rubricTablePreview = document.getElementById('rubric-table-preview');
+        const observationsInput = document.getElementById('observations');
+        const fileInput = document.getElementById('import-file');
+        
+        // --- Lógica Principal ---
+        const getUniqueId = (() => { let count = 0; return () => `id-${Date.now()}-${count++}`; })();
+        
+        function renderAll() {
+            renderLists();
+            generatePreview();
+        }
+
+        function toggleScoreVisibility() {
+            isQualifiable = document.getElementById('qualify-yes').checked;
+            document.querySelectorAll('.score-related').forEach(el => el.classList.toggle('hidden', !isQualifiable));
+            renderAll();
+        }
+        
+        // --- Manejo de Niveles y Criterios ---
+        function handleAddLevel() {
+            const name = levelNameInput.value.trim();
+            if (!name) { alert("Por favor, ingresa un nombre para el nivel."); return; }
+            const value = isQualifiable ? parseInt(levelValueInput.value) : 0;
+            levels.push({ name, value, id: getUniqueId() });
+            renderAll();
+            levelNameInput.value = ""; levelValueInput.value = "0";
+        }
+
+        function handleAddCriterion() {
+            const name = criterionNameInput.value.trim();
+            if (!name) { alert("Por favor, ingresa un nombre para el criterio."); return; }
+            const maxPoints = isQualifiable ? parseInt(criterionMaxPointsInput.value) : 0;
+            criteria.push({ name, maxPoints, id: getUniqueId() });
+            renderAll();
+            criterionNameInput.value = ""; criterionMaxPointsInput.value = "0";
+        }
+
+        function editLevel(index) {
+            const level = levels[index];
+            const newName = prompt("Editar nombre del nivel:", level.name);
+            if (newName !== null) level.name = newName.trim();
+            if (isQualifiable) {
+                const newValue = prompt("Editar valor relativo:", level.value);
+                if (newValue !== null) level.value = parseInt(newValue) || 0;
+            }
+            renderAll();
+        }
+
+        function editCriterion(index) {
+            const criterion = criteria[index];
+            const newName = prompt("Editar nombre del criterio:", criterion.name);
+            if (newName !== null) criterion.name = newName.trim();
+            if (isQualifiable) {
+                const newMaxPoints = prompt("Editar puntaje máximo:", criterion.maxPoints);
+                if (newMaxPoints !== null) criterion.maxPoints = parseInt(newMaxPoints) || 0;
+            }
+            renderAll();
+        }
+
+        function removeLevel(index) { if (confirm("¿Seguro que quieres eliminar este nivel?")) { levels.splice(index, 1); renderAll(); } }
+        function removeCriterion(index) { if (confirm("¿Seguro que quieres eliminar este criterio?")) { criteria.splice(index, 1); renderAll(); } }
+        
+        // --- Renderizado de UI ---
+        function renderLists() {
+            levelsList.innerHTML = levels.map((level, index) => `
+                <div class="list-item">
+                    <span>${level.name}${isQualifiable ? ` (${level.value} pts)` : ''}</span>
+                    <div class="list-item-buttons">
+                        <button class="btn" onclick="editLevel(${index})">Editar</button>
+                        <button class="btn btn-danger" onclick="removeLevel(${index})">Eliminar</button>
+                    </div>
+                </div>`).join('');
+            
+            criteriaList.innerHTML = criteria.map((criterion, index) => `
+                <div class="list-item">
+                    <span>${criterion.name}${isQualifiable ? ` (Máx: ${criterion.maxPoints} pts)` : ''}</span>
+                    <div class="list-item-buttons">
+                        <button class="btn" onclick="editCriterion(${index})">Editar</button>
+                        <button class="btn btn-danger" onclick="removeCriterion(${index})">Eliminar</button>
+                    </div>
+                </div>`).join('');
+        }
+        
+        function generatePreview() {
+            rubricHeaderPreview.innerHTML = `
+                <div class="rubric-header">
+                    <h2>Rúbrica de evaluación</h2>
+                    <div class="btn-group" style="justify-content: center; padding: 0 10px;">
+                        <div><strong>Docente:</strong> ${teacherNameInput.value || "-"}</div>
+                        <div><strong>Materia:</strong> ${subjectInput.value || "-"}</div>
+                        <div><strong>Trabajo:</strong> ${workInput.value || "-"}</div>
+                    </div>
+                </div>`;
+
+            let tableHTML = `<table class="rubric-table"><thead><tr><th>Criterios</th>`;
+            tableHTML += levels.map(level => `<th>${level.name}${isQualifiable ? `<br>(${level.value} pts)` : ''}</th>`).join('');
+            tableHTML += `</tr></thead><tbody>`;
+            tableHTML += criteria.map(criterion => `
+                <tr>
+                    <td class="criterion-cell">${criterion.name}${isQualifiable ? `<br>(Máx: ${criterion.maxPoints} pts)` : ''}</td>
+                    ${levels.map(level => {
+                        const key = `${criterion.id}-${level.id}`;
+                        const descriptorValue = descriptors[key] || '';
+                        return `<td class="descriptor-cell"><textarea class="descriptor-input" placeholder="Descriptor..." oninput="descriptors['${key}'] = this.value">${descriptorValue}</textarea></td>`;
+                    }).join('')}
+                </tr>`).join('');
+            tableHTML += `</tbody></table>`;
+            rubricTablePreview.innerHTML = tableHTML;
+        }
+        
+        // --- Funcionalidad de Guardado, Carga y Exportación ---
+        function saveRubric() {
+            const data = {
+                teacher: teacherNameInput.value, subject: subjectInput.value, work: workInput.value,
+                observations: observationsInput.value, isQualifiable, levels, criteria, descriptors
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `plantilla-rubrica-${workInput.value.replace(/\s+/g, '-') || 'sin-titulo'}.json`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+            alert("¡Plantilla guardada! La descarga debería comenzar.");
+        }
+
+        function loadRubric(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    teacherNameInput.value = data.teacher || '';
+                    subjectInput.value = data.subject || '';
+                    workInput.value = data.work || '';
+                    observationsInput.value = data.observations || '';
+                    document.getElementById(data.isQualifiable ? 'qualify-yes' : 'qualify-no').checked = true;
+                    levels = data.levels || []; criteria = data.criteria || []; descriptors = data.descriptors || {};
+                    toggleScoreVisibility();
+                } catch (error) { alert("Error al leer el archivo. Asegúrate de que es un archivo de plantilla válido."); }
+            };
+            reader.readAsText(file);
+            fileInput.value = '';
+        }
+        
+        function generateExportHTML(isForPDF = false) {
+            const totalMaxPoints = isQualifiable ? criteria.reduce((sum, c) => sum + c.maxPoints, 0) : 0;
+            const maxLevelValue = isQualifiable ? Math.max(0, ...levels.map(l => l.value)) : 0;
+
+            let html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Rúbrica: ${workInput.value}</title><style>
+                body { font-family: Arial, sans-serif; margin: 20px; } .container { max-width: 1000px; margin: auto; }
+                .header { background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+                .info { display: flex; justify-content: space-around; }
+                .rubric-table { width: 100%; border-collapse: collapse; margin-top: 0; }
+                .rubric-table th, .rubric-table td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; }
+                .rubric-table th { background-color: #3498db; color: white; text-align: center; }
+                .criterion-cell { font-weight: bold; background-color: #f2f2f2; }
+                .descriptor-cell label { display: block; cursor: pointer; } .descriptor-cell input { margin-right: 5px; }
+                .score-value { color: #27ae60; font-weight: bold; font-size: 0.9em; margin-top: 5px; }
+                .summary, .observations-box { margin-top: 20px; padding: 15px; background: #f8f9fa; border: 1px solid #eee; border-radius: 8px; }
+                .print-btn { display: block; margin: 20px auto; padding: 10px 20px; cursor: pointer; }
+                @media print { .print-btn, input[type=radio] { display: none; } .descriptor-cell label { cursor: default; } }
+            </style></head><body><div class="container">
+                <div class="header"><h1>Rúbrica de evaluación</h1><div class="info">
+                    <div><strong>Docente:</strong> ${teacherNameInput.value}</div><div><strong>Materia:</strong> ${subjectInput.value}</div><div><strong>Trabajo:</strong> ${workInput.value}</div>
+                </div></div>
+                <div class="student-info" style="padding: 15px; background: #f2f2f2;">
+                    <strong>Estudiante:</strong> _________________________ &nbsp;&nbsp;&nbsp; <strong>Fecha:</strong> _________________________
+                </div>
+                <table class="rubric-table"><thead><tr><th>Criterios</th>${levels.map(l => `<th>${l.name}${isQualifiable ? ` (${l.value} pts)`:''}</th>`).join('')}</tr></thead><tbody>`;
+            
+            criteria.forEach(c => {
+                html += `<tr><td class="criterion-cell">${c.name}${isQualifiable ? ` (Máx: ${c.maxPoints} pts)`:''}</td>`;
+                levels.forEach(l => {
+                    const key = `${c.id}-${l.id}`;
+                    const score = (maxLevelValue > 0) ? (l.value / maxLevelValue * c.maxPoints).toFixed(1) : 0;
+                    html += `<td class="descriptor-cell">`;
+                    if (isForPDF) {
+                        html += `${descriptors[key] || ''}${isQualifiable ? `<div class="score-value">(${score} pts)</div>` : ''}`;
+                    } else {
+                        html += `<label><input type="radio" name="${c.id}" onchange="calculateScore()" data-score="${score}">
+                                ${descriptors[key] || ''}${isQualifiable ? `<div class="score-value">(${score} pts)</div>` : ''}</label>`;
+                    }
+                    html += `</td>`;
+                });
+                html += `</tr>`;
+            });
+
+            html += `</tbody></table>`;
+            if (isQualifiable) {
+                html += `<div class="summary"><strong>Puntaje total:</strong> <span id="total-score">0</span> / ${totalMaxPoints}</div>`;
+            }
+            html += `<div class="observations-box"><h3>Observaciones:</h3><p>${observationsInput.value.replace(/\n/g, '<br>')}</p></div>`;
+            if (!isForPDF) {
+                html += `<button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
+                    <script> function calculateScore() { let total = 0; document.querySelectorAll('input[type=radio]:checked').forEach(r => total += parseFloat(r.dataset.score)); document.getElementById('total-score').innerText = total.toFixed(1); } </scr` + `ipt>`;
+            }
+            html += `</div></body></html>`;
+            return html;
+        }
+
+        function exportToFile(content, filename) {
+            const blob = new Blob([content], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+        }
+
+        function exportForPrint(content) {
+            const win = window.open('', '_blank');
+            win.document.write(content);
+            win.document.close();
+            win.focus();
+            setTimeout(() => { win.print(); }, 500);
+        }
+
+        // --- Carga Inicial y Eventos ---
+        function loadExampleData() {
+            teacherNameInput.value = "Ana Martínez";
+            subjectInput.value = "Lengua y literatura";
+            workInput.value = "Análisis de cuento corto";
+            observationsInput.value = "Evaluar la capacidad de análisis, la claridad expositiva y el uso de vocabulario técnico.";
+            
+            levels = []; criteria = []; descriptors = {};
+            
+            [{name: "Excelente", value: 4}, {name: "Bueno", value: 3}, {name: "Aceptable", value: 2}, {name: "Insuficiente", value: 1}]
+                .forEach(l => levels.push({ ...l, id: getUniqueId() }));
+
+            [{name: "Comprensión del tema", maxPoints: 30}, {name: "Desarrollo de personajes", maxPoints: 25}, {name: "Uso del lenguaje y estilo", maxPoints: 25}, {name: "Estructura y coherencia", maxPoints: 20}]
+                .forEach(c => criteria.push({ ...c, id: getUniqueId() }));
+            
+            const [c0, c1, c2, c3] = criteria; const [l0, l1, l2, l3] = levels;
+            descriptors[`${c0.id}-${l0.id}`] = "Identifica el tema central y secundarios, analizando cómo se desarrollan con múltiples ejemplos precisos del texto.";
+            descriptors[`${c0.id}-${l1.id}`] = "Identifica correctamente el tema central y lo explica con ejemplos relevantes.";
+            descriptors[`${c0.id}-${l2.id}`] = "Identifica el tema de forma superficial, con apoyo textual limitado.";
+            descriptors[`${c0.id}-${l3.id}`] = "No logra identificar el tema central o lo malinterpreta.";
+
+            descriptors[`${c1.id}-${l0.id}`] = "Analiza la complejidad y evolución de los personajes principales, usando evidencia textual para sostener sus afirmaciones.";
+            descriptors[`${c1.id}-${l1.id}`] = "Describe a los personajes principales y sus roles en la historia de manera correcta.";
+            descriptors[`${c1.id}-${l2.id}`] = "Describe a los personajes de forma básica, sin profundizar en sus motivaciones.";
+            descriptors[`${c1.id}-${l3.id}`] = "Confunde los personajes o no logra describir sus características básicas.";
+
+            descriptors[`${c2.id}-${l0.id}`] = "Analiza cómo el autor utiliza figuras retóricas y un estilo particular para crear un efecto específico en el lector.";
+            descriptors[`${c2.id}-${l1.id}`] = "Identifica el tono general del texto y algunas características del estilo del autor.";
+            descriptors[`${c2.id}-${l2.id}`] = "Comenta sobre el lenguaje de forma muy general, sin un análisis detallado.";
+            descriptors[`${c2.id}-${l3.id}`] = "No realiza comentarios sobre el uso del lenguaje o el estilo del autor.";
+            
+            descriptors[`${c3.id}-${l0.id}`] = "El análisis presenta una introducción, desarrollo y conclusión claros y bien conectados. Las ideas fluyen lógicamente.";
+            descriptors[`${c3.id}-${l1.id}`] = "El texto está bien organizado en su mayor parte, con una estructura lógica evidente.";
+            descriptors[`${c3.id}-${l2.id}`] = "La estructura es algo confusa y la conexión entre las ideas no siempre es clara.";
+            descriptors[`${c3.id}-${l3.id}`] = "El texto carece de una estructura clara, resultando desorganizado y difícil de seguir.";
+            
+            renderAll();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadExampleData);
+        document.querySelectorAll('input[name="qualify"]').forEach(r => r.addEventListener('change', toggleScoreVisibility));
+        [teacherNameInput, subjectInput, workInput].forEach(el => el.addEventListener('input', generatePreview));
+        document.getElementById('add-level').addEventListener('click', handleAddLevel);
+        document.getElementById('add-criterion').addEventListener('click', handleAddCriterion);
+        document.getElementById('save-btn').addEventListener('click', saveRubric);
+        document.getElementById('load-btn').addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', loadRubric);
+        document.getElementById('reset-btn').addEventListener('click', () => { if (confirm("¿Seguro? Se reiniciará al ejemplo inicial.")) loadExampleData(); });
+        document.getElementById('export-html').addEventListener('click', () => exportToFile(generateExportHTML(false), 'rubrica-interactiva.html'));
+        document.getElementById('export-pdf').addEventListener('click', () => exportForPrint(generateExportHTML(true)));
+
+    </script>
+</body>
+</html>
