@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist del estudiante: cómo presentar un examen escrito con sentido</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9fbfc; /* Un gris muy claro con toque azul */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 960px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: #1e2125;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.4em;
+            font-weight: 700;
+        }
+        .intro-text {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #5f6368;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            border-bottom: 1px solid #e8ebee;
+            padding-bottom: 25px;
+        }
+        .section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        h2 {
+            color: #424649;
+            font-size: 1.6em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border-left: 5px solid #0d6efd; /* Azul más vibrante */
+            padding-left: 12px;
+        }
+        .question-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px; /* Reducido el espacio entre preguntas */
+            padding: 8px 0;
+            border-top: 1px dashed #e8ebee;
+            transition: background-color 0.3s ease;
+        }
+        .question-item:hover {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+        .question-item:first-of-type {
+            border-top: none;
+        }
+        .question-text {
+            flex-grow: 1;
+            font-weight: 400;
+            color: #424649;
+            font-size: 1em;
+        }
+        .question-select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ced4da;
+            background-color: #fff;
+            font-size: 0.95em;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-8859-1,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23424649%22%20d%3D%22M10%203.5L6%207.5L2%203.5L0%205.5L6%2011.5L12%205.5L10%203.5Z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+            min-width: 150px;
+        }
+        .question-select:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .note {
+            font-style: italic;
+            color: #5f6368;
+            margin-top: 20px;
+            padding: 15px;
+            border-left: 4px solid #198754; /* Verde más vibrante */
+            background-color: #e9f7eb;
+            border-radius: 6px;
+        }
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.15em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+        button[type="submit"]:hover {
+            background-color: #0a58ca;
+            transform: translateY(-2px);
+        }
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+        #recommendation {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: #e7f3ff;
+            border-radius: 10px;
+            border: 1px solid #c7e1ff;
+            display: none;
+            box-shadow: 0 4px 15px rgba(13, 110, 253, 0.1);
+        }
+        #recommendation h3 {
+            color: #0a58ca;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 700;
+            text-align: center;
+        }
+        #recommendation ul {
+            list-style: disc;
+            padding-left: 25px;
+            margin-bottom: 0;
+        }
+        #recommendation li {
+            margin-bottom: 12px;
+            color: #333;
+            font-size: 1.05em;
+        }
+        #recommendation li strong {
+            color: #0d6efd;
+        }
+        #overall-message {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #198754;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Checklist del estudiante: cómo presentar un examen escrito con sentido</h1>
+        <p class="intro-text">Cada examen no solo mide lo que sabes, sino también cómo piensas y cómo te comunicas. Escribir un examen es hablarle a alguien que te lee: un diálogo en papel. Las teorías del aprendizaje pueden ayudarte a mejorar esa experiencia.</p>
+
+        <form id="examenChecklist">
+
+            <!-- Sección 1: Claridad y precisión -->
+            <div class="section">
+                <h2>1. Claridad y precisión (Skinner)</h2>
+                <div class="question-item">
+                    <p class="question-text">¿Entendiste bien qué te pedían en cada consigna antes de empezar?</p>
+                    <select name="q1" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Respondiste exactamente a lo que se te pidió, sin desviarte del tema?</p>
+                    <select name="q2" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Revisaste que las oraciones fueran claras, sin repeticiones ni frases incompletas?</p>
+                    <select name="q3" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Cuidaste la ortografía y la puntuación? (Son parte del mensaje que das).</p>
+                    <select name="q4" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Usaste el tiempo asignado y el espacio del examen de manera organizada y consciente?</p>
+                    <select name="q5" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Verificaste la cohesión y coherencia entre tus ideas y párrafos?</p>
+                    <select name="q6" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <p class="note">Recordá: la práctica mejora la escritura. Cuanto más escribas, más fácil será expresar lo que piensas.</p>
+            </div>
+
+            <!-- Sección 2: Estructura y forma -->
+            <div class="section">
+                <h2>2. Estructura y forma (Gestalt)</h2>
+                <div class="question-item">
+                    <p class="question-text">¿Tu texto tiene una forma clara: introducción, desarrollo y cierre?</p>
+                    <select name="q7" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Se entiende la idea general aunque alguien lo lea sin conocer la consigna?</p>
+                    <select name="q8" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Cada párrafo cumple una función dentro del conjunto (no repetís ni divagás)?</p>
+                    <select name="q9" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Tu hoja o documento está prolijo y legible?</p>
+                    <select name="q10" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Las ideas se conectan entre sí o parecen fragmentadas?</p>
+                    <select name="q11" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <p class="note">Pensá en tu examen como una figura completa: la forma también comunica comprensión.</p>
+            </div>
+
+            <!-- Sección 3: Profundidad y razonamiento -->
+            <div class="section">
+                <h2>3. Profundidad y razonamiento (Piaget)</h2>
+                <div class="question-item">
+                    <p class="question-text">¿Explicaste con tus palabras lo que entendés, sin copiar frases de memoria?</p>
+                    <select name="q12" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Podés justificar por qué elegiste esa respuesta o esa interpretación?</p>
+                    <select name="q13" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Relacionaste lo que aprendiste en clase con el problema que plantea la consigna?</p>
+                    <select name="q14" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Pudiste aprender algo nuevo mientras escribías el examen?</p>
+                    <select name="q15" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Aprovechaste algún error o duda para pensar mejor la respuesta?</p>
+                    <select name="q16" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Demostraste un pensamiento crítico al analizar las consignas o los temas?</p>
+                    <select name="q17" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <p class="note">No se trata de repetir, sino de construir sentido: un buen examen también te enseña algo a vos.</p>
+            </div>
+
+            <!-- Sección 4: Comunicación y diálogo -->
+            <div class="section">
+                <h2>4. Comunicación y diálogo (Vigotsky)</h2>
+                <div class="question-item">
+                    <p class="question-text">¿Pensaste que alguien va a leer tu texto y necesita entenderlo sin esfuerzo?</p>
+                    <select name="q18" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Usaste un tono adecuado: respetuoso, claro, argumentativo?</p>
+                    <select name="q19" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Incluiste ejemplos, citas o ideas de clase para mostrar cómo piensas con otros?</p>
+                    <select name="q20" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Se nota tu voz, tu manera de interpretar, más allá de lo que dicen los autores?</p>
+                    <select name="q21" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Te tomaste un momento final para releer y asegurarte de que se entendiera lo que quisiste decir?</p>
+                    <select name="q22" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Lograste que tu respuesta fuera persuasiva o convincente, según lo requerido?</p>
+                    <select name="q23" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <p class="note">Un examen no es un monólogo: es tu forma de participar en una conversación académica.</p>
+            </div>
+
+            <!-- Sección 5: Actitud reflexiva y aprendizaje -->
+            <div class="section">
+                <h2>5. Actitud reflexiva y aprendizaje</h2>
+                <div class="question-item">
+                    <p class="question-text">¿Escribiste con honestidad intelectual, sin inventar ni copiar?</p>
+                    <select name="q24" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Reconocés qué fue difícil y qué aprendiste en el proceso?</p>
+                    <select name="q25" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Podés explicar cómo te preparaste o qué estrategias te ayudaron?</p>
+                    <select name="q26" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Aceptás la corrección como parte del aprendizaje y no como una sanción?</p>
+                    <select name="q27" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Te esforzás por mejorar en la próxima instancia, no solo por aprobar?</p>
+                    <select name="q28" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <div class="question-item">
+                    <p class="question-text">¿Lograste manejar el estrés o la ansiedad durante el examen de manera efectiva?</p>
+                    <select name="q29" class="question-select" required>
+                        <option value="">Selecciona tu nivel</option>
+                        <option value="1">Nada</option>
+                        <option value="2">Poco</option>
+                        <option value="3">Moderadamente</option>
+                        <option value="4">Bastante</option>
+                        <option value="5">Totalmente</option>
+                    </select>
+                </div>
+                <p class="note">Cada examen es una fotografía de tu pensamiento en un momento. No es un juicio: es una oportunidad para verte aprender.</p>
+            </div>
+
+            <button type="submit">Obtener mi recomendación personalizada</button>
+        </form>
+
+        <div id="recommendation">
+            <h3>¡Aquí tienes una recomendación para tus próximos exámenes!</h3>
+            <p id="overall-message"></p>
+            <ul id="recommendationList"></ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('examenChecklist').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const answers = {};
+            let allAnswered = true;
+            const selectElements = this.querySelectorAll('.question-select');
+
+            selectElements.forEach(select => {
+                if (select.value === "") {
+                    allAnswered = false;
+                }
+                answers[select.name] = parseInt(select.value);
+            });
+
+            if (!allAnswered) {
+                alert("Por favor, selecciona un nivel para todas las preguntas antes de obtener tu recomendación.");
+                return;
+            }
+
+            let recommendationPoints = [];
+            const totalQuestions = selectElements.length;
+            let totalScore = 0;
+            selectElements.forEach(select => totalScore += parseInt(select.value));
+            const overallAverage = totalScore / totalQuestions;
+
+            // Mensaje general basado en el promedio
+            let overallMessage = '';
+            if (overallAverage >= 4.5) {
+                overallMessage = '¡Excelente trabajo! Estás en un gran nivel. Sigue así.';
+            } else if (overallAverage >= 3.5) {
+                overallMessage = 'Buen desempeño general. Con algunos ajustes, puedes mejorar aún más.';
+            } else if (overallAverage >= 2.5) {
+                overallMessage = 'Hay áreas de oportunidad. Enfócate en las recomendaciones para progresar.';
+            } else {
+                overallMessage = 'Es momento de trabajar en varios aspectos. ¡Tú puedes mejorar!';
+            }
+
+            // Evaluaciones por sección y preguntas específicas
+            // Claridad y precisión (q1-q6)
+            const clarityScores = [answers.q1, answers.q2, answers.q3, answers.q4, answers.q5, answers.q6];
+            const avgClarity = clarityScores.reduce((sum, val) => sum + val, 0) / clarityScores.length;
+            if (avgClarity <= 3) {
+                recommendationPoints.push("Dedica tiempo extra a la <strong>claridad y precisión</strong>. Antes de escribir, asegúrate de haber entendido cada consigna a fondo. Practica la redacción de oraciones directas, revisa la ortografía y puntuación, y verifica la cohesión entre tus ideas.");
+            }
+            if (answers.q1 <= 2) {
+                recommendationPoints.push("Para mejorar la <strong>comprensión de consignas</strong>, subraya palabras clave y desglosa la pregunta en partes más pequeñas. No dudes en preguntar si tienes dudas antes de empezar.");
+            }
+            if (answers.q4 <= 2) {
+                recommendationPoints.push("La <strong>ortografía y puntuación</strong> son tu carta de presentación. Revisa tus textos con calma al finalizar y considera usar herramientas de revisión de texto si escribes en digital.");
+            }
+            if (answers.q6 <= 3) {
+                recommendationPoints.push("Para fortalecer la <strong>cohesión y coherencia</strong>, piensa en tu texto como un todo. Cada párrafo debe fluir naturalmente hacia el siguiente, construyendo una idea principal.");
+            }
+
+            // Estructura y forma (q7-q11)
+            const structureScores = [answers.q7, answers.q8, answers.q9, answers.q10, answers.q11];
+            const avgStructure = structureScores.reduce((sum, val) => sum + val, 0) / structureScores.length;
+            if (avgStructure <= 3) {
+                recommendationPoints.push("Fortalece la <strong>estructura y forma</strong> de tus exámenes. Planifica tu respuesta con una introducción, desarrollo y cierre. Asegúrate de que cada párrafo tenga una idea central y que las ideas fluyan de manera lógica.");
+            }
+            if (answers.q7 <= 2) {
+                recommendationPoints.push("Un esquema simple (aunque sea mental) de <strong>introducción, desarrollo y cierre</strong> puede hacer maravillas para la claridad de tu examen. ¡Inténtalo!");
+            }
+            if (answers.q11 <= 2) {
+                recommendationPoints.push("Trabaja en la <strong>conexión entre tus ideas</strong>. Usa conectores lógicos (además, sin embargo, por lo tanto) para guiar al lector y evita que tus párrafos parezcan islas de información.");
+            }
+
+            // Profundidad y razonamiento (q12-q17)
+            const depthScores = [answers.q12, answers.q13, answers.q14, answers.q15, answers.q16, answers.q17];
+            const avgDepth = depthScores.reduce((sum, val) => sum + val, 0) / depthScores.length;
+            if (avgDepth <= 3) {
+                recommendationPoints.push("Impulsa tu <strong>profundidad y razonamiento</strong>. No te limites a repetir información; explícala con tus propias palabras, justifica tus puntos de vista y busca conexiones con otros temas vistos en clase. ¡Cada examen es una oportunidad para aprender!");
+            }
+            if (answers.q12 <= 2) {
+                recommendationPoints.push("Para explicar con <strong>tus propias palabras</strong>, lee el concepto, ciérrate el libro y luego intenta explicarlo en voz alta o escribirlo sin mirar. Esto fuerza la comprensión genuina.");
+            }
+            if (answers.q14 <= 2) {
+                recommendationPoints.push("Practica <strong>relacionar conceptos</strong>. Cuando estudies, pregúntate: '¿cómo se conecta esto con X o Y tema?'. Esto te ayudará a construir un mapa mental más complejo y sólido.");
+            }
+            if (answers.q17 <= 2) {
+                recommendationPoints.push("Desarrollar el <strong>pensamiento crítico</strong> es fundamental. No aceptes la información sin más; pregúntate '¿por qué?', '¿cómo?', '¿qué pasaría si...?'. Esto enriquece tus respuestas.");
+            }
+
+            // Comunicación y diálogo (q18-q23)
+            const communicationScores = [answers.q18, answers.q19, answers.q20, answers.q21, answers.q22, answers.q23];
+            const avgCommunication = communicationScores.reduce((sum, val) => sum + val, 0) / communicationScores.length;
+            if (avgCommunication <= 3) {
+                recommendationPoints.push("Refina tu <strong>comunicación y diálogo</strong>. Imagina que el lector no conoce la consigna: ¿tu texto lo guía? Presta atención al tono y asegúrate de que tu voz interpretativa se manifieste claramente.");
+            }
+            if (answers.q18 <= 2) {
+                recommendationPoints.push("Piensa siempre en tu <strong>lector</strong>. Al escribir, imagina que le estás explicando el tema a alguien que no lo conoce. ¿Estás siendo lo suficientemente claro y completo?");
+            }
+            if (answers.q22 <= 3) {
+                recommendationPoints.push("Dedica tiempo a <strong>releer tu trabajo</strong>. Una revisión final puede detectar errores y mejorar la claridad general.");
+            }
+            if (answers.q23 <= 2) {
+                recommendationPoints.push("Para hacer tus respuestas más <strong>persuasivas</strong>, incluye argumentos sólidos, ejemplos y justificaciones claras.");
+            }
+
+            // Actitud reflexiva y aprendizaje (q24-q29)
+            const attitudeScores = [answers.q24, answers.q25, answers.q26, answers.q27, answers.q28, answers.q29];
+            const avgAttitude = attitudeScores.reduce((sum, val) => sum + val, 0) / attitudeScores.length;
+            if (avgAttitude <= 3) {
+                recommendationPoints.push("Cultiva una <strong>actitud reflexiva</strong>. Reflexiona sobre tu proceso de aprendizaje, maneja el estrés y enfócate en el crecimiento personal más allá de las notas.");
+            }
+            if (answers.q24 <= 2) {
+                recommendationPoints.push("Prioriza la <strong>honestidad intelectual</strong>. Escribe basado en lo que realmente sabes y entiendes.");
+            }
+            if (answers.q29 <= 2) {
+                recommendationPoints.push("Aprende técnicas para <strong>manejar el estrés</strong>, como respiraciones profundas o planificación previa, para rendir mejor en exámenes.");
+            }
+            if (answers.q28 <= 3) {
+                recommendationPoints.push("Enfócate en el <strong>crecimiento continuo</strong>. Usa cada examen como oportunidad para mejorar habilidades, no solo para aprobar.");
+            }
+
+            // Si no hay recomendaciones específicas, agregar un mensaje positivo
+            if (recommendationPoints.length === 0) {
+                recommendationPoints.push("¡Estás haciendo un gran trabajo en todas las áreas! Continúa practicando para mantener este nivel.");
+            }
+
+            // Mostrar la recomendación
+            const recommendationDiv = document.getElementById('recommendation');
+            const recommendationList = document.getElementById('recommendationList');
+            const overallMessageElem = document.getElementById('overall-message');
+
+            overallMessageElem.textContent = overallMessage;
+            recommendationList.innerHTML = '';
+            recommendationPoints.forEach(point => {
+                const li = document.createElement('li');
+                li.innerHTML = point;
+                recommendationList.appendChild(li);
+            });
+
+            recommendationDiv.style.display = 'block';
+            recommendationDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
