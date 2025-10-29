@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprendizaje Significativo de David Ausubel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #50E3C2;
+            --text-color: #333;
+            --light-bg: #f5f8fa;
+            --panel-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            padding-top: 70px; /* Espacio para el header fijo */
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Merriweather', serif;
+            font-size: 2.2em;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        h2, h3 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary-color);
+            margin-top: 30px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+        }
+
+        p {
+            margin-bottom: 1em;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            margin-bottom: 1em;
+        }
+
+        .intro, .quiz-intro {
+            background-color: var(--panel-bg);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .accordion {
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            padding: 18px 25px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-bottom: 10px;
+            border-radius: var(--radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Merriweather', serif;
+        }
+
+        .accordion:hover {
+            background-color: #3A7BBF;
+            transform: translateY(-2px);
+        }
+
+        .accordion.active {
+            background-color: #2D6CA8;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .accordion:after {
+            content: '\02795'; /* Unicode plus sign */
+            font-size: 0.8em;
+            color: white;
+            float: right;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion.active:after {
+            content: "\2796"; /* Unicode minus sign */
+            transform: rotate(180deg);
+        }
+
+        .panel {
+            padding: 0 25px;
+            background-color: var(--panel-bg);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            border-bottom-left-radius: var(--radius);
+            border-bottom-right-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .panel p, .panel ul {
+            padding-top: 15px;
+        }
+        .panel h3 {
+            margin-top: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed var(--border-color);
+            color: #666;
+        }
+
+        #quiz {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: var(--panel-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .question {
+            margin-bottom: 35px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 25px;
+        }
+        .question:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .question p {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            cursor: pointer;
+            padding: 10px 15px;
+            background-color: var(--light-bg);
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        label:hover {
+            background-color: #eaf1f7;
+        }
+        label input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--primary-color);
+        }
+
+        button.submit-btn, button.reset-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-family: 'Open Sans', sans-serif;
+            margin-right: 10px;
+        }
+        button.submit-btn:hover, button.reset-btn:hover {
+            background-color: #3A7BBF;
+            transform: translateY(-1px);
+        }
+
+        button.reset-btn {
+            background-color: #dc3545;
+        }
+        button.reset-btn:hover {
+            background-color: #c82333;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px 20px;
+            border-radius: 5px;
+            display: none;
+            font-weight: 600;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .feedback-icon {
+            margin-left: 10px;
+            font-size: 1.2em;
+        }
+        .correct-icon { color: #28a745; }
+        .incorrect-icon { color: #dc3545; }
+
+        .go-top-btn {
+            display: none;
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 99;
+            font-size: 24px;
+            border: none;
+            outline: none;
+            background-color: var(--secondary-color);
+            color: white;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .go-top-btn:hover {
+            background-color: #42C2AA;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 0.9em;
+            border-top: 5px solid var(--secondary-color);
+        }
+        footer p {
+            margin: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            .container {
+                margin: 20px auto;
+                padding: 0 15px;
+            }
+            .accordion {
+                font-size: 1em;
+                padding: 15px 20px;
+            }
+            .panel {
+                padding: 0 20px;
+            }
+            #quiz {
+                padding: 20px;
+            }
+            .question p {
+                font-size: 1em;
+            }
+            .go-top-btn {
+                font-size: 20px;
+                padding: 8px 12px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Aprendizaje Significativo de David Ausubel</h1>
+    </header>
+
+    <div class="container">
+        <div class="intro">
+            <p>¡Bienvenido/a a esta exploración interactiva de la influyente teoría del Aprendizaje Significativo de David Ausubel! Aquí, no solo repasaremos los conceptos fundamentales, sino que profundizaremos en sus aplicaciones y la distinguiremos del aprendizaje memorístico, ofreciéndote ejemplos claros y una sección de ejercitación para consolidar tu comprensión.</p>
+            <p>Haz clic en las secciones interactivas para expandir el contenido y sumergirte en el fascinante mundo de cómo construimos el conocimiento de manera duradera.</p>
+        </div>
+
+        <button class="accordion">¿Quién fue David Ausubel?</button>
+        <div class="panel">
+            <p>David Paul Ausubel (1918-2008) fue un destacado psicólogo y educador estadounidense, nacido en Nueva York. Tras estudiar psicología en la Universidad de Pensilvania y obtener su doctorado en la Universidad de Columbia, Ausubel se consolidó como una figura clave en la psicología educativa, especialmente por su innovadora teoría del aprendizaje significativo, desarrollada en la década de 1960.</p>
+            <p>Su trabajo fue influenciado por pensadores como Jean Piaget y la corriente constructivista, lo que lo llevó a enfatizar la importancia de la estructura cognitiva preexistente del aprendiz. Ausubel fue un crítico vehemente del aprendizaje mecánico o por repetición, que consideraba ineficaz para la retención a largo plazo y la aplicación del conocimiento. En su lugar, abogó por un enfoque donde la nueva información se integre de manera sustancial y no arbitraria con lo que el estudiante ya sabe.</p>
+            <p>Entre sus obras más influyentes se encuentra "Psicología educativa: un punto de vista cognoscitivo" (1968), donde detalla los pilares de su teoría. Además, Ausubel exploró la motivación en el aprendizaje y la crucial función de los organizadores avanzados como facilitadores de la asimilación de nueva información. Su legado ha tenido un impacto duradero en el diseño curricular y en las metodologías de enseñanza en diversos niveles educativos globalmente.</p>
+        </div>
+
+        <button class="accordion">¿Qué es el Aprendizaje Significativo?</button>
+        <div class="panel">
+            <p>El aprendizaje significativo es un proceso activo y constructivo donde el estudiante relaciona el nuevo material de forma <strong>no arbitraria, sustancial y no literal</strong> con sus conocimientos previos. Es decir, el nuevo saber "se ancla" en ideas ya existentes en la estructura cognitiva, transformando tanto la nueva información como la preexistente.</p>
+            <p>Se diferencia del aprendizaje memorístico, que implica solo la repetición y retención superficial de datos sin establecer conexiones profundas. En el aprendizaje significativo, la comprensión es profunda, la retención es a largo plazo y la capacidad de aplicar el conocimiento en diferentes contextos es elevada.</p>
+            
+            <h3>Condiciones esenciales para el aprendizaje significativo:</h3>
+            <ul>
+                <li><strong>Material potencialmente significativo:</strong> el contenido a aprender debe ser lógico y coherente en sí mismo, y también debe poder relacionarse con la estructura cognitiva del aprendiz (por ejemplo, mediante la claridad de los conceptos).</li>
+                <li><strong>Estructura cognitiva clara y estable:</strong> el estudiante debe poseer conocimientos previos relevantes y bien organizados que sirvan de "anclaje" para la nueva información.</li>
+                <li><strong>Disposición para aprender significativamente:</strong> el aprendiz debe tener la intención y la motivación de relacionar el nuevo material con lo que ya sabe, en lugar de simplemente memorizarlo.</li>
+            </ul>
+
+            <h3>Beneficios clave:</h3>
+            <ul>
+                <li>Mayor comprensión y capacidad de explicación.</li>
+                <li>Retención más duradera y resistente al olvido.</li>
+                <li>Facilita la transferencia de conocimientos a nuevas situaciones.</li>
+                <li>Fortalece la capacidad de aprender de forma autónoma.</li>
+            </ul>
+            <p>Ausubel destacó que tanto el aprendizaje receptivo (donde el material se presenta de forma organizada) como el aprendizaje por descubrimiento (donde el estudiante construye activamente el conocimiento) pueden ser significativos, siempre que se cumplan las condiciones de relación sustancial con la estructura cognitiva.</p>
+
+            <p><strong>Ejemplo contextualizado:</strong> imagina que un estudiante de bachillerato está aprendiendo sobre la <strong>revolución francesa</strong>. Si solo memoriza fechas y nombres de forma aislada (aprendizaje memorístico), olvidará rápidamente. Sin embargo, si el profesor presenta la revolución como una respuesta a las ideas de la Ilustración sobre la igualdad y la libertad (conocimiento previo), y la relaciona con movimientos sociales y políticos que el estudiante ya conoce (como la independencia de su propio país), entonces el nuevo conocimiento se integra de manera significativa, permitiéndole comprender las causas, consecuencias y la relevancia histórica a largo plazo.</p>
+        </div>
+
+        <button class="accordion">Diferencia entre Aprendizaje Significativo y Aprendizaje Memorístico (por repetición)</button>
+        <div class="panel">
+            <p>Es fundamental comprender las distinciones entre estos dos tipos de aprendizaje, ya que cada uno tiene su lugar y utilidad.</p>
+            
+            <h3>Aprendizaje significativo:</h3>
+            <ul>
+                <li><strong>Naturaleza:</strong> el nuevo conocimiento se conecta de forma lógica, sustancial y no arbitraria con ideas ya existentes en la mente del estudiante.</li>
+                <li><strong>Retención:</strong> duradera y profunda. El conocimiento se integra en una red de conceptos.</li>
+                <li><strong>Comprensión:</strong> alta. El estudiante entiende "por qué" y "cómo" funciona el conocimiento.</li>
+                <li><strong>Aplicación:</strong> flexible y transferible. Permite usar el conocimiento en diversas situaciones y resolver problemas nuevos.</li>
+                <li><strong>Carga cognitiva:</strong> inicialmente puede ser mayor, pero facilita futuros aprendizajes.</li>
+                <li><strong>Cuándo conviene:</strong> para conceptos complejos, teorías, principios, y cualquier conocimiento que requiera comprensión profunda, aplicación y capacidad de análisis. Es la base del verdadero entendimiento.</li>
+            </ul>
+
+            <h3>Aprendizaje memorístico (por repetición):</h3>
+            <ul>
+                <li><strong>Naturaleza:</strong> el nuevo conocimiento se almacena de forma aislada, sin conexión con ideas previas. Se basa en la repetición y la asociación arbitraria.</li>
+                <li><strong>Retención:</strong> superficial y a corto plazo. Fácil de olvidar si no se repasa constantemente.</li>
+                <li><strong>Comprensión:</strong> baja o nula. El estudiante sabe "qué" pero no "por qué".</li>
+                <li><strong>Aplicación:</strong> limitada y rígida. Dificultad para transferir o adaptar el conocimiento a nuevas situaciones.</li>
+                <li><strong>Carga cognitiva:</strong> puede ser más baja a corto plazo, pero no facilita el aprendizaje futuro de forma significativa.</li>
+                <li><strong>Cuándo conviene:</strong> para información muy específica y arbitraria que no tiene una lógica interna obvia para anclarse, como números de teléfono, nombres de capitales, listas de vocabulario en una lengua extranjera (inicialmente), o fórmulas matemáticas si no se entienden sus principios. También es útil como paso inicial para fijar datos que luego pueden integrarse significativamente.</li>
+            </ul>
+            <p><strong>Conclusión:</strong> si bien el aprendizaje memorístico tiene su nicho, el objetivo principal en la educación es siempre fomentar el aprendizaje significativo, ya que es el que conduce a una comprensión genuina y duradera.</p>
+        </div>
+
+        <button class="accordion">Conceptos clave del Aprendizaje Significativo</button>
+        <div class="panel">
+            <h3>Organizadores previos (Advanced organizers)</h3>
+            <p>Son herramientas introductorias que se presentan <strong>antes</strong> del material de aprendizaje principal. Su función es activar y organizar el conocimiento previo relevante del estudiante, actuando como "puentes cognitivos" entre lo que el aprendiz ya sabe y lo que está a punto de aprender. Ausubel los clasificó en:</p>
+            <ul>
+                <li><strong>Expositivos:</strong> se usan cuando el material es completamente nuevo. Proporcionan un marco conceptual general, una visión panorámica que el estudiante puede usar para integrar los detalles futuros.</li>
+                <li><strong>Comparativos:</strong> se emplean cuando el material es familiar para el estudiante. Destacan similitudes y diferencias entre el nuevo conocimiento y lo ya sabido, ayudando a integrar lo nuevo o a diferenciarlo de conceptos erróneos.</li>
+            </ul>
+            <p><strong>Ejemplo:</strong> antes de enseñar las funciones sintácticas del sujeto y el predicado en Lengua y Literatura, un <strong>organizador previo expositivo</strong> podría ser una breve explicación sobre la importancia de entender "quién hace qué" en una oración para construir significado. Si los estudiantes ya conocen las partes de la oración, un <strong>organizador comparativo</strong> podría ser una analogía con el teatro, donde el "sujeto" es el actor principal y el "predicado" es la acción que realiza, diferenciando sus roles.</p>
+            
+            <h3>Subsunción (Subsumption)</h3>
+            <p>Es el mecanismo central por el cual el nuevo conocimiento se integra en la estructura cognitiva. Implica que las nuevas ideas se "subsumen" o se subordinan a conceptos más inclusivos y relevantes ya existentes en la mente del aprendiz. Ausubel identificó cuatro tipos:</p>
+            <ul>
+                <li><strong>Subsunción derivativa:</strong> el nuevo concepto es un ejemplo específico o una extensión lógica de un concepto más inclusivo que ya se conoce.
+                    <br><strong>Ejemplo:</strong> aprender que "la novela epistolar" es un tipo específico de "novela" que el estudiante ya comprende, o que "la hipérbole" es una forma de "figura retórica" ya conocida.</li>
+                <li><strong>Subsunción correlativa:</strong> el nuevo concepto modifica, extiende o cualifica un concepto ya existente, añadiéndole nuevos matices o excepciones.
+                    <br><strong>Ejemplo:</strong> al estudiar la tragedia griega, el estudiante extiende su concepto previo de "conflicto" para incluir la idea de "destino ineludible" como fuerza central en obras como "Edipo Rey".</li>
+                <li><strong>Subsunción supraordinada:</strong> conceptos existentes, que antes parecían aislados, se reorganizan bajo un nuevo concepto más amplio e inclusivo.
+                    <br><strong>Ejemplo:</strong> después de estudiar por separado el "soneto", la "oda" y el "haiku", el estudiante los agrupa bajo el nuevo concepto de "formas poéticas estructuradas", comprendiendo una categoría superior.</li>
+                <li><strong>Subsunción combinatoria:</strong> se establecen conexiones "horizontales" entre ideas nuevas que no se subordinan claramente a una preexistente, ni una a la otra. A menudo implican analogías o relaciones temáticas.
+                    <br><strong>Ejemplo:</strong> conectar el tema de la "alienación" en "El extranjero" de Albert Camus (una obra nueva) con ideas similares ya vistas en cuentos de Franz Kafka (conocimiento previo), creando enlaces temáticos sin una jerarquía estricta.</li>
+            </ul>
+            
+            <h3>Diferenciación progresiva y reconciliación integrativa</h3>
+            <ul>
+                <li><strong>Diferenciación progresiva:</strong> es una estrategia de enseñanza que implica presentar los conceptos más generales e inclusivos primero, y luego desglosarlos gradualmente en detalles más específicos y diferenciados. Esto facilita la subsunción derivativa y asegura que el estudiante construya una estructura cognitiva jerárquica y sólida.
+                    <br><strong>Ejemplo:</strong> en Lengua y Literatura, enseñar primero el concepto amplio de "Géneros Literarios" (novela, poesía, teatro) y luego profundizar en sus características específicas y subgéneros, usando ejemplos concretos de cada uno.</li>
+                <li><strong>Reconciliación integrativa:</strong> se refiere al proceso de resolver aparentes inconsistencias, conflictos o contradicciones entre ideas nuevas y existentes, o entre diferentes conjuntos de ideas. Su objetivo es lograr una integración coherente del conocimiento, evitando la fragmentación.
+                    <br><strong>Ejemplo:</strong> al estudiar "Romeo y Julieta", si los estudiantes tienen una visión idealizada del amor romántico, el profesor podría guiarlos a reconciliar esta visión con la trágica realidad de las consecuencias de la pasión impulsiva y el odio familiar, integrando así una comprensión más compleja y matizada del amor y el conflicto.</li>
+            </ul>
+            <p>Estos conceptos interconectados forman la base para una enseñanza y aprendizaje que promueven la comprensión profunda y la retención duradera.</p>
+        </div>
+
+        <button class="accordion">Ejemplos prácticos integrando conceptos</button>
+        <div class="panel">
+            <p>Veamos cómo todos estos conceptos se entrelazan en un escenario de aprendizaje real:</p>
+            <p><strong>Contexto:</strong> una clase de bachillerato va a analizar la obra "Cien años de soledad" de Gabriel García Márquez.</p>
+            <ul>
+                <li><strong>Organizador previo (Expositivo):</strong> el profesor comienza con un breve video o una charla introductoria sobre el concepto de "realismo mágico" como un estilo literario donde elementos fantásticos se presentan como parte normal de la realidad. Esto activa el conocimiento previo del estudiante sobre narrativas realistas y fantasía, creando un "puente" para la nueva información.</li>
+                <li><strong>Diferenciación progresiva:</strong> el estudio avanza de lo general a lo específico. Primero, se discute la novela como género literario y sus características generales. Luego, se introduce el "realismo mágico" como un subgénero específico.</li>
+                <li><strong>Subsunción:</strong>
+                    <ul>
+                        <li><strong>Derivativa:</strong> al leer sobre los "Buendía", el estudiante subsume el concepto de "saga familiar" bajo su idea preexistente de "narrativa" o "historia".</li>
+                        <li><strong>Correlativa:</strong> cuando se encuentra con el personaje de Remedios la Bella ascendiendo al cielo, el estudiante correlaciona su concepto de "realidad" o "natural" para extenderlo y aceptar que en el realismo mágico, lo inverosímil puede ser parte de la realidad.</li>
+                        <li><strong>Supraordinada:</strong> después de leer la novela, el estudiante puede reorganizar su comprensión de "narrativas latinoamericanas" para incluir "Cien años de soledad" y otras obras similares bajo un nuevo concepto supraordinado de "Boom Latinoamericano".</li>
+                        <li><strong>Combinatoria:</strong> el estudiante establece conexiones temáticas entre la soledad de los personajes de García Márquez y la soledad expresada en otras obras o canciones que conoce, creando un vínculo horizontal.</li>
+                    </ul>
+                </li>
+                <li><strong>Reconciliación integrativa:</strong> si un estudiante inicialmente tiene dificultades para aceptar los elementos fantásticos de la novela porque chocan con su visión "realista" de la literatura, el profesor facilita la reconciliación. Explica que el realismo mágico utiliza lo irreal para comentar y criticar la realidad política y social, ayudando al estudiante a integrar estas dos visiones aparentemente contradictorias.</li>
+            </ul>
+            <p>Este ejemplo demuestra cómo el aprendizaje significativo transforma la simple lectura en una experiencia de comprensión profunda, donde cada nuevo detalle se integra en una red de significado, permitiendo al estudiante analizar, interpretar y valorar la obra de una manera más rica y duradera.</p>
+        </div>
+
+        <div id="quiz">
+            <h2>Ejercitación interactiva</h2>
+            <div class="quiz-intro">
+                <p>¡Ponte a prueba! Responde las siguientes preguntas para consolidar tu conocimiento sobre el aprendizaje significativo. Selecciona la opción que consideres correcta y haz clic en "Enviar" para recibir retroalimentación inmediata.</p>
+            </div>
+            
+            <div class="question" id="q1">
+                <p>1. ¿Cuál es el propósito principal de un organizador previo?</p>
+                <label><input type="radio" name="q1" value="a"> Servir como un examen sorpresa al inicio de la clase.</label>
+                <label><input type="radio" name="q1" value="b"> Conectar el nuevo conocimiento con las ideas preexistentes del estudiante.</label>
+                <label><input type="radio" name="q1" value="c"> Promover el aprendizaje memorístico de fechas y nombres.</label>
+                <button class="submit-btn" onclick="checkAnswer('q1', 'b', '¡Correcto! Los organizadores previos son puentes cognitivos.', 'Incorrecto. Un organizador previo busca establecer conexiones entre lo nuevo y lo que ya sabes.')">Enviar</button>
+                <div class="feedback" id="feedback-q1"></div>
+            </div>
+            
+            <div class="question" id="q2">
+                <p>2. ¿Qué diferencia al aprendizaje significativo del aprendizaje memorístico?</p>
+                <label><input type="radio" name="q2" value="a"> El significativo se olvida más rápido y es menos útil.</label>
+                <label><input type="radio" name="q2" value="b"> El memorístico se basa en la repetición sin conexiones profundas, el significativo integra el nuevo saber con lo existente.</label>
+                <label><input type="radio" name="q2" value="c"> Ambos son idénticos en sus resultados y procesos.</label>
+                <button class="submit-btn" onclick="checkAnswer('q2', 'b', '¡Correcto! El aprendizaje significativo genera comprensión y retención duradera, a diferencia del memorístico.', 'Incorrecto. La clave está en la conexión profunda con el conocimiento previo, que es la esencia del aprendizaje significativo.')">Enviar</button>
+                <div class="feedback" id="feedback-q2"></div>
+            </div>
+            
+            <div class="question" id="q3">
+                <p>3. Si un estudiante aprende que "el soneto" es un tipo de "poema" que ya conoce, ¿qué tipo de subsunción está ocurriendo?</p>
+                <label><input type="radio" name="q3" value="a"> Subsunción correlativa.</label>
+                <label><input type="radio" name="q3" value="b"> Subsunción supraordinada.</label>
+                <label><input type="radio" name="q3" value="c"> Subsunción derivativa.</label>
+                <button class="submit-btn" onclick="checkAnswer('q3', 'c', '¡Correcto! El soneto es un ejemplo específico derivado del concepto general de poema.', 'Incorrecto. Es la subsunción derivativa, donde el nuevo concepto es un ejemplo de uno ya existente.')">Enviar</button>
+                <div class="feedback" id="feedback-q3"></div>
+            </div>
+            
+            <div class="question" id="q4">
+                <p>4. ¿Qué estrategia de enseñanza promueve ir de conceptos generales a los específicos?</p>
+                <label><input type="radio" name="q4" value="a"> Reconciliación integrativa.</label>
+                <label><input type="radio" name="q4" value="b"> Diferenciación progresiva.</label>
+                <label><input type="radio" name="q4" value="c"> Subsunción combinatoria.</label>
+                <button class="submit-btn" onclick="checkAnswer('q4', 'b', '¡Correcto! La diferenciación progresiva es clave para construir una estructura cognitiva sólida.', 'Incorrecto. La estrategia que va de lo general a lo específico es la diferenciación progresiva.')">Enviar</button>
+                <div class="feedback" id="feedback-q4"></div>
+            </div>
+            
+            <div class="question" id="q5">
+                <p>5. ¿Cuándo sería más apropiado el aprendizaje memorístico?</p>
+                <label><input type="radio" name="q5" value="a"> Para comprender una teoría científica compleja.</label>
+                <label><input type="radio" name="q5" value="b"> Para entender las causas de un conflicto histórico.</label>
+                <label><input type="radio" name="q5" value="c"> Para recordar una lista de vocabulario arbitrario en un idioma nuevo.</label>
+                <button class="submit-btn" onclick="checkAnswer('q5', 'c', '¡Correcto! Para datos arbitrarios sin una lógica interna clara, la memorización es útil.', 'Incorrecto. El aprendizaje memorístico es más adecuado para información arbitraria, como listas de vocabulario.')">Enviar</button>
+                <div class="feedback" id="feedback-q5"></div>
+            </div>
+
+            <button class="reset-btn" onclick="resetQuiz()">Reiniciar Cuestionario</button>
+        </div>
+    </div>
+
+    <button onclick="topFunction()" id="goTopBtn" class="go-top-btn" title="Volver arriba">&#x2191;</button>
+
+    <footer>
+        <p>Explorando el conocimiento con David Ausubel. &copy; 2023</p>
+    </footer>
+
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        for (var i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        }
+
+        function checkAnswer(qId, correctValue, correctMsg, incorrectMsg) {
+            var selected = document.querySelector('input[name="' + qId + '"]:checked');
+            var feedback = document.getElementById('feedback-' + qId);
+            var questionDiv = document.getElementById(qId);
+
+            // Clear previous icons
+            var existingIcons = questionDiv.querySelectorAll('.feedback-icon');
+            existingIcons.forEach(icon => icon.remove());
+
+            if (selected) {
+                // Clear previous feedback classes
+                feedback.classList.remove('correct', 'incorrect');
+                
+                // Remove existing check/cross marks from labels
+                questionDiv.querySelectorAll('label span.feedback-icon').forEach(icon => icon.remove());
+
+                var icon = document.createElement('span');
+                icon.classList.add('feedback-icon');
+
+                if (selected.value === correctValue) {
+                    feedback.innerHTML = correctMsg;
+                    feedback.classList.add('correct');
+                    icon.innerHTML = ' &#10003;'; // Check mark
+                    icon.classList.add('correct-icon');
+                } else {
+                    feedback.innerHTML = incorrectMsg;
+                    feedback.classList.add('incorrect');
+                    icon.innerHTML = ' &#10006;'; // Cross mark
+                    icon.classList.add('incorrect-icon');
+                }
+                feedback.style.display = 'block';
+                selected.parentNode.appendChild(icon); // Append icon next to the selected option
+            } else {
+                feedback.innerHTML = "Por favor, selecciona una opción.";
+                feedback.classList.remove('correct', 'incorrect');
+                feedback.classList.add('incorrect'); // Use incorrect style for warnings
+                feedback.style.display = 'block';
+            }
+        }
+
+        function resetQuiz() {
+            var questions = document.querySelectorAll('.question');
+            questions.forEach(q => {
+                // Clear selected radio buttons
+                var radios = q.querySelectorAll('input[type="radio"]');
+                radios.forEach(radio => radio.checked = false);
+
+                // Clear feedback messages and styles
+                var feedback = q.querySelector('.feedback');
+                if (feedback) {
+                    feedback.innerHTML = '';
+                    feedback.style.display = 'none';
+                    feedback.classList.remove('correct', 'incorrect');
+                }
+
+                // Remove feedback icons
+                var existingIcons = q.querySelectorAll('.feedback-icon');
+                existingIcons.forEach(icon => icon.remove());
+            });
+        }
+
+        // Go-top button functionality
+        var goTopBtn = document.getElementById("goTopBtn");
+
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                goTopBtn.style.display = "block";
+            } else {
+                goTopBtn.style.display = "none";
+            }
+        }
+
+        function topFunction() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+</body>
+</html>
