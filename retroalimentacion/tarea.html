@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Taller de Evaluación - Feedback en tres tonos (Psicología)</title>
+  <title>Taller de Evaluación - Feedback en tres tonos (Profesorado de Psicología)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
@@ -190,21 +190,17 @@
 <body>
 <header>
   <h1>Taller de Evaluación - Feedback en tres tonos</h1>
-  <p>Carrera de Psicología · Actividad asincrónica sobre tipos y calidad de la retroalimentación.</p>
+  <p>Profesorado de Psicología · Actividad asincrónica sobre tipos y calidad de la retroalimentación.</p>
 </header>
 
 <main>
   <section class="card">
-    <h2>Cómo trabajar esta actividad</h2>
-    <p>
-      Vas a leer un texto breve de un/a estudiante de Psicología, mirar un video de Rebeca Anijovich
-      sobre retroalimentación y analizar una serie de comentarios posibles.
-    </p>
-    <ul>
-      <li>Identificar si cada comentario se centra en 💛 la persona, 🔵 el producto o 🟢 el proceso.</li>
-      <li>Distinguir si es ✅ formativo (ayuda a aprender) o ⚠️ no formativo.</li>
-      <li>Poner en diálogo los ejemplos con las ideas del video: claridad, ayuda, orientación al aprendizaje.</li>
-    </ul>
+    <h2>Consigna general</h2>
+    <ol style="font-size:0.9rem; color:#374151;">
+      <li>📖 Leer el texto: <em>Anijovich, R. y Cappelletti, G. (2020). La retroalimentación formativa: Una oportunidad para mejorar los aprendizajes y la enseñanza.</em> <strong>Revista Docencia Universitaria, 21(1), 81-95.</strong></li>
+      <li>🎥 Ver el video de Rebeca Anijovich sobre la retroalimentación formativa.</li>
+      <li>🧩 Resolver las actividades que siguen, guardar el trabajo como PDF y subirlo al espacio correspondiente.</li>
+    </ol>
   </section>
 
   <section class="card">
@@ -232,17 +228,17 @@
   <section class="card">
     <div class="sample-title">Texto del estudiante</div>
     <p class="sample-text">
-      “En varias materias de la carrera siento que la evaluación funciona más como filtro que como herramienta de aprendizaje.
+      “En varias materias del profesorado siento que la evaluación funciona más como filtro que como herramienta de aprendizaje.
       Muchas veces solo recibimos una nota o frases muy generales como ‘incompleto’ o ‘superficial’, sin saber con claridad qué
       se esperaba del producto ni cómo mejorarlo. Entiendo la necesidad de sostener criterios académicos, pero me pregunto si
-      ese modo de evaluar realmente nos ayuda a construir una mirada crítica y ética como futuros psicólogos.”
+      ese modo de evaluar realmente nos ayuda a construir una mirada crítica y ética como futuros docentes.”
     </p>
   </section>
 
   <section class="card">
     <h2>Leé y clasificá las devoluciones</h2>
     <p style="font-size:0.82rem;color:#4b5563;margin-bottom:8px;">
-      A la luz del video, marcá para cada comentario su foco (💛/🔵/🟢) y si es ✅ formativo o ⚠️ no formativo.
+      A la luz del texto y del video, marcá para cada comentario su foco (💛/🔵/🟢) y si es ✅ formativo o ⚠️ no formativo.
       Luego hacé clic en “Corregir y ver análisis”.
     </p>
     <div class="feedback-container" id="feedbackContainer"></div>
@@ -252,11 +248,11 @@
 
   <section class="card">
     <h2>Bitácora de reflexión (individual)</h2>
-    <label>1. Elegí uno de los comentarios no formativos. ¿Qué efecto podría tener sobre la subjetividad de un/a estudiante de Psicología?</label>
+    <label>1. Elegí uno de los comentarios no formativos. ¿Qué efecto podría tener sobre la subjetividad de un/a futuro/a docente de Psicología?</label>
     <textarea id="r1"></textarea>
     <label>2. Reescribí uno de esos comentarios en clave formativa: que oriente, respete y ayude a mejorar el producto o el proceso.</label>
     <textarea id="r2"></textarea>
-    <label>3. A partir del video y de esta actividad, ¿qué compromisos asumirías como futuro/a psicólogo/a al dar retroalimentación?</label>
+    <label>3. A partir del texto, el video y esta actividad, ¿qué compromisos asumirías como futuro/a docente al dar retroalimentación?</label>
     <textarea id="r3"></textarea>
   </section>
 
@@ -269,7 +265,7 @@
 </main>
 
 <footer>
-  Actividad para el Taller de Evaluación de la Carrera de Psicología. Tipos de retroalimentación y análisis crítico del lenguaje evaluativo.
+  Actividad para el Taller de Evaluación del Profesorado de Psicología. Tipos de retroalimentación y análisis crítico del lenguaje evaluativo.
 </footer>
 
 <script>
@@ -286,7 +282,6 @@ const feedbackItems = [
 ];
 
 const container = document.getElementById("feedbackContainer");
-
 feedbackItems.forEach(item => {
   const card = document.createElement("div");
   card.className = "feedback-card";
