@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Taller de Evaluación - Feedback en tres tonos (Psicología)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f7;
+      margin: 0;
+      padding: 0;
+      color: #111827;
+      line-height: 1.5;
+    }
+    header {
+      background: #111827;
+      color: #f9fafb;
+      padding: 18px 24px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    header p {
+      margin: 4px 0 0;
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+    main {
+      max-width: 980px;
+      margin: 22px auto 28px;
+      padding: 0 16px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 22px rgba(15,23,42,0.06);
+    }
+    h2 {
+      margin-top: 0;
+      font-weight: 600;
+      color: #111827;
+    }
+    p {
+      font-size: 0.9rem;
+      color: #374151;
+    }
+    ul {
+      padding-left: 18px;
+      font-size: 0.88rem;
+      color: #374151;
+    }
+    .sample-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+    .sample-text {
+      font-size: 0.9rem;
+      color: #111827;
+      border-left: 3px solid #e5e7eb;
+      padding-left: 10px;
+      background: #f9fafb;
+      border-radius: 8px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+    iframe {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 8px 22px rgba(15,23,42,0.12);
+    }
+    .feedback-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .feedback-card {
+      background: #f9fafb;
+      border-radius: 12px;
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+    }
+    .feedback-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .feedback-text {
+      font-size: 0.86rem;
+      color: #111827;
+    }
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 2px;
+      align-items: center;
+    }
+    .options span.legend {
+      font-size: 0.7rem;
+      color: #6b7280;
+      margin-right: 4px;
+    }
+    .opt-btn {
+      flex: 1 0 auto;
+      padding: 3px 7px;
+      font-size: 0.72rem;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .opt-btn.selected {
+      border-color: #4f46e5;
+      background: #eef2ff;
+      font-weight: 600;
+    }
+    .feedback-result {
+      margin-top: 3px;
+      font-size: 0.75rem;
+      min-height: 16px;
+    }
+    .feedback-result.correct {
+      color: #15803d;
+    }
+    .feedback-result.incorrect {
+      color: #b91c1c;
+    }
+    .btn-check,
+    .btn-pdf {
+      padding: 7px 14px;
+      border: none;
+      border-radius: 999px;
+      background: #111827;
+      color: #f9fafb;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(15,23,42,0.25);
+      transition: all 0.18s ease;
+    }
+    .btn-check:hover,
+    .btn-pdf:hover {
+      background: #4f46e5;
+    }
+    .summary {
+      font-size: 0.8rem;
+      color: #374151;
+      margin-top: 6px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 70px;
+      resize: vertical;
+      padding: 7px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 0.82rem;
+      background: #ffffff;
+      font-family: inherit;
+    }
+    footer {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0 16px 18px;
+      font-size: 0.7rem;
+      color: #9ca3af;
+    }
+    @media print {
+      .btn-check, .btn-pdf { display: none !important; }
+      iframe { box-shadow: none; }
+      .card { border: 1px solid #e5e7eb; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Taller de Evaluación - Feedback en tres tonos</h1>
+  <p>Carrera de Psicología · Actividad asincrónica sobre tipos y calidad de la retroalimentación.</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>Cómo trabajar esta actividad</h2>
+    <p>
+      Vas a leer un texto breve de un/a estudiante de Psicología, mirar un video de Rebeca Anijovich
+      sobre retroalimentación y analizar una serie de comentarios posibles.
+    </p>
+    <ul>
+      <li>Identificar si cada comentario se centra en 💛 la persona, 🔵 el producto o 🟢 el proceso.</li>
+      <li>Distinguir si es ✅ formativo (ayuda a aprender) o ⚠️ no formativo.</li>
+      <li>Poner en diálogo los ejemplos con las ideas del video: claridad, ayuda, orientación al aprendizaje.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Video: Rebeca Anijovich sobre la retroalimentación</h2>
+    <p style="font-size:0.84rem;color:#4b5563;">
+      Mirá el video y prestá atención a cómo define la retroalimentación formativa, su relación con las metas de aprendizaje
+      y la importancia de orientar al estudiante sobre los próximos pasos.
+    </p>
+    <div style="text-align:center;">
+      <iframe width="560" height="315"
+        src="https://www.youtube.com/embed/ylB6oU9O-1g"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
+      <p style="font-size:0.78rem;color:#6b7280;margin-top:6px;">
+        Si no ves el reproductor, abrí el video directamente en
+        <a href="https://youtu.be/ylB6oU9O-1g" target="_blank" rel="noopener noreferrer">YouTube</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="sample-title">Texto del estudiante</div>
+    <p class="sample-text">
+      “En varias materias de la carrera siento que la evaluación funciona más como filtro que como herramienta de aprendizaje.
+      Muchas veces solo recibimos una nota o frases muy generales como ‘incompleto’ o ‘superficial’, sin saber con claridad qué
+      se esperaba del producto ni cómo mejorarlo. Entiendo la necesidad de sostener criterios académicos, pero me pregunto si
+      ese modo de evaluar realmente nos ayuda a construir una mirada crítica y ética como futuros psicólogos.”
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Leé y clasificá las devoluciones</h2>
+    <p style="font-size:0.82rem;color:#4b5563;margin-bottom:8px;">
+      A la luz del video, marcá para cada comentario su foco (💛/🔵/🟢) y si es ✅ formativo o ⚠️ no formativo.
+      Luego hacé clic en “Corregir y ver análisis”.
+    </p>
+    <div class="feedback-container" id="feedbackContainer"></div>
+    <button class="btn-check" id="checkBtn">✅ Corregir y ver análisis</button>
+    <div class="summary" id="summary"></div>
+  </section>
+
+  <section class="card">
+    <h2>Bitácora de reflexión (individual)</h2>
+    <label>1. Elegí uno de los comentarios no formativos. ¿Qué efecto podría tener sobre la subjetividad de un/a estudiante de Psicología?</label>
+    <textarea id="r1"></textarea>
+    <label>2. Reescribí uno de esos comentarios en clave formativa: que oriente, respete y ayude a mejorar el producto o el proceso.</label>
+    <textarea id="r2"></textarea>
+    <label>3. A partir del video y de esta actividad, ¿qué compromisos asumirías como futuro/a psicólogo/a al dar retroalimentación?</label>
+    <textarea id="r3"></textarea>
+  </section>
+
+  <section class="card" style="text-align:center;">
+    <button class="btn-pdf" id="pdfBtn">🖨 Guardar toda la actividad como PDF</button>
+    <p style="font-size:0.72rem;color:#6b7280;margin-top:4px;">
+      Se generará una versión para impresión con tus clasificaciones y reflexiones visibles.
+    </p>
+  </section>
+</main>
+
+<footer>
+  Actividad para el Taller de Evaluación de la Carrera de Psicología. Tipos de retroalimentación y análisis crítico del lenguaje evaluativo.
+</footer>
+
+<script>
+const feedbackItems = [
+  {id:1,text:"“La verdad, esperaba mucho más de vos en este trabajo.”",correctType:"persona",correctQuality:"no",explain:"Se centra en la persona, con juicio global. No ayuda a mejorar ni a aprender."},
+  {id:2,text:"“Nota: 6. Faltan conceptos.”",correctType:"producto",correctQuality:"no",explain:"Se refiere al producto, pero de modo vago y solo punitivo."},
+  {id:3,text:"“Organizaste bien el texto. Para profundizar, podrías vincular la crítica a la evaluación con algún autor y un ejemplo propio.”",correctType:"producto",correctQuality:"si",explain:"Reconoce fortalezas y propone una acción concreta: formativa."},
+  {id:4,text:"“Sos brillante, como siempre. Seguí así y no aflojes.”",correctType:"persona",correctQuality:"no",explain:"Elogio centrado en la persona; no explicita criterios ni orienta el aprendizaje."},
+  {id:5,text:"“Tu planteo es interesante, pero queda en lo descriptivo. Agregá una pregunta crítica sobre el sentido ético de evaluar solo con notas.”",correctType:"producto",correctQuality:"si",explain:"Señala un límite del producto y propone cómo complejizarlo."},
+  {id:6,text:"“¿Qué cambió en tu manera de entender la evaluación después de leer a Anijovich y revisar tus experiencias?”",correctType:"proceso",correctQuality:"si",explain:"Invita a revisar el propio proceso y hacerlo consciente."},
+  {id:7,text:"“Tu texto confunde mucho. No se entiende lo que querés decir.”",correctType:"producto",correctQuality:"no",explain:"Marca un problema real, pero sin precisión ni orientación."},
+  {id:8,text:"“Buen esfuerzo.”",correctType:"persona",correctQuality:"no",explain:"Reconoce actitud, pero es demasiado genérico para ser formativo."},
+  {id:9,text:"“Identificás una tensión real en la carrera. Releé la consigna y verificá si cada parte de tu texto dialoga con ella.”",correctType:"proceso",correctQuality:"si",explain:"Orienta el proceso de revisión con criterios claros."}
+];
+
+const container = document.getElementById("feedbackContainer");
+
+feedbackItems.forEach(item => {
+  const card = document.createElement("div");
+  card.className = "feedback-card";
+  card.dataset.id = item.id;
+  card.innerHTML = `
+    <div class="feedback-label">Comentario ${item.id}</div>
+    <div class="feedback-text">${item.text}</div>
+    <div class="options">
+      <span class="legend">Tipo:</span>
+      <button class="opt-btn" data-group="type" data-type="persona">💛 Persona</button>
+      <button class="opt-btn" data-group="type" data-type="producto">🔵 Producto</button>
+      <button class="opt-btn" data-group="type" data-type="proceso">🟢 Proceso</button>
+    </div>
+    <div class="options">
+      <span class="legend">Calidad:</span>
+      <button class="opt-btn" data-group="quality" data-type="si">✅ Formativa</button>
+      <button class="opt-btn" data-group="quality" data-type="no">⚠️ No formativa</button>
+    </div>
+    <div class="feedback-result" id="result-${item.id}"></div>
+  `;
+  container.appendChild(card);
+});
+
+container.addEventListener("click", e => {
+  const btn = e.target.closest(".opt-btn");
+  if (!btn) return;
+  const card = btn.closest(".feedback-card");
+  const group = btn.dataset.group;
+  const type = btn.dataset.type;
+  card.querySelectorAll(`.opt-btn[data-group="${group}"]`).forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+  if (group === "type") card.dataset.type = type;
+  if (group === "quality") card.dataset.quality = type;
+  document.getElementById(`result-${card.dataset.id}`).textContent = "";
+});
+
+document.getElementById("checkBtn").addEventListener("click", () => {
+  let correct = 0;
+  feedbackItems.forEach(item => {
+    const card = document.querySelector(`.feedback-card[data-id="${item.id}"]`);
+    const type = card.dataset.type;
+    const qual = card.dataset.quality;
+    const res = document.getElementById(`result-${item.id}`);
+    if (!type || !qual) {
+      res.textContent = "Completá tipo y calidad.";
+      res.className = "feedback-result incorrect";
+      return;
+    }
+    if (type === item.correctType && qual === item.correctQuality) {
+      correct++;
+      res.textContent = "✔ Correcto. " + item.explain;
+      res.className = "feedback-result correct";
+    } else {
+      res.textContent = "✳ Revisá. " + item.explain;
+      res.className = "feedback-result incorrect";
+    }
+  });
+  document.getElementById("summary").textContent =
+    `Coincidencias completas: ${correct} de ${feedbackItems.length}.`;
+});
+
+document.getElementById("pdfBtn").addEventListener("click", () => {
+  window.print();
+});
+</script>
+</body>
+</html>
