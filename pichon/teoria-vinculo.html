@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Guía de lectura de Teoría del vínculo</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 40px; 
+            background-color: #f9f9f9; 
+            color: #333; 
+            line-height: 1.6; 
+        }
+        h1 { 
+            color: #2c3e50; 
+            text-align: center; 
+            border-bottom: 2px solid #3498db; 
+            padding-bottom: 10px; 
+        }
+        p { margin-bottom: 20px; }
+        details { 
+            margin-bottom: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            background-color: #fff; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+        summary { 
+            font-weight: bold; 
+            cursor: pointer; 
+            padding: 15px; 
+            background-color: #ecf0f1; 
+            color: #2c3e50; 
+            transition: background-color 0.3s; 
+        }
+        summary:hover { background-color: #d6eaff; }
+        details[open] summary { background-color: #3498db; color: #fff; }
+        .relevancia { 
+            font-weight: bold; 
+            background-color: #e8f4fd; 
+            padding: 15px; 
+            margin: 15px; 
+            border-left: 5px solid #3498db; 
+            border-radius: 4px; 
+        }
+        .relevancia p { font-weight: normal; }
+        .term { 
+            color: #2980b9; 
+            text-decoration: underline; 
+            cursor: pointer; 
+        }
+        .term:hover { color: #e74c3c; }
+        /* Modal styles */
+        #modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+            padding-top: 60px; 
+        }
+        #modal-content { 
+            background-color: #fff; 
+            margin: 5% auto; 
+            padding: 20px; 
+            border: 1px solid #888; 
+            width: 80%; 
+            max-width: 600px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+        }
+        #close { 
+            color: #aaa; 
+            float: right; 
+            font-size: 28px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+        #close:hover { color: #000; }
+        #modal-title { color: #2c3e50; }
+        #modal-definition { font-style: italic; }
+        footer { 
+            text-align: center; 
+            font-size: 0.8em; 
+            color: #777; 
+            margin-top: 40px; 
+            border-top: 1px solid #ddd; 
+            padding-top: 10px; 
+        }
+    </style>
+    <script>
+        var definitions = {
+            "Ambivalencia": "Relación o vínculo con un objeto total en que el amor y el odio se dirigen al mismo objeto. Es característica de la posición depresiva y muestra la complejidad de los afectos humanos. Ejemplo: un hijo puede amar profundamente a su padre y, al mismo tiempo, sentir enojo hacia él por sus exigencias.",
+            "Aprendizaje de la realidad (trastorno del)": "La enfermedad mental es entendida como un trastorno del aprendizaje de la realidad. Surge cuando se interrumpe el proceso dialéctico normal entre los momentos de cierre y apertura para incorporar nueva información. Ejemplo: una persona con fobia evita enfrentarse a lo temido, bloqueando así la posibilidad de aprender algo nuevo sobre esa experiencia.",
+            "Área 1 (psiquis)": "Una de las tres dimensiones que integran a la persona como totalidad significativa. Se refiere al mundo interno, a los pensamientos, emociones y representaciones. Ejemplo: reflexionar sobre un conflicto emocional pertenece al área psíquica.",
+            "Área 2 (cuerpo)": "Segunda dimensión de la totalidad humana. En ella se inscriben los objetos internos y los vínculos corporales. Ejemplo: las contracturas musculares que acompañan al estrés son manifestaciones corporales de un conflicto interno.",
+            "Área 3 (mundo exterior)": "Tercera dimensión que representa el contacto del sujeto con su entorno social, material y simbólico. Ejemplo: las normas de un grupo de trabajo o los roles familiares pertenecen al mundo exterior.",
+            "Angustia agorafóbica": "Una de las dos angustias básicas. Es el miedo a quedar demasiado tiempo abierto al mundo exterior o a perder los límites. Es una angustia de tipo espacial. Ejemplo: quien teme salir de su casa puede sentir que el espacio abierto lo amenaza o lo desborda.",
+            "Angustia claustrofóbica": "La otra angustia básica. Es el miedo a quedarse encerrado o atrapado, tanto en un espacio físico como en un vínculo o una situación emocional. Se asocia al tiempo de espera. Ejemplo: una persona que no soporta estar mucho tiempo en una relación percibida como asfixiante manifiesta esta forma de angustia.",
+            "Bivalencia": "Concepto que reemplaza al de ambivalencia. Indica que siempre coexisten dos vínculos: uno con el objeto bueno y otro con el objeto malo. Ejemplo: alguien puede sentir ternura y resentimiento hacia su pareja al mismo tiempo.",
+            "Campo psicológico": "Objeto central de la investigación pichoniana. Incluye las interacciones entre el individuo y su medio. No hay sujeto sin contexto. Ejemplo: el estado de ánimo de un estudiante no puede entenderse sin considerar el clima grupal de su aula.",
+            "Conducta": "Expresión visible de un vínculo. Muestra cómo la personalidad actúa como agente modificador en una situación. Ejemplo: una sonrisa en medio de una discusión puede expresar un intento de reparación.",
+            "Despersonalización": "Sensación de pérdida del yo o de la identidad. Es un mecanismo defensivo frente al temor de comprometerse en un vínculo. Ejemplo: alguien puede decir “me siento como si no fuera yo” después de una ruptura afectiva.",
+            "Desrealización": "Versión proyectada de la despersonalización: el mundo se percibe como extraño o modificado. Ejemplo: tras un impacto emocional fuerte, una persona siente que “todo está raro” o “como si fuera una película”.",
+            "Dialéctica o espiral dialéctica": "Modo de pensamiento que concibe la realidad como un proceso de interacción constante entre lo interno y lo externo. Es una espiral en movimiento que integra contradicciones. Ejemplo: aprender de los errores implica revisar la experiencia, reelaborarla y volver a actuar de un modo nuevo.",
+            "Teoría de las tres D (depositante, depositario y depositado)": "Describe la circulación de los contenidos psíquicos entre las personas. El paciente (depositante) coloca sus objetos internos (depositado) en el analista (depositario). Ejemplo: un alumno deposita en su docente la confianza o el temor que antes sintió hacia figuras parentales.",
+            "E.C.R.O. (esquema conceptual, referencial y operativo)": "Instrumento de trabajo para construir la interpretación. Es una estructura en continuo movimiento que resuelve la tensión entre lo previo y lo nuevo. Ejemplo: un equipo de trabajo revisa periódicamente sus supuestos teóricos y modifica su plan de acción.",
+            "Gestalt": "Estructura que funciona como totalidad. Persona, vínculo y grupo son configuraciones globales en constante evolución. Ejemplo: un grupo de estudio se convierte en una Gestalt cuando sus miembros funcionan de manera integrada.",
+            "Identificación introyectiva": "Mecanismo por el cual el sujeto incorpora rasgos o roles del otro, haciéndolos propios. Ejemplo: una hija que adopta el tono de voz de su madre sin notarlo.",
+            "Identificación proyectiva": "Mecanismo que consiste en proyectar en otro aspectos propios, manteniéndose como espectador de la acción. Ejemplo: un estudiante acusa a su docente de impaciencia, cuando en realidad es él quien está ansioso.",
+            "Inconsciente y consciente": "No se conciben como ámbitos separados, sino como diferencias de grado dentro de la misma actividad psíquica. Ejemplo: un lapsus verbal revela un contenido inconsciente que roza la conciencia.",
+            "Interpretación": "Hipótesis que actúa como dato operacional, permitiendo la síntesis entre teoría y práctica. Ejemplo: cuando un terapeuta señala una contradicción que ayuda al paciente a entender su conducta.",
+            "Introspección": "Equivalente al autoanálisis. Es el diálogo interno entre el yo y sus objetos internos. Ejemplo: alguien que se pregunta “¿por qué reaccioné así?” está realizando una introspección.",
+            "Investigación institucional": "Estudia grandes grupos, sus estructuras, ideologías y modos de organización. Ejemplo: analizar cómo se toman las decisiones en una escuela.",
+            "Investigación psicosocial": "Explora cómo el sujeto se expresa hacia afuera, en relación con otros. Ejemplo: observar las interacciones en un grupo de vecinos durante una asamblea.",
+            "Investigación sociodinámica": "Examina las tensiones internas de los grupos y las relaciones de fuerza entre sus miembros. Ejemplo: detectar cómo un liderazgo rígido genera resistencia en un equipo.",
+            "Lo racional y lo irracional": "No se oponen, sino que forman un continuo. Lo irracional surge del grado de inconsciencia de los vínculos que actúan. Ejemplo: reaccionar con enojo sin entender por qué refleja un vínculo interno no elaborado.",
+            "Observador participante": "Quien observa también transforma el campo que estudia; nunca es neutral. Ejemplo: un docente que evalúa a su grupo influye en el clima del aula mientras lo observa.",
+            "Praxis": "Síntesis entre teoría y práctica que se alcanza en el momento mismo de la acción transformadora. Ejemplo: un proyecto comunitario que ajusta su plan a partir de los resultados obtenidos.",
+            "Psiquiatría del vínculo": "Perspectiva que reemplaza la visión individualista por una mirada centrada en las relaciones interpersonales. Ejemplo: analizar una depresión considerando no solo la biografía del sujeto, sino también sus lazos sociales.",
+            "Regresión transferencial": "Proceso mediante el cual el paciente revive experiencias pasadas dentro de la relación terapéutica, para reconfigurarlas y aprender de ellas. Ejemplo: un alumno que se siente tratado con injusticia puede estar reeditando un vínculo antiguo con la autoridad.",
+            "Relación de objeto": "Estructura interna del vínculo que el sujeto establece con las figuras significativas de su mundo interno. Ejemplo: el modo en que alguien imagina la mirada crítica de su padre incluso en ausencia de él.",
+            "Rol": "Función particular que una persona intenta comunicar al otro; es el aspecto cualitativo de la función social. Ejemplo: en un grupo de trabajo, el rol de mediador puede surgir espontáneamente en quien tiende a armonizar.",
+            "Situación": "Campo de acción donde el medio es el agente principal de cambio o de influencia. Ejemplo: una entrevista laboral es una situación que pone a prueba la adaptación del sujeto al contexto.",
+            "Status": "Nivel o jerarquía del rol; indica su valor cuantitativo o de prestigio. Ejemplo: dentro de un grupo, el coordinador tiene un status más alto que los demás miembros, aunque todos compartan un objetivo común.",
+            "Totalidad significativa": "Concepción integral del ser humano, compuesto por mente, cuerpo y mundo exterior. Ejemplo: un malestar físico puede entenderse también desde sus causas emocionales y sociales.",
+            "Unidad dialéctica de relación": "Vínculo en el que dos personas actúan una sobre la otra en un proceso de mutua transformación. Ejemplo: en la terapia, tanto el paciente como el analista cambian a lo largo del tratamiento.",
+            "Vínculo": "Estructura dinámica en continuo movimiento que engloba por igual al sujeto y al objeto. Toda conducta se origina en un vínculo y tiende a repetirse. Ejemplo: un estudiante que se desanima ante las críticas puede estar repitiendo un vínculo de desvalorización aprendido en su infancia."
+        };
+
+        function showDefinition(term) {
+            document.getElementById('modal-title').innerText = term;
+            document.getElementById('modal-definition').innerText = definitions[term] || 'Definición no encontrada.';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <h1>Guía de lectura de <i>Teoría del vínculo</i></h1>
+    <p style="text-align: center; font-weight: bold;">Enrique Pichon-Riviére</p>
+
+    <details>
+        <summary>Sobre el libro</summary>
+        <div>
+            <p>El libro Teoría del vínculo, recopilado por Fernando Taragano, reúne doce clases dictadas por Enrique Pichon-Riviére entre 1956 y 1957. En ellas, el autor desarrolla una concepción del sujeto profundamente relacional, donde el <span class="term" onclick="showDefinition('Vínculo')">vínculo</span> se entiende como una estructura dinámica en permanente movimiento que engloba al sujeto y al objeto en una trama de mutua influencia. Esta teoría marcó un punto de inflexión en el pasaje de una psiquiatría intrapsíquica a una psiquiatría social, centrada en la interacción dialéctica entre los aspectos internos y externos del individuo. Desde este enfoque, el aprendizaje, la comunicación y la transformación social se piensan como momentos de un mismo proceso. El propósito de esta guía es ofrecer una lectura que vincule cada capítulo con los fundamentos de un Preproyecto Comunitario (PPC), concebido como un dispositivo cíclico de práctica → reflexión → praxis transformadora.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 1. Consideraciones generales acerca del vínculo</summary>
+        <div>
+            <p>Pichon-Riviére presenta aquí las bases de la <span class="term" onclick="showDefinition('Psiquiatría del vínculo')">psiquiatría del vínculo</span>. Describe las distintas formas que adoptan los vínculos patológicos —paranoico, depresivo, obsesivo, entre otros— y destaca que toda relación humana es mixta, es decir, que combina de manera simultánea aspectos de diferentes estructuras vinculares. El autor subraya que la <span class="term" onclick="showDefinition('Conducta')">conducta</span> siempre tiene una finalidad y que el estudio de los vínculos requiere considerar esas finalidades, que organizan la estructura vincular.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 1: Diagnóstico vivo).</strong><p> Este capítulo orienta a comprender que la <span class="term" onclick="showDefinition('Investigación psicosocial')">investigación psicosocial</span> debe complementarse con una investigación social dirigida en una triple perspectiva: psicosocial, sociológica e institucional. Solo una lectura que articule estas dimensiones permite captar los procesos del “adentro” a partir de lo que ocurre en el “afuera”. En un PPC, este enfoque es esencial para construir un diagnóstico vivo y participativo.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 2. Patología del vínculo</summary>
+        <div>
+            <p>Pichon-Riviére diferencia dos conceptos: <span class="term" onclick="showDefinition('Relación de objeto')">Relación de objeto</span>, que remite a la estructura interna del <span class="term" onclick="showDefinition('Vínculo')">vínculo</span>. <span class="term" onclick="showDefinition('Vínculo')">Vínculo</span>, que es más concreto, porque incluye la <span class="term" onclick="showDefinition('Conducta')">conducta</span> observable y las motivaciones psicológicas que la sostienen. Define el <span class="term" onclick="showDefinition('Vínculo')">vínculo</span> como una estructura dinámica que tiende a repetirse y que se impulsa por motivaciones inconscientes. Introduce, además, la noción de <span class="term" onclick="showDefinition('Bivalencia')">bivalencia</span>, que reemplaza a la tradicional “<span class="term" onclick="showDefinition('Ambivalencia')">ambivalencia</span>”: en todo <span class="term" onclick="showDefinition('Vínculo')">vínculo</span> coexisten simultáneamente dos polos, uno ligado al objeto bueno y otro al objeto malo. Esta tensión interna es constitutiva y marca la complejidad de toda relación humana.</p>
+        </div>
+    </details>
+
+<details>
+        <summary>Capítulo 3. Vínculo, comunicación y aprendizaje</summary>
+        <div>
+            <p>El <span class="term" onclick="showDefinition('Vínculo')">vínculo</span> no es parcial, sino que compromete a la totalidad de la persona: el sujeto entero entra en juego. El aprendizaje de la realidad externa depende del aprendizaje previo de la realidad interna, de los vínculos ya establecidos y de las experiencias previas de comunicación. Pichon-Riviére propone una visión espiralada del proceso dialéctico, en la que lo interno y lo externo se interpenetran en un movimiento continuo de apertura y cierre.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Lógica Cíclica).</strong><p> Esta idea de la <span class="term" onclick="showDefinition('Dialéctica o espiral dialéctica')">espiral dialéctica</span> constituye el núcleo teórico de la lógica del PPC: un proceso de ida y vuelta entre la práctica, la reflexión y la <span class="term" onclick="showDefinition('Praxis')">praxis</span> transformadora. El aprendizaje comunitario se concibe, así, como un movimiento que integra experiencia y reelaboración crítica.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 4. Vínculo racional e irracional</summary>
+        <div>
+            <p>Pichon-Riviére rechaza la oposición tajante entre razón y sinrazón: lo racional y lo irracional se diferencian solo por el grado de conciencia de los vínculos internos que están actuando. <span class="term" onclick="showDefinition('Lo racional y lo irracional')">Lo irracional</span> se manifiesta cuando esos vínculos permanecen inconscientes y, por tanto, determinan la <span class="term" onclick="showDefinition('Conducta')">conducta</span> sin que el sujeto lo advierta. El proceso terapéutico —y también el educativo— busca transformar lo irracional en racional, es decir, hacer consciente lo inconsciente y reestructurar los aprendizajes a través de un nuevo movimiento de la <span class="term" onclick="showDefinition('Dialéctica o espiral dialéctica')">espiral dialéctica</span>. La <span class="term" onclick="showDefinition('Regresión transferencial')">regresión transferencial</span> no se entiende como retroceso, sino como una oportunidad de nuevo aprendizaje de la realidad.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 5. Vínculo, campos de interacción y de conducta</summary>
+        <div>
+            <p>El autor sostiene que el estudio del comportamiento humano debe incluir tanto la <span class="term" onclick="showDefinition('Situación')">situación</span> (donde el medio es el agente) como la <span class="term" onclick="showDefinition('Conducta')">conducta</span> (donde el agente es la personalidad). Desarrolla la teoría de las tres áreas —psiquis, cuerpo y mundo exterior— como una manera sistemática de ver, sentir y explicar la experiencia.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 1: Contexto y foco).</strong><p> Esta perspectiva permite superar la dicotomía individuo/sociedad. El <span class="term" onclick="showDefinition('Campo psicológico')">campo psicológico</span> es, en realidad, un campo de interacciones donde se cruzan los tres niveles. La teoría de las tres áreas ofrece una herramienta de análisis integral de la persona en su <span class="term" onclick="showDefinition('Totalidad significativa')">totalidad significativa</span>. Aquí aparece también el <span class="term" onclick="showDefinition('E.C.R.O. (esquema conceptual, referencial y operativo)')">E.C.R.O.</span> (esquema conceptual referencial y operativo), que funciona como un instrumento de interpretación dinámica, capaz de articular teoría y práctica en una verdadera <span class="term" onclick="showDefinition('Praxis')">praxis</span>.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 6. Vínculo e identificación introyectiva y proyectiva</summary>
+        <div>
+            <p>Pichon-Riviére examina los procesos de identificación, tanto <span class="term" onclick="showDefinition('Identificación introyectiva')">introyectiva</span> (incorporación de rasgos del otro) como <span class="term" onclick="showDefinition('Identificación proyectiva')">proyectiva</span> (atribución de rasgos propios al otro), y los vincula con la teoría de los roles. Afirma que el terapeuta —o, en términos comunitarios, el agente social— debe poder asumir el <span class="term" onclick="showDefinition('Rol')">rol</span> que el otro le adjudica, para comprender el tipo de <span class="term" onclick="showDefinition('Vínculo')">vínculo</span> que se establece y cómo se estructura la relación.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 3: Roles y vocerías).</strong><p> La teoría de los roles resulta central en el trabajo comunitario. Toda relación social implica un intercambio permanente de adjudicación y asunción de roles. El grado de coherencia entre los distintos roles que una persona puede desempeñar indica su madurez psicosocial. En la planificación participativa, promover vocerías rotativas favorece la comprensión de que todos los miembros del grupo pueden ocupar posiciones diferentes sin que el liderazgo se rigidice.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 7. Vínculo y unidad dialéctica de interacción</summary>
+        <div>
+            <p>Pichon-Riviére considera que el campo de análisis debe tratarse como un campo operacional, semejante al de la psicología experimental. El <span class="term" onclick="showDefinition('Observador participante')">observador</span> nunca es externo ni neutro: siempre es un participante que modifica el campo que observa. La relación paciente-terapeuta, o grupo-coordinador, forma una <span class="term" onclick="showDefinition('Unidad dialéctica de relación')">unidad dialéctica</span> de interacción, en la que ambos actúan uno sobre el otro en un proceso de mutua transformación.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 4: Monitoreo y ajuste).</strong><p> El reconocimiento del carácter participativo del observador legitima la necesidad de un diagnóstico vivo y de un monitoreo constante de las acciones comunitarias. No hay intervención sin efecto: toda acción modifica el campo social y debe ser evaluada desde esa misma dinámica.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 8. Vínculo y dialéctica del aprendizaje</summary>
+        <div>
+            <p>La enfermedad mental se conceptualiza como una perturbación del aprendizaje de la realidad, producto de una interrupción en el movimiento dialéctico de apertura y cierre necesario para incorporar nueva información. El ser humano necesita comunicarse; la comunicación es condición de su equilibrio psíquico.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Validación y objetivos).</strong><p> El proceso del PPC comparte esa lógica: convertir la necesidad en acción implica aprender a reconocer las propias limitaciones y transformarlas colectivamente. La psicoterapia, según Pichon-Riviére, busca recuperar la cualidad dialéctica del <span class="term" onclick="showDefinition('Vínculo')">vínculo</span>, y de manera análoga, el trabajo comunitario apunta a restablecer los canales de comunicación, de modo que el grupo pueda pensarse, aprender y transformarse.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 9. Vínculo e interpretación</summary>
+        <div>
+            <p>El psicoanálisis, para Pichon-Riviére, es una teoría operacional: su función no es solo explicar, sino también transformar. La <span class="term" onclick="showDefinition('Interpretación')">interpretación</span> del terapeuta devuelve al paciente su propio material, pero reconfigurado, generando un proceso de <span class="term" onclick="showDefinition('Dialéctica o espiral dialéctica')">espiral dialéctica</span> que incluye observación, devolución y reelaboración. Paciente y terapeuta —o, en un sentido más amplio, grupo y coordinador— constituyen una <span class="term" onclick="showDefinition('Gestalt')">Gestalt</span>, una totalidad significativa que se reorganiza a través de la palabra compartida.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 10. El E.C.R.O. (Esquema Conceptual, Referencial y Operativo)</summary>
+        <div>
+            <p>El <span class="term" onclick="showDefinition('E.C.R.O. (esquema conceptual, referencial y operativo)')">E.C.R.O.</span> se presenta como una estructura conceptual en movimiento continuo, capaz de integrar lo teórico y lo empírico, lo a priori y lo a posteriori. Es un sistema abierto, flexible y autorregulador que permite comprender la realidad sin clausurarla.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Metodología y ajuste dialéctico).</strong><p> El <span class="term" onclick="showDefinition('E.C.R.O. (esquema conceptual, referencial y operativo)')">E.C.R.O.</span> es el instrumento metodológico del equipo de trabajo. Debe mantenerse plástico, revisable y dialéctico. En la práctica del PPC, esto se traduce en la disposición a revisar hipótesis, ajustar estrategias y romper estructuras internas cuando se enfrentan nuevas situaciones. La “regla de ajuste” del semáforo quincenal refleja esta idea: rectificar no es retroceder, sino seguir aprendiendo.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 11. Teoría de las tres D (depositante, depositario y depositado). Rol y status</summary>
+        <div>
+            <p>Pichon-Riviére formula la <span class="term" onclick="showDefinition('Teoría de las tres D (depositante, depositario y depositado)')">teoría de las tres D</span>, que describe la dinámica transferencial entre el paciente (depositante), el analista (depositario) y los contenidos psíquicos (depositado). Esta teoría se enlaza con la de los roles, subrayando que toda relación terapéutica o social depende de la confianza y del reconocimiento mutuo de funciones. El <span class="term" onclick="showDefinition('Rol')">rol</span> define la cualidad de la función; el <span class="term" onclick="showDefinition('Status')">status</span>, su nivel de prestigio o autoridad.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Mapa de actores y alianzas).</strong><p> Esta teoría ayuda a comprender la circulación del poder y la resistencia en una comunidad. El agente comunitario debe actuar como un depositario desaprensivo, abierto a recibir los contenidos que el grupo proyecta, sin juicios previos. El estudio de los roles y los status permite construir un mapa de actores, identificar alianzas, conflictos y oportunidades para la comunicación transformadora.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 12. Vínculo y terapia psicoanalítica</summary>
+        <div>
+            <p>Pichon-Riviére cierra el ciclo reafirmando que la enfermedad mental es un trastorno del aprendizaje de la realidad, y que el proceso terapéutico consiste en ayudar al sujeto a reorganizar una nueva <span class="term" onclick="showDefinition('Gestalt')">Gestalt</span>, es decir, una forma más integrada de comprenderse y actuar en el mundo. El analista no introduce contenidos nuevos: facilita que el paciente reordene los que ya posee.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Praxis transformadora).</strong><p> En el ámbito comunitario, la tarea del grupo es semejante: reorganizar su saber sobre sí mismo para superar los “círculos viciosos” de repetición y estancamiento. La <span class="term" onclick="showDefinition('Praxis')">praxis</span> transformadora implica convertir el conocimiento en acción colectiva. Trabajar con un esquema coherente y una metodología compartida asegura un nivel de organización que mantiene el sentido científico y ético de la intervención.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Síntesis final</summary>
+        <div>
+            <p>La Teoría del <span class="term" onclick="showDefinition('Vínculo')">vínculo</span> propone una mirada compleja y profundamente humana sobre el lazo social. Para Pichon-Riviére, el <span class="term" onclick="showDefinition('Vínculo')">vínculo</span> no es solo objeto de estudio: es también el método y la materia misma del cambio. El Preproyecto Comunitario se inscribe en esa misma lógica: conocer, actuar y transformarse son momentos de una única espiral de aprendizaje. El <span class="term" onclick="showDefinition('Vínculo')">vínculo</span> es, al mismo tiempo, la condición, el camino y el horizonte de toda práctica que busque transformar la realidad.</p>
+        </div>
+    </details>
+
+    <!-- Modal -->
+    <div id="modal">
+        <div id="modal-content">
+            <span id="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-definition"></p>
+        </div>
+    </div>
+
+    <footer>Stella M. Cao - Psicología Comunitaria 2025</footer>
+</body>
+</html>
