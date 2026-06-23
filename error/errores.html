@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Mapa Mental Exportado</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<style>
+* { margin: 0; padding: 0; }
+body { background: #ffffff;  }
+#mindmap { display: block; width: 100vw; height: 100vh; }
+.markmap-link { stroke-width: 2px !important; stroke-dasharray: none; stroke-opacity: 1; }
+.markmap { opacity: 1; }
+.markmap-foreign {
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+}
+.markmap-foreign > div {
+    background: transparent !important;
+    padding: 0 !important;
+    overflow: visible !important;
+}
+line {
+    display: none !important;
+    stroke-width: 0 !important;
+    stroke: transparent !important;
+}
+.mm-node-inner table { border-collapse: collapse; min-width: max-content; margin: 4px 0; }
+.mm-node-inner td, .mm-node-inner th { white-space: normal; padding: 4px 8px; }
+.mm-node-inner img { max-width: 100%; height: auto; display: block; margin: 4px auto; }
+.mm-node-inner code { background: rgba(128,128,128,.25); padding: 2px 4px; border-radius: 3px; font-family: monospace; }
+</style>
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view"></script>
+<script>
+const root = {"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Tipos de errores</div>","depth":0,"payload":{"tag":"h2","lines":"0,1","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Errores no inteligentes</div>","depth":1,"payload":{"tag":"h3","lines":"2,3","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Qu&#xe9; son: surgen por azar, distracci&#xf3;n, cansancio o ansiedad</div>","depth":2,"payload":{"tag":"h4","lines":"4,5","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Ejemplo: saltear una parte de la consigna por apuro</div>","depth":2,"payload":{"tag":"h4","lines":"6,7","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Intervenci&#xf3;n: dar tiempo para releer y aclarar qu&#xe9; se pide</div>","depth":2,"payload":{"tag":"h4","lines":"8,9","fold":1}}]},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Errores inteligentes</div>","depth":1,"payload":{"tag":"h3","lines":"10,11","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Qu&#xe9; son: muestran una l&#xf3;gica parcial en construcci&#xf3;n</div>","depth":2,"payload":{"tag":"h4","lines":"12,13","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Ejemplo: decir &#x201c;se dorme&#x201d; aplicando una regla regular a un verbo irregular</div>","depth":2,"payload":{"tag":"h4","lines":"14,15","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Intervenci&#xf3;n: reconocer la l&#xf3;gica y mostrar el l&#xed;mite de la regla</div>","depth":2,"payload":{"tag":"h4","lines":"16,17","fold":1}}]},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Errores por interpretaci&#xf3;n de consignas</div>","depth":1,"payload":{"tag":"h3","lines":"18,19","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Qu&#xe9; son: el estudiante no comprende exactamente qu&#xe9; pide la tarea</div>","depth":2,"payload":{"tag":"h4","lines":"20,21","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Ejemplo: la consigna pide comparar y el estudiante solo resume</div>","depth":2,"payload":{"tag":"h4","lines":"22,23","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Intervenci&#xf3;n: aclarar verbos como explicar, justificar, comparar o analizar</div>","depth":2,"payload":{"tag":"h4","lines":"24,25","fold":1}}]},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Errores por oficio de alumno</div>","depth":1,"payload":{"tag":"h3","lines":"26,27","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Qu&#xe9; son: se responde seg&#xfa;n lo que se cree que la escuela espera</div>","depth":2,"payload":{"tag":"h4","lines":"28,29","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Ejemplo: repetir una frase del docente aunque se pida opini&#xf3;n fundamentada</div>","depth":2,"payload":{"tag":"h4","lines":"30,31","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Intervenci&#xf3;n: explicitar reglas del intercambio y habilitar respuestas argumentadas</div>","depth":2,"payload":{"tag":"h4","lines":"32,33","fold":1}}]},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Errores por concepciones previas</div>","depth":1,"payload":{"tag":"h3","lines":"34,35","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Qu&#xe9; son: lo nuevo se interpreta desde ideas anteriores o representaciones sociales</div>","depth":2,"payload":{"tag":"h4","lines":"36,37","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Ejemplo: clasificar los hongos como plantas porque &#x201c;crecen en la tierra&#x201d;</div>","depth":2,"payload":{"tag":"h4","lines":"38,39","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Intervenci&#xf3;n: hacer visibles esas ideas y confrontarlas con contraejemplos</div>","depth":2,"payload":{"tag":"h4","lines":"40,41","fold":1}}]},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Errores por operaciones intelectuales inadecuadas</div>","depth":1,"payload":{"tag":"h3","lines":"42,43","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Qu&#xe9; son: falla la comparaci&#xf3;n, la inferencia, la jerarquizaci&#xf3;n o la s&#xed;ntesis</div>","depth":2,"payload":{"tag":"h4","lines":"44,45","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Ejemplo: en una s&#xed;ntesis, copiar detalles y perder la idea principal</div>","depth":2,"payload":{"tag":"h4","lines":"46,47","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Intervenci&#xf3;n: ense&#xf1;ar estrategias y modelar c&#xf3;mo se piensa la tarea</div>","depth":2,"payload":{"tag":"h4","lines":"48,49","fold":1}}]},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Errores por sobrecarga cognitiva</div>","depth":1,"payload":{"tag":"h3","lines":"50,51","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Qu&#xe9; son: la tarea exige retener demasiada informaci&#xf3;n a la vez</div>","depth":2,"payload":{"tag":"h4","lines":"52,53","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Ejemplo: en una consigna con varios pasos, responder solo el primero</div>","depth":2,"payload":{"tag":"h4","lines":"54,55","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Intervenci&#xf3;n: dividir la tarea en etapas y ordenar la informaci&#xf3;n</div>","depth":2,"payload":{"tag":"h4","lines":"56,57","fold":1}}]},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Errores por transferencia mec&#xe1;nica</div>","depth":1,"payload":{"tag":"h3","lines":"58,59","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Qu&#xe9; son: se usa una estrategia de un contexto en otro sin advertir diferencias</div>","depth":2,"payload":{"tag":"h4","lines":"60,61","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Ejemplo: aplicar el mismo esquema de an&#xe1;lisis a problemas muy distintos</div>","depth":2,"payload":{"tag":"h4","lines":"62,63","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Intervenci&#xf3;n: comparar semejanzas y diferencias; preguntar cu&#xe1;ndo sirve y cu&#xe1;ndo no</div>","depth":2,"payload":{"tag":"h4","lines":"64,65","fold":1}}]},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Errores por complejidad del contenido</div>","depth":1,"payload":{"tag":"h3","lines":"66,67","fold":1},"children":[{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Qu&#xe9; son: el contenido es abstracto, contraintuitivo o alejado del sentido com&#xfa;n</div>","depth":2,"payload":{"tag":"h4","lines":"68,69","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Ejemplo: creer que la fuerza de la mano sigue actuando sobre una moneda ya lanzada</div>","depth":2,"payload":{"tag":"h4","lines":"70,71","fold":1}},{"content":"<div class=\"mm-node-inner\" style=\"display: inline-block; border-radius: 0px; border: none; border-bottom: 2px solid #2c3e50; background-color: color-mix(in srgb, #2c3e50 12%, #ffffff); padding: 7px 14px; box-sizing: border-box; font-family: Inter, sans-serif; font-size: 20px; font-weight: normal; font-style: normal; text-transform: none; color: #2c3e50; max-width: 280px; white-space: normal; word-break: break-word;; min-width: 280px; white-space: normal; word-break: break-word;\">Intervenci&#xf3;n: trabajar los nudos de dificultad y confrontar intuiciones con evidencias</div>","depth":2,"payload":{"tag":"h4","lines":"72,73","fold":1}}]}]};
+const levels = [{"color":"#2c3e50","textColor":"#2c3e50","fontSize":20,"fontFamily":"Inter, sans-serif","fontWeight":"normal","italic":false,"uppercase":false,"spacingVertical":20,"paddingX":14,"paddingY":7,"borderColor":"transparent","borderWidth":0,"borderStyle":"solid","nodeShape":"square","minWidth":280,"maxWidth":280},{"color":"#2c3e50","textColor":"#2c3e50","fontSize":20,"fontFamily":"Inter, sans-serif","fontWeight":"normal","italic":false,"uppercase":false,"spacingVertical":20,"paddingX":14,"paddingY":7,"borderColor":"transparent","borderWidth":0,"borderStyle":"solid","nodeShape":"square","minWidth":280,"maxWidth":280},{"color":"#2c3e50","textColor":"#2c3e50","fontSize":20,"fontFamily":"Inter, sans-serif","fontWeight":"normal","italic":false,"uppercase":false,"spacingVertical":20,"paddingX":14,"paddingY":7,"borderColor":"transparent","borderWidth":0,"borderStyle":"solid","nodeShape":"square","minWidth":280,"maxWidth":280}];
+const { Markmap } = window.markmap;
+
+const colorFn = (...args) => {
+  const node = args[0];
+  const lvl = levels[node.depth] || levels[levels.length - 1];
+  return lvl?.color || '#2E86C1';
+};
+
+const maxSpacing = levels.reduce((max, lvl) =>
+  Math.max(max, lvl.spacingVertical ?? 5), 5);
+
+const mm = Markmap.create('#mindmap', { 
+  spacingHorizontal: 100, 
+  spacingVertical: maxSpacing, 
+  color: colorFn, 
+  maxWidth: 400, 
+  duration: 400,
+  paddingX: 0
+}, root);
+
+const origToggleNode = mm.toggleNode.bind(mm);
+mm.toggleNode = async (node, recursive) => {
+  await origToggleNode(node, recursive);
+  mm.fit();
+};
+
+let observer = null;
+const adjustLayout = () => {
+  const svg = document.getElementById('mindmap');
+  if (!svg) return;
+  
+  if (observer) observer.disconnect();
+
+  const alignByLevel = false;
+
+  // ── Step 1: Center boxes and circles ──────────────────────────────
+  svg.querySelectorAll('.markmap-node').forEach(nodeGroup => {
+    const circle = nodeGroup.querySelector('circle');
+    const fo     = nodeGroup.querySelector('foreignObject');
+    if (!fo) return;
+    const h = parseFloat(fo.getAttribute('height') || 0);
+    if (h > 0) {
+      const targetY = String(-h / 2);
+      if (fo.getAttribute('y') !== targetY) {
+        fo.setAttribute('y', targetY);
+      }
+    }
+    if (circle) {
+      if (circle.getAttribute('cy') !== '0') circle.setAttribute('cy', '0');
+      if (nodeGroup.lastElementChild !== circle) nodeGroup.appendChild(circle);
+    }
+  });
+
+  // ── Step 2 (optional): Align nodes by depth level ─────────────────
+  if (alignByLevel) {
+    const nodeGroups = Array.from(svg.querySelectorAll('.markmap-node'));
+    const depthMaxX = new Map();
+    nodeGroups.forEach(nodeGroup => {
+      const data = nodeGroup.__data__;
+      if (!data) return;
+      const depth = data.state?.depth !== undefined ? data.state.depth - 1 : (data.depth ?? 0);
+      const rect = data.state?.rect;
+      if (!rect) return;
+      const currentMaxX = depthMaxX.get(depth) ?? rect.x;
+      depthMaxX.set(depth, Math.max(currentMaxX, rect.x));
+    });
+
+    nodeGroups.forEach(nodeGroup => {
+      const data = nodeGroup.__data__;
+      if (!data) return;
+      const depth = data.state?.depth !== undefined ? data.state.depth - 1 : (data.depth ?? 0);
+      const rect  = data.state?.rect;
+      if (!rect) return;
+      const targetX = depthMaxX.get(depth) ?? rect.x;
+      const deltaX  = targetX - rect.x;
+      if (Math.abs(deltaX) < 0.5) return;
+
+      const transform = nodeGroup.getAttribute('transform') || '';
+      const parts = transform.replace('translate(', '').replace(')', '').split(',');
+      if (parts.length < 2) return;
+      const ty = parseFloat(parts[1]);
+      nodeGroup.setAttribute('transform', 'translate(' + targetX + ',' + ty + ')');
+    });
+  }
+
+  // ── Step 3: Redraw link paths ──────────────────────────────────────
+  svg.querySelectorAll('.markmap-link').forEach(path => {
+    const data = path.__data__;
+    if (!data || !data.source || !data.target) return;
+
+    const sourceRect = data.source.state?.rect;
+    const targetRect = data.target.state?.rect;
+    if (!sourceRect || !targetRect) return;
+
+    const getEffectiveX = (nodeData) => {
+      if (!alignByLevel) return nodeData.state?.rect?.x ?? 0;
+      const nodeGroups = Array.from(svg.querySelectorAll('.markmap-node'));
+      const depthMaxX = new Map();
+      nodeGroups.forEach(ng => {
+        const d = ng.__data__;
+        if (!d) return;
+        const r = d.state?.rect;
+        if (!r) return;
+        const depth = d.state?.depth !== undefined ? d.state.depth - 1 : (d.depth ?? 0);
+        depthMaxX.set(depth, Math.max(depthMaxX.get(depth) ?? r.x, r.x));
+      });
+      const depth = nodeData.state?.depth !== undefined ? nodeData.state.depth - 1 : (nodeData.depth ?? 0);
+      return depthMaxX.get(depth) ?? (nodeData.state?.rect?.x ?? 0);
+    };
+
+    const y0 = sourceRect.y;
+    const y1 = targetRect.y;
+    const x0 = (alignByLevel ? getEffectiveX(data.source) : sourceRect.x) + sourceRect.width;
+    const x1 = alignByLevel ? getEffectiveX(data.target) : targetRect.x;
+    const w  = targetRect.width;
+
+    const newD = 'M ' + x0 + ',' + y0 + ' C ' + ((x0 + x1) / 2) + ',' + y0 + ' ' + ((x0 + x1) / 2) + ',' + y1 + ' ' + x1 + ',' + y1 + ' L ' + (x1 + w) + ',' + y1;
+    if (path.getAttribute('d') !== newD) path.setAttribute('d', newD);
+  });
+
+  if (observer) {
+    observer.observe(svg, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['transform', 'd', 'y', 'cy', 'height']
+    });
+  }
+};
+
+adjustLayout();
+let adjustTimeout = null;
+observer = new MutationObserver(() => {
+  adjustLayout();
+  if (adjustTimeout) clearTimeout(adjustTimeout);
+  adjustTimeout = setTimeout(() => {
+    adjustLayout();
+  }, 150);
+});
+observer.observe(document.getElementById('mindmap'), {
+  childList: true,
+  subtree: true,
+  attributes: true,
+  attributeFilter: ['transform', 'd', 'y', 'cy', 'height']
+});
+
+setTimeout(() => {
+  mm.fit();
+  adjustLayout();
+}, 550);
+</script>
+</body>
+</html>
