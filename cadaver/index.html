@@ -89,7 +89,6 @@
             opacity: 0.9;
         }
 
-        /* Glassmorphism Card */
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
@@ -195,7 +194,7 @@
             flex-wrap: wrap;
         }
 
-        input[type="text"] {
+        input[type="text"], input[type="password"] {
             flex: 1;
             min-width: 200px;
             background: rgba(10, 8, 20, 0.7);
@@ -209,7 +208,7 @@
             transition: all 0.3s ease;
         }
 
-        input[type="text"]:focus {
+        input[type="text"]:focus, input[type="password"]:focus {
             border-color: var(--accent-glow);
             box-shadow: 0 0 10px rgba(199, 125, 255, 0.25);
         }
@@ -297,7 +296,7 @@
 
         .finished-title {
             font-family: var(--font-title);
-            font-size: 2rem;
+            font-size: 2.1rem;
             color: var(--accent-gold);
             margin-bottom: 6px;
         }
@@ -311,19 +310,23 @@
             padding: 24px;
             border-radius: 12px;
             border: 1px solid rgba(224, 169, 109, 0.3);
-            max-height: 450px;
+            max-height: 480px;
             overflow-y: auto;
             white-space: pre-wrap;
             box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        .story-paragraph {
+            margin-bottom: 16px;
         }
 
         .author-tag {
             color: var(--accent-glow);
             font-family: var(--font-body);
             font-weight: 700;
-            font-size: 0.9rem;
-            margin-top: 14px;
-            display: block;
+            font-size: 0.85rem;
+            margin-left: 8px;
+            opacity: 0.9;
         }
 
         /* Autores */
@@ -371,7 +374,7 @@
         .docente-link {
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.35);
             font-size: 0.8rem;
             cursor: pointer;
             text-decoration: underline;
@@ -440,7 +443,6 @@
             padding: 0;
         }
 
-        /* Toast */
         #toast {
             position: fixed;
             bottom: 25px;
@@ -479,7 +481,7 @@
             <div class="subtitle">Escritura Colectiva a Ciegas</div>
         </header>
 
-        <!-- PANTALLA ESTUDIANTE (MODO A CIEGAS) -->
+        <!-- MODO JUEGO ACTIVO (A CIEGAS) -->
         <div id="activeGameView" style="display: flex; flex-direction: column; gap: 22px;">
             
             <!-- Últimas 15 palabras -->
@@ -533,7 +535,7 @@
                 <button class="btn-secondary" onclick="exportStory()">
                     <span>📥 Descargar archivo (.txt)</span>
                 </button>
-                <button class="btn-danger" onclick="confirmResetFromView()">
+                <button class="btn-danger" onclick="confirmResetStory()">
                     <span>🔄 Iniciar nueva historia</span>
                 </button>
             </div>
@@ -549,7 +551,7 @@
 
         <!-- Acceso discreto exclusivo para Docente -->
         <footer>
-            <button class="docente-link" onclick="openDocenteModal()">🔒 Acceso Docente / Administración</button>
+            <button class="docente-link" onclick="openDocenteModal()">🔒 Acceso Docente</button>
         </footer>
     </div>
 
@@ -562,12 +564,11 @@
             </div>
             
             <div id="passwordAuthSection">
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">Ingresa la clave docente para acceder al control de la obra:</p>
-                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <input type="password" id="docentePassword" placeholder="Clave docente" style="flex:1;" />
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">Ingresa la contraseña docente para acceder al control del juego:</p>
+                <div style="display: flex; gap: 10px;">
+                    <input type="password" id="docentePassword" placeholder="Contraseña" style="flex:1;" />
                     <button class="btn-primary" onclick="verifyDocentePass()" style="min-width: 100px;">Entrar</button>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--accent-gold);">Clave docente por defecto: <strong>cadavar</strong></p>
             </div>
 
             <div id="docenteControlsSection" style="display: none; flex-direction: column; gap: 14px;">
@@ -593,7 +594,7 @@
     <!-- 🔥 Firebase Realtime Database -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
         const firebaseConfig = {
             databaseURL: "https://cadaverexquisito-66d1a-default-rtdb.firebaseio.com/"
@@ -602,11 +603,12 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
         const storyRef = ref(database, "cadaverExquisito");
-        const statusRef = ref(database, "cadaverExquisito_status");
 
         let currentFullStory = [];
-        let isFinishedMode = false;
-        const DOCENTE_PASS = "cadavar"; // Clave docente
+        let isGameFinished = false;
+
+        // La clave docente exacta solicitada: "Final de Juego" (aceptando cualquier variación de mayúsculas/minúsculas)
+        const DOCENTE_PASS_TARGET = "final de juego";
 
         function showToast(msg) {
             const toast = document.getElementById("toast");
@@ -624,13 +626,13 @@
             counter.textContent = `${words} palabra${words === 1 ? '' : 's'} escrita${words === 1 ? '' : 's'}`;
         });
 
-        // 📌 Enviar línea (Estudiante)
+        // 📌 Enviar línea (Estudiante o Docente)
         function submitLine() {
             let line = document.getElementById("lineInput").value.trim();
             let nickname = document.getElementById("nicknameInput").value.trim();
 
-            // Si la docente escribe secretamente "Final de juego" como nombre, se activa el final
-            if (nickname.toLowerCase() === "final de juego") {
+            // Si el nombre ingresado es "Final de juego" (o cualquier variación como "final de juego"), activa el final de juego
+            if (nickname.toLowerCase() === DOCENTE_PASS_TARGET) {
                 triggerFinalGameDocente();
                 return;
             }
@@ -654,42 +656,54 @@
             });
         }
 
-        // 📌 Activar Final de juego desde Panel Docente o atajo secreto
+        // 📌 Revelar la Obra Completa para TODOS enviando el marcador de finalización a storyRef
         function triggerFinalGameDocente() {
-            set(statusRef, { finished: true, endedAt: Date.now() }).then(() => {
+            push(storyRef, {
+                text: "__END_GAME_MARKER__",
+                author: "Final de Juego",
+                timestamp: Date.now()
+            }).then(() => {
                 closeDocenteModal();
-                showToast("📜 ¡Obra revelada para todos los participantes!");
+                showToast("📜 ¡Obra completa revelada para todos!");
+            }).catch(err => {
+                showToast("❌ Error al finalizar la partida.");
+                console.error(err);
             });
         }
 
-        // Escuchar estado en tiempo real
-        onValue(statusRef, (snapshot) => {
-            const val = snapshot.val();
-            isFinishedMode = val && val.finished === true;
-            renderViewMode();
-        });
-
-        // Escuchar turnos en tiempo real
+        // 📌 Escuchar turnos e inspeccionar si la historia está finalizada
         onValue(storyRef, (snapshot) => {
             let lastSnippet = "";
             let authorsSet = new Set();
             currentFullStory = [];
+            isGameFinished = false;
 
             if (snapshot.exists()) {
                 snapshot.forEach((childSnapshot) => {
                     let data = childSnapshot.val();
-                    currentFullStory.push(data);
 
-                    const words = data.text.trim().split(/\s+/);
-                    lastSnippet = words.slice(-15).join(' ');
-                    if (words.length > 15) {
-                        lastSnippet = "... " + lastSnippet;
+                    // Detectar si se ingresó "Final de juego" como marcador o nombre de autor
+                    if (
+                        (data.author && data.author.toLowerCase() === DOCENTE_PASS_TARGET) ||
+                        data.text === "__END_GAME_MARKER__"
+                    ) {
+                        isGameFinished = true;
+                    } else if (data.text && data.text !== "__END_GAME_MARKER__") {
+                        currentFullStory.push(data);
+
+                        // Calcular las últimas 15 palabras del último turno real
+                        const words = data.text.trim().split(/\s+/);
+                        lastSnippet = words.slice(-15).join(' ');
+                        if (words.length > 15) {
+                            lastSnippet = "... " + lastSnippet;
+                        }
+
+                        if (data.author) authorsSet.add(data.author);
                     }
-
-                    if (data.author) authorsSet.add(data.author);
                 });
             }
 
+            // Actualizar 15 palabras previas
             const lastLineEl = document.getElementById("lastLine");
             if (lastSnippet) {
                 lastLineEl.textContent = `"${lastSnippet}"`;
@@ -697,6 +711,7 @@
                 lastLineEl.innerHTML = `<span class="empty-hint">La historia aún no ha comenzado. ¡Sé el primero en escribir!</span>`;
             }
 
+            // Actualizar lista de autores
             const authorsListEl = document.getElementById("authorsList");
             if (authorsSet.size > 0) {
                 authorsListEl.innerHTML = Array.from(authorsSet)
@@ -709,23 +724,27 @@
             renderViewMode();
         });
 
+        // 📌 Alternar vistas según si el juego terminó o sigue activo
         function renderViewMode() {
             const activeView = document.getElementById("activeGameView");
             const finishedView = document.getElementById("finishedGameView");
             const fullStoryEl = document.getElementById("fullStoryContent");
 
-            if (isFinishedMode) {
+            if (isGameFinished) {
                 activeView.style.display = "none";
                 finishedView.style.display = "flex";
 
                 if (currentFullStory.length === 0) {
                     fullStoryEl.textContent = "No se escribieron fragmentos en esta partida.";
                 } else {
-                    let formattedStory = currentFullStory.map(item => 
-                        `"${item.text}"\n<span class="author-tag">— ${escapeHtml(item.author)}</span>`
-                    ).join("\n\n");
+                    let formattedHtml = currentFullStory.map((item, i) => 
+                        `<div class="story-paragraph">
+                            "${escapeHtml(item.text)}"
+                            <span class="author-tag">— ${escapeHtml(item.author)}</span>
+                         </div>`
+                    ).join("");
 
-                    fullStoryEl.innerHTML = formattedStory;
+                    fullStoryEl.innerHTML = formattedHtml;
                 }
             } else {
                 activeView.style.display = "flex";
@@ -733,9 +752,12 @@
             }
         }
 
-        // 📌 Modal Docente
+        // 📌 Modal Docente y verificación de clave "Final de Juego"
         function openDocenteModal() {
             document.getElementById("docenteModal").classList.add("active");
+            document.getElementById("docentePassword").value = "";
+            document.getElementById("passwordAuthSection").style.display = "block";
+            document.getElementById("docenteControlsSection").style.display = "none";
         }
 
         function closeDocenteModal() {
@@ -743,16 +765,17 @@
         }
 
         function verifyDocentePass() {
-            const pass = document.getElementById("docentePassword").value;
-            if (pass === DOCENTE_PASS) {
+            const pass = document.getElementById("docentePassword").value.trim().toLowerCase();
+            if (pass === DOCENTE_PASS_TARGET) {
                 document.getElementById("passwordAuthSection").style.display = "none";
                 document.getElementById("docenteControlsSection").style.display = "flex";
                 showToast("🔓 Acceso concedido al Panel Docente.");
             } else {
-                showToast("❌ Clave incorrecta.");
+                showToast("❌ Contraseña incorrecta.");
             }
         }
 
+        // 📌 Copiar historia completa
         function copyFullStory() {
             if (currentFullStory.length === 0) return;
             let fullText = currentFullStory.map(i => `${i.text} (${i.author})`).join("\n\n");
@@ -761,6 +784,7 @@
             });
         }
 
+        // 📌 Descargar .TXT
         function exportStory() {
             if (currentFullStory.length === 0) {
                 showToast("⚠️ La historia está vacía aún.");
@@ -783,20 +807,19 @@
             showToast("📥 Descargando borrador (.txt)...");
         }
 
+        // 📌 Borrar todo e Iniciar Nuevo Juego
         function confirmResetStory() {
-            if (confirm("⚠️ ¿Estás seguro de reiniciar la historia e iniciar una nueva partida?")) {
-                remove(storyRef);
-                set(statusRef, { finished: false }).then(() => {
+            if (confirm("⚠️ ¿Estás seguro de borrar esta historia y comenzar un juego nuevo desde cero?")) {
+                remove(storyRef).then(() => {
                     closeDocenteModal();
                     document.getElementById("lineInput").value = "";
                     document.getElementById("nicknameInput").value = "";
-                    showToast("🔄 ¡Partida reiniciada!");
+                    showToast("🔄 ¡Nueva partida iniciada!");
+                }).catch(err => {
+                    showToast("❌ Error al reiniciar.");
+                    console.error(err);
                 });
             }
-        }
-
-        function confirmResetFromView() {
-            confirmResetStory();
         }
 
         function escapeHtml(str) {
@@ -811,7 +834,6 @@
         window.copyFullStory = copyFullStory;
         window.exportStory = exportStory;
         window.confirmResetStory = confirmResetStory;
-        window.confirmResetFromView = confirmResetFromView;
     </script>
 </body>
 </html>
