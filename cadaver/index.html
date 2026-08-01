@@ -63,7 +63,7 @@
             max-width: 780px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 22px;
         }
 
         header {
@@ -98,10 +98,8 @@
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: all 0.4s ease;
         }
 
-        /* Preview box durante el juego */
         .preview-box {
             border-left: 4px solid var(--accent-purple);
         }
@@ -157,7 +155,6 @@
             color: var(--text-muted);
         }
 
-        /* Seccion Escritura */
         .form-group {
             display: flex;
             flex-direction: column;
@@ -224,24 +221,16 @@
             margin-top: -8px;
         }
 
-        .hint-text {
-            font-size: 0.82rem;
-            color: var(--accent-gold);
-            font-style: italic;
-            opacity: 0.95;
-        }
-
         /* Botones */
         .btn-group {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 8px;
+            margin-top: 4px;
         }
 
         button {
             flex: 1;
-            min-width: 140px;
             padding: 14px 20px;
             font-family: var(--font-body);
             font-size: 0.95rem;
@@ -276,17 +265,6 @@
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.18);
-            transform: translateY(-2px);
-        }
-
-        .btn-finish {
-            background: rgba(224, 169, 109, 0.18);
-            color: var(--accent-gold);
-            border: 1px solid rgba(224, 169, 109, 0.4);
-        }
-
-        .btn-finish:hover {
-            background: rgba(224, 169, 109, 0.35);
             transform: translateY(-2px);
         }
 
@@ -384,6 +362,84 @@
             font-size: 0.75rem;
         }
 
+        /* Acceso discreto para Docente */
+        footer {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .docente-link {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .docente-link:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Modal Panel Docente */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #141124;
+            border: 1px solid rgba(224, 169, 109, 0.3);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 520px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-title);
+            color: var(--accent-gold);
+            font-size: 1.4rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            min-width: auto;
+            padding: 0;
+        }
+
         /* Toast */
         #toast {
             position: fixed;
@@ -423,10 +479,10 @@
             <div class="subtitle">Escritura Colectiva a Ciegas</div>
         </header>
 
-        <!-- MODO JUEGO ACTIVO -->
-        <div id="activeGameView" style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- PANTALLA ESTUDIANTE (MODO A CIEGAS) -->
+        <div id="activeGameView" style="display: flex; flex-direction: column; gap: 22px;">
             
-            <!-- Última línea previa (15 palabras) -->
+            <!-- Últimas 15 palabras -->
             <div class="glass-card preview-box">
                 <div class="preview-header">
                     <span>📍 Conexión previa</span>
@@ -437,7 +493,7 @@
                 </div>
             </div>
 
-            <!-- Formulario para escribir turno -->
+            <!-- Formulario de escritura -->
             <div class="glass-card">
                 <div class="form-group">
                     <label for="lineInput">Tu turno en la historia:</label>
@@ -448,16 +504,9 @@
                         <input id="nicknameInput" type="text" placeholder="Tu nombre / Nickname" />
                     </div>
 
-                    <div class="hint-text">
-                        💡 Tip: Escribir <strong>"Final de juego"</strong> como nombre revela la obra completa para todos.
-                    </div>
-
                     <div class="btn-group">
                         <button class="btn-primary" onclick="submitLine()">
                             <span>✉️ Enviar línea</span>
-                        </button>
-                        <button class="btn-finish" onclick="triggerFinalGame()">
-                            <span>📜 Final de juego (Revelar)</span>
                         </button>
                     </div>
                 </div>
@@ -465,16 +514,16 @@
 
         </div>
 
-        <!-- MODO HISTORIA REVELADA / FINAL DE JUEGO -->
+        <!-- MODO OBRA REVELADA / FINAL DE JUEGO -->
         <div id="finishedGameView" class="glass-card finished-container">
             <div class="finished-header">
-                <div class="badge badge-finished" style="margin-bottom: 8px;">🎉 Obras Colectivas Completadas</div>
-                <h2 class="finished-title">La Historia Completa</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">El juego ha finalizado. Aquí está la narración completa unificada:</p>
+                <div class="badge badge-finished" style="margin-bottom: 8px;">🎉 Historia Colectiva Completada</div>
+                <h2 class="finished-title">La Obra Completa</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Esta es la historia creada colaborativamente a ciegas:</p>
             </div>
 
             <div class="full-story-scroll" id="fullStoryContent">
-                Cargando historia completa...
+                Cargando historia...
             </div>
 
             <div class="btn-group">
@@ -484,17 +533,57 @@
                 <button class="btn-secondary" onclick="exportStory()">
                     <span>📥 Descargar archivo (.txt)</span>
                 </button>
-                <button class="btn-danger" onclick="resetStory()">
+                <button class="btn-danger" onclick="confirmResetFromView()">
                     <span>🔄 Iniciar nueva historia</span>
                 </button>
             </div>
         </div>
 
-        <!-- Lista de Autores -->
+        <!-- Autores -->
         <div class="glass-card authors-section">
-            <div class="authors-title">👥 Autores de esta historia</div>
+            <div class="authors-title">👥 Participantes</div>
             <div class="authors-list" id="authorsList">
                 <span class="empty-hint">Ninguno aún. ¡Sé el primero!</span>
+            </div>
+        </div>
+
+        <!-- Acceso discreto exclusivo para Docente -->
+        <footer>
+            <button class="docente-link" onclick="openDocenteModal()">🔒 Acceso Docente / Administración</button>
+        </footer>
+    </div>
+
+    <!-- Modal Panel Docente -->
+    <div class="modal-overlay" id="docenteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎓 Panel Docente</h2>
+                <button class="close-btn" onclick="closeDocenteModal()">&times;</button>
+            </div>
+            
+            <div id="passwordAuthSection">
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">Ingresa la clave docente para acceder al control de la obra:</p>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <input type="password" id="docentePassword" placeholder="Clave docente" style="flex:1;" />
+                    <button class="btn-primary" onclick="verifyDocentePass()" style="min-width: 100px;">Entrar</button>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--accent-gold);">Clave docente por defecto: <strong>cadavar</strong></p>
+            </div>
+
+            <div id="docenteControlsSection" style="display: none; flex-direction: column; gap: 14px;">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Controles de la partida:</p>
+                
+                <button class="btn-primary" onclick="triggerFinalGameDocente()" style="width: 100%;">
+                    📜 Revelar Obra Completa a Todos
+                </button>
+                
+                <button class="btn-secondary" onclick="exportStory()" style="width: 100%;">
+                    📥 Descargar borrador (.TXT)
+                </button>
+
+                <button class="btn-danger" onclick="confirmResetStory()" style="width: 100%;">
+                    🗑️ Reiniciar e iniciar nuevo juego
+                </button>
             </div>
         </div>
     </div>
@@ -506,7 +595,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
         import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
-        // 🔥 Configuración de tu Realtime Database
         const firebaseConfig = {
             databaseURL: "https://cadaverexquisito-66d1a-default-rtdb.firebaseio.com/"
         };
@@ -518,8 +606,8 @@
 
         let currentFullStory = [];
         let isFinishedMode = false;
+        const DOCENTE_PASS = "cadavar"; // Clave docente
 
-        // Toast Notification
         function showToast(msg) {
             const toast = document.getElementById("toast");
             toast.textContent = msg;
@@ -536,14 +624,14 @@
             counter.textContent = `${words} palabra${words === 1 ? '' : 's'} escrita${words === 1 ? '' : 's'}`;
         });
 
-        // 📌 Enviar línea a Firebase
+        // 📌 Enviar línea (Estudiante)
         function submitLine() {
             let line = document.getElementById("lineInput").value.trim();
             let nickname = document.getElementById("nicknameInput").value.trim();
 
-            // Si el nombre ingresado es "Final de juego" (o similar), se activa el final de juego
+            // Si la docente escribe secretamente "Final de juego" como nombre, se activa el final
             if (nickname.toLowerCase() === "final de juego") {
-                triggerFinalGame();
+                triggerFinalGameDocente();
                 return;
             }
 
@@ -559,28 +647,29 @@
             }).then(() => {
                 document.getElementById("lineInput").value = "";
                 counter.textContent = "0 palabras escritas";
-                showToast("✨ ¡Tu fragmento ha sido agregado!");
+                showToast("✨ ¡Tu fragmento ha sido enviado!");
             }).catch(err => {
                 showToast("❌ Error al enviar. Intenta nuevamente.");
                 console.error(err);
             });
         }
 
-        // 📌 Activar MODO FINAL DE JUEGO para todos los usuarios
-        function triggerFinalGame() {
+        // 📌 Activar Final de juego desde Panel Docente o atajo secreto
+        function triggerFinalGameDocente() {
             set(statusRef, { finished: true, endedAt: Date.now() }).then(() => {
-                showToast("📜 ¡Final de juego activado! Revelando la historia...");
+                closeDocenteModal();
+                showToast("📜 ¡Obra revelada para todos los participantes!");
             });
         }
 
-        // 📌 Escuchar estado del juego en tiempo real (Si finalizó o no)
+        // Escuchar estado en tiempo real
         onValue(statusRef, (snapshot) => {
             const val = snapshot.val();
             isFinishedMode = val && val.finished === true;
             renderViewMode();
         });
 
-        // 📌 Escuchar los turnos en tiempo real
+        // Escuchar turnos en tiempo real
         onValue(storyRef, (snapshot) => {
             let lastSnippet = "";
             let authorsSet = new Set();
@@ -591,7 +680,6 @@
                     let data = childSnapshot.val();
                     currentFullStory.push(data);
 
-                    // Extraer últimas 15 palabras del último turno
                     const words = data.text.trim().split(/\s+/);
                     lastSnippet = words.slice(-15).join(' ');
                     if (words.length > 15) {
@@ -602,7 +690,6 @@
                 });
             }
 
-            // Actualizar la vista de las últimas 15 palabras
             const lastLineEl = document.getElementById("lastLine");
             if (lastSnippet) {
                 lastLineEl.textContent = `"${lastSnippet}"`;
@@ -610,7 +697,6 @@
                 lastLineEl.innerHTML = `<span class="empty-hint">La historia aún no ha comenzado. ¡Sé el primero en escribir!</span>`;
             }
 
-            // Actualizar autores
             const authorsListEl = document.getElementById("authorsList");
             if (authorsSet.size > 0) {
                 authorsListEl.innerHTML = Array.from(authorsSet)
@@ -623,7 +709,6 @@
             renderViewMode();
         });
 
-        // 📌 Alternar entre Modo Juego Activo y Modo Historia Revelada
         function renderViewMode() {
             const activeView = document.getElementById("activeGameView");
             const finishedView = document.getElementById("finishedGameView");
@@ -648,7 +733,26 @@
             }
         }
 
-        // 📌 Copiar historia completa
+        // 📌 Modal Docente
+        function openDocenteModal() {
+            document.getElementById("docenteModal").classList.add("active");
+        }
+
+        function closeDocenteModal() {
+            document.getElementById("docenteModal").classList.remove("active");
+        }
+
+        function verifyDocentePass() {
+            const pass = document.getElementById("docentePassword").value;
+            if (pass === DOCENTE_PASS) {
+                document.getElementById("passwordAuthSection").style.display = "none";
+                document.getElementById("docenteControlsSection").style.display = "flex";
+                showToast("🔓 Acceso concedido al Panel Docente.");
+            } else {
+                showToast("❌ Clave incorrecta.");
+            }
+        }
+
         function copyFullStory() {
             if (currentFullStory.length === 0) return;
             let fullText = currentFullStory.map(i => `${i.text} (${i.author})`).join("\n\n");
@@ -657,7 +761,6 @@
             });
         }
 
-        // 📌 Exportar a .txt
         function exportStory() {
             if (currentFullStory.length === 0) {
                 showToast("⚠️ La historia está vacía aún.");
@@ -680,28 +783,35 @@
             showToast("📥 Descargando borrador (.txt)...");
         }
 
-        // 📌 Reiniciar juego
-        function resetStory() {
-            if (confirm("⚠️ ¿Estás seguro de reiniciar la historia e iniciar un nuevo Cadáver Exquisito?")) {
+        function confirmResetStory() {
+            if (confirm("⚠️ ¿Estás seguro de reiniciar la historia e iniciar una nueva partida?")) {
                 remove(storyRef);
                 set(statusRef, { finished: false }).then(() => {
+                    closeDocenteModal();
                     document.getElementById("lineInput").value = "";
                     document.getElementById("nicknameInput").value = "";
-                    showToast("🔄 ¡Nuevo juego iniciado!");
+                    showToast("🔄 ¡Partida reiniciada!");
                 });
             }
+        }
+
+        function confirmResetFromView() {
+            confirmResetStory();
         }
 
         function escapeHtml(str) {
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        // Exportar a scope global
         window.submitLine = submitLine;
-        window.triggerFinalGame = triggerFinalGame;
+        window.openDocenteModal = openDocenteModal;
+        window.closeDocenteModal = closeDocenteModal;
+        window.verifyDocentePass = verifyDocentePass;
+        window.triggerFinalGameDocente = triggerFinalGameDocente;
         window.copyFullStory = copyFullStory;
         window.exportStory = exportStory;
-        window.resetStory = resetStory;
+        window.confirmResetStory = confirmResetStory;
+        window.confirmResetFromView = confirmResetFromView;
     </script>
 </body>
 </html>
