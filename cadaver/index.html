@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadáver Exquisito — Escritura Colaborativa</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-overlay: rgba(12, 10, 24, 0.85);
+            --card-bg: rgba(22, 20, 38, 0.78);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --accent-purple: #9d4edd;
+            --accent-glow: #c77dff;
+            --accent-gold: #e0a96d;
+            --text-main: #f8f9fa;
+            --text-muted: #adb5bd;
+            --font-title: 'Cinzel', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-story: 'Special Elite', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0914;
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(157, 78, 221, 0.18) 0%, transparent 65%),
+                url('cadaver.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 30px 15px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(15, 12, 29, 0.78) 0%, rgba(5, 4, 10, 0.92) 100%);
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 780px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-family: var(--font-title);
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(199, 125, 255, 0.4), 0 2px 10px rgba(0,0,0,0.8);
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--accent-gold);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.4s ease;
+        }
+
+        /* Preview box durante el juego */
+        .preview-box {
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            background: rgba(157, 78, 221, 0.25);
+            color: var(--accent-glow);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(199, 125, 255, 0.3);
+        }
+
+        .badge-finished {
+            background: rgba(224, 169, 109, 0.25);
+            color: var(--accent-gold);
+            border: 1px solid rgba(224, 169, 109, 0.4);
+        }
+
+        .last-line-content {
+            font-family: var(--font-story);
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .empty-hint {
+            font-family: var(--font-body);
+            font-style: italic;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Seccion Escritura */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        textarea {
+            width: 100%;
+            height: 110px;
+            background: rgba(10, 8, 20, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px;
+            color: #ffffff;
+            font-family: var(--font-story);
+            font-size: 1.1rem;
+            line-height: 1.5;
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 15px rgba(199, 125, 255, 0.3);
+            background: rgba(10, 8, 20, 0.9);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(10, 8, 20, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 10px rgba(199, 125, 255, 0.25);
+        }
+
+        .char-counter {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: -8px;
+        }
+
+        .hint-text {
+            font-size: 0.82rem;
+            color: var(--accent-gold);
+            font-style: italic;
+            opacity: 0.95;
+        }
+
+        /* Botones */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        button {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 20px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7b2cbf 0%, #9d4edd 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(123, 44, 191, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(199, 125, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .btn-finish {
+            background: rgba(224, 169, 109, 0.18);
+            color: var(--accent-gold);
+            border: 1px solid rgba(224, 169, 109, 0.4);
+        }
+
+        .btn-finish:hover {
+            background: rgba(224, 169, 109, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #d90429;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ef233c;
+        }
+
+        /* Modo FINAL DE JUEGO (Historia Revelada) */
+        .finished-container {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            border-top: 4px solid var(--accent-gold);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .finished-header {
+            text-align: center;
+        }
+
+        .finished-title {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+        }
+
+        .full-story-scroll {
+            font-family: var(--font-story);
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #f8f9fa;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(224, 169, 109, 0.3);
+            max-height: 450px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        .author-tag {
+            color: var(--accent-glow);
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 14px;
+            display: block;
+        }
+
+        /* Autores */
+        .authors-section {
+            margin-top: 5px;
+        }
+
+        .authors-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .authors-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .author-pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .author-pill::before {
+            content: '✍️';
+            font-size: 0.75rem;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(20, 15, 35, 0.95);
+            border: 1px solid var(--accent-glow);
+            color: #ffffff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            font-size: 0.95rem;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.1rem; }
+            .btn-group { flex-direction: column; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Cadáver Exquisito</h1>
+            <div class="subtitle">Escritura Colectiva a Ciegas</div>
+        </header>
+
+        <!-- MODO JUEGO ACTIVO -->
+        <div id="activeGameView" style="display: flex; flex-direction: column; gap: 24px;">
+            
+            <!-- Última línea previa (15 palabras) -->
+            <div class="glass-card preview-box">
+                <div class="preview-header">
+                    <span>📍 Conexión previa</span>
+                    <span class="badge">Últimas 15 palabras</span>
+                </div>
+                <div class="last-line-content" id="lastLine">
+                    <span class="empty-hint">Cargando o esperando la primera línea de la historia...</span>
+                </div>
+            </div>
+
+            <!-- Formulario para escribir turno -->
+            <div class="glass-card">
+                <div class="form-group">
+                    <label for="lineInput">Tu turno en la historia:</label>
+                    <textarea id="lineInput" placeholder="Escribe tu continuación aquí..."></textarea>
+                    <div class="char-counter" id="counter">0 palabras escritas</div>
+
+                    <div class="input-row">
+                        <input id="nicknameInput" type="text" placeholder="Tu nombre / Nickname" />
+                    </div>
+
+                    <div class="hint-text">
+                        💡 Tip: Escribir <strong>"Final de juego"</strong> como nombre revela la obra completa para todos.
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn-primary" onclick="submitLine()">
+                            <span>✉️ Enviar línea</span>
+                        </button>
+                        <button class="btn-finish" onclick="triggerFinalGame()">
+                            <span>📜 Final de juego (Revelar)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- MODO HISTORIA REVELADA / FINAL DE JUEGO -->
+        <div id="finishedGameView" class="glass-card finished-container">
+            <div class="finished-header">
+                <div class="badge badge-finished" style="margin-bottom: 8px;">🎉 Obras Colectivas Completadas</div>
+                <h2 class="finished-title">La Historia Completa</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">El juego ha finalizado. Aquí está la narración completa unificada:</p>
+            </div>
+
+            <div class="full-story-scroll" id="fullStoryContent">
+                Cargando historia completa...
+            </div>
+
+            <div class="btn-group">
+                <button class="btn-primary" onclick="copyFullStory()">
+                    <span>📋 Copiar texto completo</span>
+                </button>
+                <button class="btn-secondary" onclick="exportStory()">
+                    <span>📥 Descargar archivo (.txt)</span>
+                </button>
+                <button class="btn-danger" onclick="resetStory()">
+                    <span>🔄 Iniciar nueva historia</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Lista de Autores -->
+        <div class="glass-card authors-section">
+            <div class="authors-title">👥 Autores de esta historia</div>
+            <div class="authors-list" id="authorsList">
+                <span class="empty-hint">Ninguno aún. ¡Sé el primero!</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">Notificación</div>
+
+    <!-- 🔥 Firebase Realtime Database -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue, remove, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        // 🔥 Configuración de tu Realtime Database
+        const firebaseConfig = {
+            databaseURL: "https://cadaverexquisito-66d1a-default-rtdb.firebaseio.com/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const storyRef = ref(database, "cadaverExquisito");
+        const statusRef = ref(database, "cadaverExquisito_status");
+
+        let currentFullStory = [];
+        let isFinishedMode = false;
+
+        // Toast Notification
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.textContent = msg;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 3200);
+        }
+
+        // Contador de palabras
+        const lineInput = document.getElementById("lineInput");
+        const counter = document.getElementById("counter");
+        lineInput.addEventListener("input", () => {
+            const text = lineInput.value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            counter.textContent = `${words} palabra${words === 1 ? '' : 's'} escrita${words === 1 ? '' : 's'}`;
+        });
+
+        // 📌 Enviar línea a Firebase
+        function submitLine() {
+            let line = document.getElementById("lineInput").value.trim();
+            let nickname = document.getElementById("nicknameInput").value.trim();
+
+            // Si el nombre ingresado es "Final de juego" (o similar), se activa el final de juego
+            if (nickname.toLowerCase() === "final de juego") {
+                triggerFinalGame();
+                return;
+            }
+
+            if (!line || !nickname) {
+                showToast("⚠️ Completa tu nombre y tu fragmento antes de enviar.");
+                return;
+            }
+
+            push(storyRef, { 
+                text: line, 
+                author: nickname, 
+                timestamp: Date.now() 
+            }).then(() => {
+                document.getElementById("lineInput").value = "";
+                counter.textContent = "0 palabras escritas";
+                showToast("✨ ¡Tu fragmento ha sido agregado!");
+            }).catch(err => {
+                showToast("❌ Error al enviar. Intenta nuevamente.");
+                console.error(err);
+            });
+        }
+
+        // 📌 Activar MODO FINAL DE JUEGO para todos los usuarios
+        function triggerFinalGame() {
+            set(statusRef, { finished: true, endedAt: Date.now() }).then(() => {
+                showToast("📜 ¡Final de juego activado! Revelando la historia...");
+            });
+        }
+
+        // 📌 Escuchar estado del juego en tiempo real (Si finalizó o no)
+        onValue(statusRef, (snapshot) => {
+            const val = snapshot.val();
+            isFinishedMode = val && val.finished === true;
+            renderViewMode();
+        });
+
+        // 📌 Escuchar los turnos en tiempo real
+        onValue(storyRef, (snapshot) => {
+            let lastSnippet = "";
+            let authorsSet = new Set();
+            currentFullStory = [];
+
+            if (snapshot.exists()) {
+                snapshot.forEach((childSnapshot) => {
+                    let data = childSnapshot.val();
+                    currentFullStory.push(data);
+
+                    // Extraer últimas 15 palabras del último turno
+                    const words = data.text.trim().split(/\s+/);
+                    lastSnippet = words.slice(-15).join(' ');
+                    if (words.length > 15) {
+                        lastSnippet = "... " + lastSnippet;
+                    }
+
+                    if (data.author) authorsSet.add(data.author);
+                });
+            }
+
+            // Actualizar la vista de las últimas 15 palabras
+            const lastLineEl = document.getElementById("lastLine");
+            if (lastSnippet) {
+                lastLineEl.textContent = `"${lastSnippet}"`;
+            } else {
+                lastLineEl.innerHTML = `<span class="empty-hint">La historia aún no ha comenzado. ¡Sé el primero en escribir!</span>`;
+            }
+
+            // Actualizar autores
+            const authorsListEl = document.getElementById("authorsList");
+            if (authorsSet.size > 0) {
+                authorsListEl.innerHTML = Array.from(authorsSet)
+                    .map(author => `<div class="author-pill">${escapeHtml(author)}</div>`)
+                    .join('');
+            } else {
+                authorsListEl.innerHTML = `<span class="empty-hint">Ninguno aún. ¡Sé el primero!</span>`;
+            }
+
+            renderViewMode();
+        });
+
+        // 📌 Alternar entre Modo Juego Activo y Modo Historia Revelada
+        function renderViewMode() {
+            const activeView = document.getElementById("activeGameView");
+            const finishedView = document.getElementById("finishedGameView");
+            const fullStoryEl = document.getElementById("fullStoryContent");
+
+            if (isFinishedMode) {
+                activeView.style.display = "none";
+                finishedView.style.display = "flex";
+
+                if (currentFullStory.length === 0) {
+                    fullStoryEl.textContent = "No se escribieron fragmentos en esta partida.";
+                } else {
+                    let formattedStory = currentFullStory.map(item => 
+                        `"${item.text}"\n<span class="author-tag">— ${escapeHtml(item.author)}</span>`
+                    ).join("\n\n");
+
+                    fullStoryEl.innerHTML = formattedStory;
+                }
+            } else {
+                activeView.style.display = "flex";
+                finishedView.style.display = "none";
+            }
+        }
+
+        // 📌 Copiar historia completa
+        function copyFullStory() {
+            if (currentFullStory.length === 0) return;
+            let fullText = currentFullStory.map(i => `${i.text} (${i.author})`).join("\n\n");
+            navigator.clipboard.writeText(fullText).then(() => {
+                showToast("📋 ¡Historia completa copiada al portapapeles!");
+            });
+        }
+
+        // 📌 Exportar a .txt
+        function exportStory() {
+            if (currentFullStory.length === 0) {
+                showToast("⚠️ La historia está vacía aún.");
+                return;
+            }
+
+            let storyText = "=========================================\n";
+            storyText += "       CADÁVER EXQUISITO - HISTORIA       \n";
+            storyText += "=========================================\n\n";
+
+            currentFullStory.forEach((item, index) => {
+                storyText += `[Turno ${index + 1} - ${item.author}]:\n${item.text}\n\n`;
+            });
+
+            let blob = new Blob([storyText], { type: "text/plain;charset=utf-8" });
+            let link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `CadaverExquisito_${new Date().toISOString().slice(0,10)}.txt`;
+            link.click();
+            showToast("📥 Descargando borrador (.txt)...");
+        }
+
+        // 📌 Reiniciar juego
+        function resetStory() {
+            if (confirm("⚠️ ¿Estás seguro de reiniciar la historia e iniciar un nuevo Cadáver Exquisito?")) {
+                remove(storyRef);
+                set(statusRef, { finished: false }).then(() => {
+                    document.getElementById("lineInput").value = "";
+                    document.getElementById("nicknameInput").value = "";
+                    showToast("🔄 ¡Nuevo juego iniciado!");
+                });
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        // Exportar a scope global
+        window.submitLine = submitLine;
+        window.triggerFinalGame = triggerFinalGame;
+        window.copyFullStory = copyFullStory;
+        window.exportStory = exportStory;
+        window.resetStory = resetStory;
+    </script>
+</body>
+</html>
