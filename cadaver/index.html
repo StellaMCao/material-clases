@@ -656,6 +656,9 @@
                     </div>
 
                     <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                        <button class="btn-primary" onclick="copyFullStory()">
+                            <span>📋 Copiar Texto</span>
+                        </button>
                         <button class="btn-finish" onclick="triggerFinalGame(); closeTeacherModal();">
                             <span>📜 Revelar a Todos</span>
                         </button>
@@ -893,12 +896,17 @@
             }
         }
 
-        // 📌 Copiar historia completa
+        // 📌 Copiar historia completa (Solo lectura, no modifica Firebase)
         function copyFullStory() {
-            if (currentFullStory.length === 0) return;
-            let fullText = currentFullStory.map(i => `${i.text} (${i.author})`).join("\n\n");
+            if (!currentFullStory || currentFullStory.length === 0) {
+                showToast("⚠️ No hay texto para copiar aún.");
+                return;
+            }
+            let fullText = currentFullStory.map(i => i.text).join("\n\n");
             navigator.clipboard.writeText(fullText).then(() => {
-                showToast("📋 ¡Historia completa copiada al portapapeles!");
+                showToast("📋 ¡Texto completo copiado al portapapeles!");
+            }).catch(() => {
+                showToast("❌ Error al copiar al portapapeles.");
             });
         }
 
