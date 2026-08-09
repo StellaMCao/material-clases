@@ -127,6 +127,7 @@ h1{
   color:#ffffff;
   display:flex;
   align-items:center;
+  justify-content:space-between;
   gap:10px;
 }
 .panel-sub{
@@ -162,6 +163,11 @@ h1{
   background:var(--accent-soft);
   border-color:var(--accent);
   color:var(--accent-bright);
+}
+.chip-highlight{
+  border-color:var(--accent);
+  color:var(--accent-bright);
+  background:rgba(193,120,23,0.12);
 }
 
 .controls{
@@ -249,6 +255,18 @@ button:active{transform:translateY(1px);}
   border:1px solid var(--line);
 }
 .btn-secondary:hover{color:var(--ink); border-color:var(--muted);}
+.btn-case{
+  background:rgba(91,138,138,0.15);
+  color:#82c4c4;
+  border:1px solid rgba(91,138,138,0.35);
+  font-size:0.85em;
+  padding:6px 12px;
+  border-radius:20px;
+}
+.btn-case:hover{
+  background:rgba(91,138,138,0.28);
+  color:#fff;
+}
 
 .output{
   position:relative;
@@ -306,6 +324,61 @@ button:active{transform:translateY(1px);}
 #b-a{border-color:var(--a-color);} #b-a .b-title{color:var(--a-color);}
 #b-b{border-color:var(--b-color);} #b-b .b-title{color:var(--b-color);}
 #b-c{border-color:var(--c-color);} #b-c .b-title{color:var(--c-color);}
+
+/* TARJETA COMPARATIVA REAL EN VIVO */
+.case-comparison-card{
+  display:none;
+  background:rgba(15,20,28,0.9);
+  border:1px solid var(--accent);
+  border-radius:12px;
+  padding:20px;
+  margin-top:18px;
+  animation:fadeIn 0.4s ease;
+}
+@keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+.model-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:14px;
+}
+@media (max-width:600px){
+  .model-grid{grid-template-columns:1fr;}
+}
+
+.model-box{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:16px;
+}
+.model-header{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.badge-gpt{color:#82c4c4; background:rgba(91,138,138,0.15); padding:3px 8px; border-radius:4px;}
+.badge-gemini:{color:#e0a96d; background:rgba(224,169,109,0.15); padding:3px 8px; border-radius:4px;}
+
+.model-text{
+  font-family:var(--font-mono);
+  font-size:0.88em;
+  line-height:1.65;
+  color:#d4cfc3;
+  white-space:pre-wrap;
+  background:rgba(0,0,0,0.3);
+  padding:12px;
+  border-radius:6px;
+  max-height:280px;
+  overflow-y:auto;
+}
 
 /* BLOQUE DE ANÁLISIS */
 .analysis-section{
@@ -514,15 +587,18 @@ button:active{transform:translateY(1px);}
 
   <!-- BLOQUE 1: GENERADOR DE MARCOS -->
   <div class="panel">
-    <div class="panel-title">1. Generar la consigna imposible</div>
+    <div class="panel-title">
+      <span>1. Generar la consigna imposible</span>
+      <button class="btn-case" onclick="cargarCasoEjemplo()">💡 Caso Destacado: El sándwich (ChatGPT vs Gemini)</button>
+    </div>
     <div class="panel-sub">Elegí un ejemplo o escribí una tarea cotidiana. Copiá la consigna generada y pruébala en vivo en cualquier IA.</div>
 
     <div class="examples" id="examples">
+      <div class="chip chip-highlight" data-task="armar un sándwich" data-seed="085">armar un sándwich 🥪</div>
       <div class="chip" data-task="atarme los cordones de las zapatillas">cordones</div>
       <div class="chip" data-task="preparar un té">preparar un té</div>
       <div class="chip" data-task="cruzar la calle">cruzar la calle</div>
       <div class="chip" data-task="doblar una sábana">doblar una sábana</div>
-      <div class="chip" data-task="armar un sándwich">armar un sándwich</div>
       <div class="chip" data-task="lavarme los dientes">lavarme los dientes</div>
       <div class="chip" data-task="colgar un cuadro en la pared">colgar un cuadro</div>
       <div class="chip" data-task="pelar una naranja">pelar una naranja</div>
@@ -569,8 +645,51 @@ button:active{transform:translateY(1px);}
     </div>
   </div>
 
+  <!-- TARJETA COMPARATIVA DE CASO REAL DE EJEMPLO -->
+  <div class="case-comparison-card" id="sandwich-case-card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="font-family:var(--font-display); color:var(--accent-bright); margin:0;">📊 Respuestas reales de prueba (Caso Sándwich - Semilla 085)</h3>
+      <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="document.getElementById('sandwich-case-card').style.display='none'">Cerrar ×</button>
+    </div>
+    <p style="font-size:0.9em; color:var(--muted); margin:6px 0 12px;">Comparación entre la negativa/detección de paradoja de ChatGPT y la obediencia procedimental paso a paso de Gemini ante la misma consigna:</p>
+    
+    <div class="model-grid">
+      <div class="model-box">
+        <div class="model-header">
+          <span>ChatGPT (GPT-4o)</span>
+          <span class="badge-gpt">Detectó Contradicción</span>
+        </div>
+        <div class="model-text">No hay un procedimiento que pueda garantizar esas tres condiciones a la vez.
+
+La segunda condición, que cada paso dure más que el anterior, es perfectamente realizable en una secuencia finita: por ejemplo, 2 segundos, 4 segundos, 8 segundos, etc. Y armar un sándwich usando solamente el cuerpo también podría hacerse, suponiendo que los ingredientes ya están al alcance.
+
+El problema aparece en la tercera condición: que funcione igual sin importar cuántas veces se repita. Cada ejecución consume pan y relleno y produce un sándwich. Después de suficientes repeticiones, los ingredientes disponibles se agotan. Como además no se permite introducir herramientas ni ninguna condición de reposición de materiales, no existe una secuencia corporal que pueda repetirse indefinidamente conservando el mismo resultado.
+
+En otras palabras, el obstáculo no está en encontrar una coreografía suficientemente ingeniosa: está en que una operación que consume recursos finitos no puede ser indefinidamente repetible sin reponerlos. La consigna puede describirse sintácticamente, pero no realizarse bajo todas esas restricciones simultáneas.</div>
+      </div>
+
+      <div class="model-box">
+        <div class="model-header">
+          <span>Gemini 1.5 Pro</span>
+          <span class="badge-gemini">Obedeció Literalmente</span>
+        </div>
+        <div class="model-text">Procedimiento para ensamblar un sándwich utilizando únicamente el cuerpo y con un incremento progresivo de tiempo en cada paso:
+
+Paso 1 (duración: 5 segundos): tomar la primera rodaja de pan con ambas manos y apoyarla horizontalmente sobre la superficie de trabajo.
+
+Paso 2 (duración: 10 segundos): sujetar el ingrediente de base (como una feta de queso) con las yemas de los dedos de ambas manos y extenderlo de manera centrada sobre el pan.
+
+Paso 3 (duración: 20 segundos): tomar el segundo ingrediente (como una feta de jamón) sujetándolo suavemente entre las palmas y acomodarlo con lentitud sobre la capa previa, asegurando que cubra los bordes uniformemente.
+
+Paso 4 (duración: 30 segundos): sostener la segunda rodaja de pan entre los dedos pulgares e índices de ambas manos, alinearla con precisión sobre el relleno y descenderla a velocidad reducida hasta posarla por completo.
+
+Paso 5 (duración: 45 segundos): colocar la palma de una mano sobre la tapa superior, cubrirla con la otra palma y ejercer una presión constante e ininterrumpida hacia abajo para compactar toda la estructura y garantizar la adherencia de todos los componentes.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- BLOQUE 2: GUÍA DE ANÁLISIS EN VIVO -->
-  <div class="panel">
+  <div class="panel" style="margin-top:24px;">
     <div class="panel-title">2. Análisis de la respuesta en vivo</div>
     <div class="panel-sub">Una vez probada la consigna en la IA que estés usando, analizamos juntos cómo respondió.</div>
 
@@ -600,7 +719,7 @@ button:active{transform:translateY(1px);}
         <div class="step-header">Paso 2 · Evidencia y Cita</div>
         <div class="step-question">Elegí una frase de la respuesta que te parezca especialmente reveladora:</div>
         <div class="field">
-          <textarea id="quote-text" placeholder="Ej: 'Para cumplir con la restricción C sin tocar la zapatilla...'"></textarea>
+          <textarea id="quote-text" placeholder="Ej: 'La consigna puede describirse sintácticamente, pero no realizarse bajo todas esas restricciones simultáneas...'"></textarea>
         </div>
         <div class="field">
           <label for="quote-reflection">¿Qué te hace pensar ese fragmento?</label>
@@ -773,27 +892,43 @@ button:active{transform:translateY(1px);}
 </div>
 
 <script>
+/* RESTRICCIONES REFINADAS A, B, C */
 const data = {
   a: [
-    "no puedo usar las manos","no puedo mirar lo que estoy haciendo",
-    "no puedo usar ninguna herramienta, solo el cuerpo","solo puedo usar la mano no dominante",
-    "no puedo hablar ni pedir ayuda mientras lo hago","tengo que hacerlo con los ojos cerrados",
-    "no puedo tocar ningún objeto más de una vez","no puedo moverme de un mismo punto fijo",
-    "no puedo usar más de un dedo por vez","no puedo repetir ningún gesto que ya haya hecho"
+    "no puedo usar ninguna herramienta, solo el cuerpo",
+    "no puedo usar las manos",
+    "no puedo mirar lo que estoy haciendo",
+    "solo puedo usar la mano no dominante",
+    "tengo que hacerlo con los ojos cerrados",
+    "no puedo tocar ningún elemento más de una vez",
+    "no puedo moverme de un mismo punto fijo",
+    "no puedo usar más de un dedo por vez",
+    "no puedo hablar ni emitir ningún sonido mientras lo hago",
+    "no puedo tocar el objeto principal directamente"
   ],
   b: [
-    "tengo que deshacer cada paso antes de dar el siguiente","cada acción debe repetirse exactamente tres veces",
-    "no puedo detenerme en ningún momento, ni un segundo","tengo que hacerlo en el orden exactamente inverso al habitual",
-    "no puedo repetir ningún paso que ya haya usado","tengo que anunciar en voz alta cada movimiento antes de hacerlo",
-    "no puedo corregir ningún error una vez cometido","todo debe completarse sin que mire el resultado en ningún momento",
-    "tengo que hacerlo al mismo tiempo que otra tarea completamente distinta","cada paso debe durar más que el anterior"
+    "tengo que deshacer cada paso antes de dar el siguiente",
+    "cada acción debe repetirse exactamente tres veces",
+    "no puedo detenerme en ningún momento, ni un segundo",
+    "tengo que hacerlo en el orden exactamente inverso al habitual",
+    "no puedo repetir ningún paso o movimiento que ya haya usado",
+    "tengo que anunciar en voz alta cada movimiento antes de realizarlo",
+    "no puedo corregir ningún error una vez cometido",
+    "tengo que hacerlo al mismo tiempo que realizo una tarea totalmente distinta",
+    "cada paso debe durar estrictamente más tiempo que el anterior",
+    "cada movimiento tiene que ser el opuesto al movimiento anterior"
   ],
   c: [
-    "el resultado debe quedar exactamente igual que si no hubiera hecho nada","el resultado debe ser mejor que el original sin cambiar nada de él",
-    "nadie debe poder notar que intervine","el resultado tiene que deshacerse solo apenas lo termine",
-    "tengo que garantizar que quedó perfecto sin poder revisarlo","el procedimiento tiene que funcionar igual sin importar cuántas veces se repita",
-    "el resultado debe ser reversible y definitivo a la vez","tengo que lograrlo sin dejar ningún rastro del proceso",
-    "el resultado debe sostenerse solo, sin ningún apoyo","todo tiene que quedar como estaba, pero también completamente resuelto"
+    "el resultado debe quedar exactamente igual que si no hubiera hecho nada",
+    "el resultado debe ser mejor que el original sin modificar nada de él",
+    "nadie debe poder notar que intervine en el proceso",
+    "el resultado tiene que deshacerse solo apenas lo termine",
+    "tengo que garantizar que quedó perfecto sin poder revisarlo",
+    "el procedimiento tiene que funcionar igual sin importar cuántas veces se repita",
+    "el resultado debe ser reversible y definitivo a la vez",
+    "tengo que lograr el objetivo sin dejar ningún rastro del proceso",
+    "el resultado debe sostenerse por sí solo sin ningún apoyo",
+    "todo tiene que quedar como estaba antes de empezar, pero también completamente resuelto"
   ]
 };
 
@@ -817,8 +952,19 @@ document.getElementById('examples').addEventListener('click', (e) => {
     document.querySelectorAll('.examples .chip').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
     taskInput.value = chip.dataset.task;
+    if (chip.dataset.seed) {
+      seedInput.value = chip.dataset.seed;
+    }
   }
 });
+
+function cargarCasoEjemplo() {
+  taskInput.value = "armar un sándwich";
+  seedInput.value = "085";
+  generar();
+  document.getElementById('sandwich-case-card').style.display = 'block';
+  document.getElementById('sandwich-case-card').scrollIntoView({ behavior: 'smooth' });
+}
 
 function generar() {
   const task = taskInput.value.trim();
@@ -878,6 +1024,7 @@ function reiniciar() {
   cup.classList.remove('inverted');
   cupCaption.textContent = 'así la usamos, sin pensarlo';
   document.querySelectorAll('.examples .chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('sandwich-case-card').style.display = 'none';
 }
 
 function copiar() {
@@ -963,6 +1110,8 @@ function actualizarSintesisPersonal() {
 
   textEl.innerHTML = `En tu análisis de esta respuesta, tu evaluación se apoyó principalmente en considerar que <strong>${listStr}</strong> son componentes esenciales de una acción inteligente ante una consigna problemática.`;
 }
+
+window.cargarCasoEjemplo = cargarCasoEjemplo;
 </script>
 </body>
 </html>
