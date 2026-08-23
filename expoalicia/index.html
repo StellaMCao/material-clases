@@ -1176,8 +1176,8 @@
             <div class="form-group">
                 <label class="form-label">Proveedor de IA Preferido</label>
                 <select id="primary-provider-select" class="custom-input" onchange="toggleProviderInputs()" style="background:#130924; color:white;">
+                    <option value="openai">💚 OpenAI gpt-4o-mini (IA Paga Ultra Económica ~$0.001 por charla - RECOMENDADO)</option>
                     <option value="gemini">✦ Google Gemini (Gratis / Ultra Barato - aistudio.google.com)</option>
-                    <option value="openai">💚 OpenAI gpt-4o-mini (IA Paga Ultra Económica ~$0.001 por charla)</option>
                     <option value="groq">⚡ Groq Llama 3.3 (Gratis / Alta Velocidad)</option>
                     <option value="openrouter">🔮 OpenRouter / DeepSeek (Económico / Multi-modelo)</option>
                 </select>
@@ -2505,7 +2505,7 @@
         }
 
         async function callAI(systemPrompt, messages) {
-            const preferred = localStorage.getItem('primary_provider') || 'gemini';
+            const preferred = localStorage.getItem('primary_provider') || 'openai';
 
             // Lista priorizada de llamadas a intentar
             const attempts = [];
@@ -2517,8 +2517,8 @@
 
             // Agregar proveedores de respaldo que estén disponibles
             const allProviders = [
-                { name: 'gemini', fn: callGemini },
                 { name: 'openai', fn: callOpenAI },
+                { name: 'gemini', fn: callGemini },
                 { name: 'groq', fn: callGroq },
                 { name: 'openrouter', fn: callOpenRouter }
             ];
@@ -2766,7 +2766,7 @@ ${turnRule}
 
         function openSettings() {
             document.getElementById('settings-modal').style.display = 'flex';
-            const savedProvider = localStorage.getItem('primary_provider') || 'gemini';
+            const savedProvider = localStorage.getItem('primary_provider') || 'openai';
             const savedGroq = localStorage.getItem('groq_api_key');
             const savedGemini = localStorage.getItem('gemini_api_key');
             const savedOpenAI = localStorage.getItem('openai_api_key');
