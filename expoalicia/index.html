@@ -841,16 +841,46 @@
                 max-width: 90% !important;
             }
             .chat-header {
-                padding: 10px 14px;
+                padding: 8px 10px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .chat-identity {
+                gap: 6px;
             }
             .chat-persona-name {
-                font-size: 0.98rem;
+                font-size: 0.92rem;
             }
             .chat-actions {
-                gap: 4px;
+                gap: 3px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            .chat-action-btn {
+                padding: 5px 8px !important;
+                font-size: 0.76rem !important;
             }
             .chat-action-btn span {
-                display: none;
+                display: inline-block !important;
+                font-size: 0.7rem;
+            }
+            .suggestions-bar {
+                padding: 8px 12px;
+                max-height: 140px;
+                overflow-y: auto;
+                position: relative;
+                z-index: 20;
+                pointer-events: auto !important;
+            }
+            .suggestion-pill {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: rgba(168, 85, 247, 0.4);
+                cursor: pointer !important;
+                position: relative;
+                z-index: 25;
+                pointer-events: auto !important;
             }
         }
         
@@ -2339,11 +2369,21 @@
                 }
             };
 
-            const res = await fetch(`${GEMINI_API_URL}?key=${geminiKey}`, {
+            let res = await fetch(`${GEMINI_API_URL}?key=${geminiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             });
+
+            if (!res.ok) {
+                // Intentar fallback a gemini-1.5-flash en caso de incompatibilidad regional del modelo 2.0
+                const fallbackUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
+                res = await fetch(fallbackUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+            }
 
             if (!res.ok) {
                 const errData = await res.json().catch(() => ({}));
@@ -2976,9 +3016,19 @@ ${turnRule}
             if (profile.vocation) body += '--- CLAVE VOCACIONAL DE ' + currentPersona.toUpperCase() + ' ---\n"' + profile.vocation + '"\n\n';
             if (reflection) body += '--- MI REFLEXION ---\n"' + reflection + '"\n\n';
             body += '=================================\nDesarrollado para el IES N1 Dra. Alicia Moreau de Justo | Expo Alicia 2026\nMaterial extra: ' + PRINT_QR_DATA;
+
+            // Garantizar compatibilidad de longitud con aplicaciones móviles de mail (Gmail/Apple Mail)
+            if (body.length > 1200) {
+                body = body.substring(0, 1200) + '\n\n[...Texto resumido para compatibilidad con celular]\nMaterial extra: ' + PRINT_QR_DATA;
+            }
+
             const subject = 'Expo Alicia 2026 - Charla con ' + currentPersona + ' | ' + nombre;
-            window.open('mailto:stella.psico.cfe@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body));
+            const mailUrl = 'mailto:stella.psico.cfe@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
             closePrintModal();
+
+            // Usar redirección directa para disparar la app de mail nativa en celulares Android e iOS
+            window.location.href = mailUrl;
         }
 
         // ==================================================================
