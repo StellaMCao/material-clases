@@ -825,8 +825,67 @@
         }
         .quiz-option-btn:hover {
             background: rgba(168, 85, 247, 0.15);
-            border-color: var(--accent-purple);
-            transform: translateX(4px);
+        /* Featured Hero Card for Alicia Moreau de Justo */
+        .featured-hero-card {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.28), rgba(236, 72, 153, 0.22));
+            border: 2px solid rgba(234, 179, 8, 0.6);
+            border-radius: 20px;
+            padding: 16px 20px;
+            margin-bottom: 22px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+            transition: all 0.3s ease;
+        }
+        .featured-hero-card:hover {
+            transform: translateY(-3px);
+            border-color: #facc15;
+            box-shadow: 0 12px 32px rgba(234, 179, 8, 0.45);
+        }
+        .featured-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, #eab308, #f59e0b);
+            color: #1e1b4b;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        .featured-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .featured-emoji {
+            font-size: 3rem;
+            flex-shrink: 0;
+        }
+        .featured-info h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 3px;
+        }
+        .featured-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            line-height: 1.35;
+        }
+        .featured-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fef08a;
+            background: rgba(234, 179, 8, 0.15);
+            border: 1px solid rgba(234, 179, 8, 0.4);
+            padding: 5px 12px;
+            border-radius: 14px;
         }
         
         /* Mobile Layout Optimizations */
@@ -969,7 +1028,25 @@
                 </div>
             </div>
 
+            <!-- Featured Hero Card: Alicia Moreau de Justo -->
+            <div class="featured-hero-card" onclick="startChat('Alicia Moreau de Justo')">
+                <div class="featured-badge">🏛️ FIGURA DESTACADA · PATRONA DE NUESTRO INSTITUTO IES N°1</div>
+                <div class="featured-content">
+                    <div class="featured-emoji">👩‍⚕️</div>
+                    <div class="featured-info">
+                        <h2>Dra. Alicia Moreau de Justo</h2>
+                        <p>Médica, educadora y defensora de los derechos humanos. ¡Conversá con la personalidad que inspira nuestra casa de estudios!</p>
+                        <span class="featured-btn"><i class="fas fa-comments"></i> Iniciar Charla Especial</span>
+                    </div>
+                </div>
+            </div>
+
             <div class="character-grid" id="character-grid">
+                <div class="character-card" data-category="Ciencia" onclick="startChat('Alicia Moreau de Justo')" style="border-color: rgba(234, 179, 8, 0.6); background: linear-gradient(145deg, rgba(168, 85, 247, 0.15), rgba(236, 72, 153, 0.15));">
+                    <span class="character-emoji">👩‍⚕️</span>
+                    <span class="character-name">Alicia Moreau de Justo</span>
+                    <span class="character-tag" style="background:rgba(234, 179, 8, 0.2); color:#fef08a; border:1px solid rgba(234, 179, 8, 0.4);">Medicina & Derechos</span>
+                </div>
                 <div class="character-card" data-category="Deporte" onclick="startChat('Lionel Messi')">
                     <span class="character-emoji">⚽</span>
                     <span class="character-name">Lionel Messi</span>
@@ -1029,11 +1106,6 @@
                     <span class="character-emoji">✨</span>
                     <span class="character-name">Emilia Mernes</span>
                     <span class="character-tag">Espectáculo</span>
-                </div>
-                <div class="character-card" data-category="Tecnología" onclick="startChat('Elon Musk')">
-                    <span class="character-emoji">🚀</span>
-                    <span class="character-name">Elon Musk</span>
-                    <span class="character-tag">Ingeniería</span>
                 </div>
                 <div class="character-card" data-category="Deporte" onclick="startChat('Manu Ginóbili')">
                     <span class="character-emoji">🏀</span>
@@ -1502,19 +1574,19 @@
                 ],
                 anecdote: 'Emilia llegó de Nogoyá a Buenos Aires sin conocer a nadie en la industria. Estudió literatura en la universidad, tomaba clases de canto y danza de forma paralela y hacía castings sin resultados durante años. Cuando la convocaron para Rombai, recién comenzaba. Hoy llena estadios sola, con una carrera construida ladrillo a ladrillo.'
             },
-            'Elon Musk': {
-                emoji: '🚀',
-                tag: 'Ingeniería',
-                intro: 'Hola. El futuro de la humanidad está en las estrellas, y para llegar allí necesitamos ingenieros y científicos apasionados. Estudiar física y programación es el verdadero superpoder para construir el futuro. ¿Te interesan la tecnología o las ciencias?',
-                hint: 'Eres Elon Musk. Habla de forma entusiasta sobre el espacio, la ingeniería y el futuro. Anima siempre al estudiante a estudiar física, matemáticas y programación, explicando que son las herramientas fundamentales para resolver problemas difíciles. No uses palabras en inglés.',
-                history: 'Estudió física y economía en la universidad. Leía enciclopedias y libros de cohetes de forma autodidacta para comprender la ingeniería espacial.',
-                vocation: 'Estudiar física y programación te permite entender el mundo desde los principios fundamentales. La educación te da la base para inventar cosas que hoy parecen imposibles.',
+            'Alicia Moreau de Justo': {
+                emoji: '👩‍⚕️',
+                tag: 'Medicina & Derechos',
+                intro: '¡Hola! Es un honor enorme darte la bienvenida. Dediqué mi vida a la medicina, a la educación pública y a defender los derechos de todos. Como patrona de la institución IES N°1 que lleva mi nombre, me llena de orgullo verte pensando en tu futuro. ¿Qué vocación o carrera te despierta curiosidad?',
+                hint: 'Eres la Dra. Alicia Moreau de Justo, ilustre médica, educadora y defensora de los derechos humanos y el feminismo en Argentina. Hablas con una cálida sabiduría maternal, firmeza ética y profundo compromiso con la educación pública. Te llena de inmenso orgullo dialogar con los estudiantes y visitantes del IES N°1 Dra. Alicia Moreau de Justo en esta Expo. Anímalos a estudiar con sentido social, empatía y pensamiento crítico.',
+                history: 'Fue una de las primeras mujeres en graduarse de médica en la Universidad de Buenos Aires (1914). Creó el Ateneo Popular, impulsó el sufragio femenino y ejerció la medicina social en barrios humildes.',
+                vocation: 'Estudiar y educarse no es solo un mérito personal; es la herramienta para transformar la sociedad y defender la dignidad humana. Estudia con pasión, rigor y sentido ético.',
                 quotes: [
-                    'Si algo es suficientemente importante, tenés que intentarlo aunque la probabilidad de éxito sea baja.',
-                    'Aprendé física. Te enseña a razonar desde primeros principios.',
-                    'Los que dicen que algo es imposible no deberían interrumpir a los que lo están haciendo.'
+                    'La educación es la herramienta más poderosa para liberar la mente y construir justicia.',
+                    'Recuerden que la medicina no es solo curar cuerpos, sino sanar y transformar la sociedad.',
+                    'La democracia se construye con ciudadanos educados, libres y profundamente solidarios.'
                 ],
-                anecdote: 'Cuando Musk intentó comprar cohetes rusos usados para sus primeras misiones, los rusos se rieron de él. En el avión de regreso, calculó en una planilla que podía construir los cohetes más barato por su cuenta. Así nació SpaceX. El conocimiento técnico profundo fue lo que le permitió tomar esa decisión en un vuelo.'
+                anecdote: 'En 1906, cuando ingresar a la Facultad de Medicina parecía casi imposible para las mujeres, Alicia organizó el primer Congreso Femenino Internacional y estudió sin descanso. Se convirtió en médica en 1914 y durante décadas atendió gratuitamente a trabajadoras, madres y niños de sectores vulnerables.'
             },
             'Manu Ginóbili': {
                 emoji: '🏀',
@@ -1639,6 +1711,7 @@
         let projectorMode = false;
 
         const characterGenders = {
+            'Alicia Moreau de Justo': 'female',
             'Lionel Messi': 'male',
             'Lali Espósito': 'female',
             'Emiliano Martínez': 'male',
@@ -1651,7 +1724,6 @@
             'Quino': 'male',
             'Bizarrap': 'male',
             'Emilia Mernes': 'female',
-            'Elon Musk': 'male',
             'Manu Ginóbili': 'male',
             'Lionel Scaloni': 'male',
             'René Favaloro': 'male',
@@ -1723,10 +1795,10 @@
                 '¿Qué disciplinas tuviste que estudiar además de cantar?',
                 '¿Qué le recomendás a los que quieren dedicarse al espectáculo?'
             ],
-            'Elon Musk': [
-                '¿Por qué decís que estudiar física y matemática es clave?',
-                '¿Cómo aprendiste a construir cohetes de forma autodidacta?',
-                '¿Qué consejo le das a los futuros ingenieros?'
+            'Alicia Moreau de Justo': [
+                '¿Qué te motivó a estudiar medicina cuando casi no había mujeres?',
+                '¿Por qué la educación es clave para el futuro y los derechos?',
+                '¿Qué mensaje le dejás a los estudiantes del IES N°1 que lleva tu nombre?'
             ],
             'Manu Ginóbili': [
                 '¿Cómo te ayudó la disciplina a triunfar en la NBA?',
