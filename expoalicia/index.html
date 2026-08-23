@@ -182,51 +182,46 @@
         }
         @media(min-width: 480px) {
             .character-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        @media(min-width: 768px) {
-            .character-grid {
-                grid-template-columns: repeat(5, 1fr); /* 5 columnas en computadoras */
-            }
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
         }
         .character-card {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 10px 12px;
-            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 10px 8px;
             cursor: pointer;
             transition: var(--transition-smooth);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
         .character-card:hover {
             background: rgba(168, 85, 247, 0.08);
             border-color: rgba(168, 85, 247, 0.4);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
         }
         .character-emoji {
-            font-size: 1.7rem;
+            font-size: 1.45rem;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
             transition: var(--transition-smooth);
         }
         .character-card:hover .character-emoji {
-            transform: scale(1.12);
+            transform: scale(1.1);
         }
         .character-name {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-main);
+            text-align: center;
         }
         .character-tag {
-            font-size: 0.75rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
             background: rgba(255, 255, 255, 0.05);
-            padding: 2px 8px;
+            padding: 2px 7px;
             border-radius: 20px;
         }
 
@@ -1826,6 +1821,8 @@
 
         // ==================================================================
         // === INICIALIZACIÓN ===
+        // ==================================================================
+        document.addEventListener('DOMContentLoaded', () => {
             // Forzar 'openai' como proveedor predeterminado principal
             if (!localStorage.getItem('primary_provider') || localStorage.getItem('primary_provider') === 'groq' || localStorage.getItem('primary_provider') === 'gemini') {
                 localStorage.setItem('primary_provider', 'openai');
