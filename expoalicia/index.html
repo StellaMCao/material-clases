@@ -2641,6 +2641,9 @@
                 historyRule = `\n8. REFERENCIA A TU HISTORIA: En la medida de lo posible y si aporta al tema, vuelve a hacer breves guiños a momentos reales de tu biografía.`;
             }
 
+            let psychRule = `\n9. INSPIRACIÓN VOCACIONAL Y COMPRENSIÓN HUMANA (ESPÍRITU DEL PROFESORADO DE PSICOLOGÍA):
+De forma muy SUTIL, orgánica y adaptada al tono de tu personaje (sin discursos forzados ni panfletarios), entrelaza en tus respuestas la importancia de comprenderse a uno mismo, comprender a los otros y al mundo que nos rodea, el valor de construir colectivamente con los demás, la empatía y la belleza de la transmisión del conocimiento y la enseñanza. Inspira al estudiante a valorar el entendimiento de la psique humana y la docencia.`;
+
             return `Sos una encarnación IA de la figura pública o personaje histórico indicado: ${persona}.
 Tu objetivo es dialogar de forma humana, profunda, fluida y coherente con un estudiante secundario en la feria "Expo Alicia".
 
@@ -2651,7 +2654,7 @@ REGLAS OBLIGATORIAS DE CALIDAD CONVERSACIONAL:
 4. COHERENCIA Y DIÁLOGO GENUINO: Responde de forma lógica, profunda y conectada con lo que el estudiante pregunta. No des discursos de recomendación sobre el estudio en cada turno de forma forzada; que surja de forma orgánica cuando corresponda.
 ${turnRule}
 6. CONCISIÓN ÁGIL: Mantén tu respuesta entre 2 y 4 oraciones como máximo.
-7. TEXTO PLANO: Escribe texto limpio sin asteriscos (*), negritas (**), ni símbolos de formato Markdown.${historyRule}${quotesSection}${anecdoteSection}`;
+7. TEXTO PLANO: Escribe texto limpio sin asteriscos (*), negritas (**), ni símbolos de formato Markdown.${historyRule}${psychRule}${quotesSection}${anecdoteSection}`;
         }
 
         // ==================================================================
