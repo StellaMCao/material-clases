@@ -829,6 +829,31 @@
             transform: translateX(4px);
         }
         
+        /* Mobile Layout Optimizations */
+        @media (max-width: 768px) {
+            .chat-sidebar {
+                display: none !important;
+            }
+            .chat-main-area {
+                width: 100% !important;
+            }
+            .message-bubble {
+                max-width: 90% !important;
+            }
+            .chat-header {
+                padding: 10px 14px;
+            }
+            .chat-persona-name {
+                font-size: 0.98rem;
+            }
+            .chat-actions {
+                gap: 4px;
+            }
+            .chat-action-btn span {
+                display: none;
+            }
+        }
+        
         #print-version {
             display: none;
         }
@@ -2527,33 +2552,29 @@ ${turnRule}
         function obtenerVozPorGenero(genero) {
             if (!('speechSynthesis' in window)) return null;
             const voces = speechSynthesis.getVoices();
-            const vocesEspañol = voces.filter(v => v.lang.startsWith('es'));
-            
-            // Intentar buscar voces con acento argentino (es-AR) primero
-            const vocesArgentinas = vocesEspañol.filter(v => v.lang.toLowerCase().replace('_', '-').startsWith('es-ar'));
-            
-            const palabrasMujer = ['sabina', 'helena', 'elena', 'zira', 'female', 'mujer', 'sofia', 'maria', 'juana', 'laura', 'sofía', 'lucia', 'luz', 'dalia'];
-            const palabrasHombre = ['raul', 'david', 'pablo', 'male', 'hombre', 'miguel', 'julio', 'carlos', 'esteban', 'mateo', 'tomas', 'tomás', 'diego', 'facundo', 'jeronimo', 'gabriel'];
+            if (!voces || voces.length === 0) return null;
 
-            let candidatas = vocesArgentinas.length > 0 ? vocesArgentinas : vocesEspañol;
+            const vocesEspañol = voces.filter(v => v.lang && v.lang.toLowerCase().startsWith('es'));
+            if (vocesEspañol.length === 0) return null;
+
+            const vocesArgentinas = vocesEspañol.filter(v => v.lang.toLowerCase().replace('_', '-').startsWith('es-ar'));
+            const candidatas = vocesArgentinas.length > 0 ? vocesArgentinas : vocesEspañol;
+
+            const palabrasMujer = ['sabina', 'helena', 'elena', 'zira', 'female', 'mujer', 'sofia', 'maria', 'juana', 'laura', 'sofía', 'lucia', 'luz', 'dalia', 'monica', 'mónica', 'esperanza', 'paulina'];
+            const palabrasHombre = ['raul', 'raúl', 'david', 'pablo', 'male', 'hombre', 'miguel', 'julio', 'carlos', 'esteban', 'mateo', 'tomas', 'tomás', 'diego', 'facundo', 'jeronimo', 'jorge', 'juan', 'alberto', 'mario', 'sergio', 'pedro', 'enrique', 'gonzalo', 'es-es', 'es_es', 'es-mx'];
 
             if (genero === 'female') {
-                // Buscar en candidatas
                 let voz = candidatas.find(v => palabrasMujer.some(p => v.name.toLowerCase().includes(p)));
                 if (voz) return voz;
-                // Si no, buscar en cualquier español
                 voz = vocesEspañol.find(v => palabrasMujer.some(p => v.name.toLowerCase().includes(p)));
                 if (voz) return voz;
             } else {
-                // Buscar en candidatas
                 let voz = candidatas.find(v => palabrasHombre.some(p => v.name.toLowerCase().includes(p)));
                 if (voz) return voz;
-                // Si no, buscar en cualquier español
                 voz = vocesEspañol.find(v => palabrasHombre.some(p => v.name.toLowerCase().includes(p)));
                 if (voz) return voz;
             }
 
-            // Fallback general en español (priorizar Google)
             return candidatas.find(v => v.name.includes('Google')) || candidatas[0] || vocesEspañol[0] || null;
         }
 
@@ -2572,7 +2593,16 @@ ${turnRule}
             } else {
                 utterance.lang = 'es-AR';
             }
-            
+
+            // Modulación de tono (pitch) para garantizar voz percibida masculina o femenina en celulares
+            if (currentPersonaGender === 'female') {
+                utterance.pitch = 1.2; // Tono femenino más agudo
+                utterance.rate = 1.0;
+            } else {
+                utterance.pitch = 0.72; // Tono masculino más grave (indispensable en celulares Android/iOS)
+                utterance.rate = 0.94;
+            }
+
             speechSynthesis.speak(utterance);
         }
 
