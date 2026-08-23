@@ -1166,6 +1166,17 @@
                 <input type="number" id="max-questions-input" class="custom-input" min="1" max="50" value="5">
             </div>
 
+            <!-- Resguardo y Enlace Privado -->
+            <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:14px; margin-top:14px;">
+                <label class="form-label" style="margin-bottom:8px;">🔒 Copias de Seguridad y Enlace Móvil</label>
+                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                    <button onclick="exportKeyBackup()" style="flex:1; background:rgba(168,85,247,0.15); border:1px solid rgba(168,85,247,0.3); color:#e9d5ff; border-radius:10px; padding:7px 10px; font-size:0.78rem; cursor:pointer; font-weight:600;"><i class="fas fa-download"></i> Backup Claves</button>
+                    <button onclick="document.getElementById('backup-file-input').click()" style="flex:1; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); color:#bfdbfe; border-radius:10px; padding:7px 10px; font-size:0.78rem; cursor:pointer; font-weight:600;"><i class="fas fa-upload"></i> Restaurar Backup</button>
+                    <input type="file" id="backup-file-input" accept=".json" style="display:none;" onchange="importKeyBackup(event)">
+                </div>
+                <button onclick="generateMagicLink()" style="width:100%; margin-top:8px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#a7f3d0; border-radius:10px; padding:8px 10px; font-size:0.8rem; cursor:pointer; font-weight:600;"><i class="fas fa-link"></i> Generar Enlace Privado (para Celular / WhatsApp)</button>
+            </div>
+
             <!-- Session Counter -->
             <div class='form-group' style='margin-bottom:0; border-top:1px solid rgba(255,255,255,0.06); padding-top:16px;'><label class='form-label'>Charlas de hoy en la Expo</label><div id='session-counter-display' style='font-size:0.82rem;color:var(--text-muted);line-height:1.8;'>Cargando...</div><button onclick='resetSessionCounters()' style='margin-top:8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:10px;padding:6px 14px;font-size:0.8rem;cursor:pointer;font-weight:600;'>Resetear contadores</button></div>
 
@@ -2678,6 +2689,100 @@ ${turnRule}
             closeSettings();
             showToast('Ajustes guardados correctamente', 3000);
         }
+
+        function exportKeyBackup() {
+            const backupData = {
+                primary_provider: localStorage.getItem('primary_provider') || 'gemini',
+                openai_api_key: localStorage.getItem('openai_api_key') || '',
+                gemini_api_key: localStorage.getItem('gemini_api_key') || '',
+                groq_api_key: localStorage.getItem('groq_api_key') || '',
+                openrouter_api_key: localStorage.getItem('openrouter_api_key') || ''
+            };
+            const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'backup-claves-expoalicia.json';
+            a.click();
+            showToast('📥 Copia de seguridad guardada en tu equipo', 3500);
+        }
+
+        function importKeyBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.primary_provider) localStorage.setItem('primary_provider', data.primary_provider);
+                    if (data.openai_api_key) localStorage.setItem('openai_api_key', data.openai_api_key);
+                    if (data.gemini_api_key) localStorage.setItem('gemini_api_key', data.gemini_api_key);
+                    if (data.groq_api_key) localStorage.setItem('groq_api_key', data.groq_api_key);
+                    if (data.openrouter_api_key) localStorage.setItem('openrouter_api_key', data.openrouter_api_key);
+                    openSettings();
+                    showToast('✅ Claves restauradas correctamente', 4000);
+                } catch (err) {
+                    alert('Archivo de backup no válido.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function generateMagicLink() {
+            const openaiKey = localStorage.getItem('openai_api_key') || '';
+            const geminiKey = localStorage.getItem('gemini_api_key') || '';
+            const groqKey = localStorage.getItem('groq_api_key') || '';
+
+            if (!openaiKey && !geminiKey && !groqKey) {
+                alert('Primero ingresá al menos una clave en los Ajustes.');
+                return;
+            }
+
+            let hash = '#';
+            if (openaiKey) hash += 'openai=' + encodeURIComponent(openaiKey) + '&';
+            if (geminiKey) hash += 'gemini=' + encodeURIComponent(geminiKey) + '&';
+            if (groqKey) hash += 'groq=' + encodeURIComponent(groqKey) + '&';
+
+            const magicUrl = window.location.origin + window.location.pathname + hash;
+            navigator.clipboard.writeText(magicUrl).then(() => {
+                alert('🔗 ¡Enlace personal copiado al portapapeles!\n\nMandátelo por WhatsApp o Mail a vos misma. Si abrís la app desde ese enlace en cualquier celular o compu, se configurará automáticamente sin exponer la clave.');
+            }).catch(() => {
+                prompt('Copiá este enlace privado y guardalo en tus notas:', magicUrl);
+            });
+        }
+
+        function checkUrlKeys() {
+            const hash = window.location.hash;
+            if (!hash || hash.length < 5) return;
+            try {
+                const params = new URLSearchParams(hash.substring(1));
+                let updated = false;
+
+                if (params.has('openai')) {
+                    localStorage.setItem('openai_api_key', params.get('openai'));
+                    localStorage.setItem('primary_provider', 'openai');
+                    updated = true;
+                }
+                if (params.has('gemini')) {
+                    localStorage.setItem('gemini_api_key', params.get('gemini'));
+                    localStorage.setItem('primary_provider', 'gemini');
+                    updated = true;
+                }
+                if (params.has('groq')) {
+                    localStorage.setItem('groq_api_key', params.get('groq'));
+                    localStorage.setItem('primary_provider', 'groq');
+                    updated = true;
+                }
+
+                if (updated) {
+                    showToast('🔑 Claves configuradas automáticamente', 4000);
+                    // Ocultar la clave de la barra de navegación de forma inmediata por seguridad
+                    history.replaceState(null, document.title, window.location.pathname + window.location.search);
+                }
+            } catch (e) {
+                console.error("Error al procesar llaves URL:", e);
+            }
+        }
+        window.addEventListener('DOMContentLoaded', checkUrlKeys);
 
         // ==================================================================
         // === PROCESO DE IMPRESIÓN ===
