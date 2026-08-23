@@ -1767,8 +1767,11 @@
 
         // ==================================================================
         // === INICIALIZACIÓN ===
-        // ==================================================================
-        document.addEventListener('DOMContentLoaded', () => {
+            // Forzar 'openai' como proveedor predeterminado principal
+            if (!localStorage.getItem('primary_provider') || localStorage.getItem('primary_provider') === 'groq' || localStorage.getItem('primary_provider') === 'gemini') {
+                localStorage.setItem('primary_provider', 'openai');
+            }
+
             // Cargar API Key de LocalStorage si existe, o usar la por defecto
             if (!localStorage.getItem('groq_api_key')) {
                 localStorage.setItem('groq_api_key', DEFAULT_API_KEY);
