@@ -2578,38 +2578,77 @@ ${turnRule}
             return candidatas.find(v => v.name.includes('Google')) || candidatas[0] || vocesEspañol[0] || null;
         }
 
-        function speakText(text) {
-            if (!isVoiceEnabled || !('speechSynthesis' in window)) return;
+        let currentAudioPlayer = null;
+
+        function stopVoice() {
+            if (currentAudioPlayer) {
+                try {
+                    currentAudioPlayer.pause();
+                    currentAudioPlayer.currentTime = 0;
+                } catch (e) {}
+                currentAudioPlayer = null;
+            }
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+        }
+
+        async function speakText(text) {
+            if (!isVoiceEnabled) return;
             stopVoice();
 
             // Limpiar texto de emoticones para una lectura más fluida
-            const cleanText = text.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "");
+            const cleanText = text.replace(/[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/g, "").trim();
+            if (!cleanText) return;
 
+            const openaiKey = localStorage.getItem('openai_api_key');
+
+            // MODO 1: Si hay API Key de OpenAI configurada, usar voces humanas reales ultra realistas HD
+            if (openaiKey && openaiKey.startsWith('sk-')) {
+                try {
+                    // 'onyx' es una voz masculina profunda y natural; 'nova' es femenina natural
+                    const voiceName = (currentPersonaGender === 'female') ? 'nova' : 'onyx';
+                    const res = await fetch('https://api.openai.com/v1/audio/speech', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${openaiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'tts-1',
+                            input: cleanText,
+                            voice: voiceName
+                        })
+                    });
+
+                    if (res.ok) {
+                        const blob = await res.blob();
+                        const audioUrl = URL.createObjectURL(blob);
+                        currentAudioPlayer = new Audio(audioUrl);
+                        currentAudioPlayer.play();
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('OpenAI TTS falló, usando sintetizador nativo:', e);
+                }
+            }
+
+            // MODO 2: Sintetizador nativo del navegador con tono natural limpio
+            if (!('speechSynthesis' in window)) return;
             const utterance = new SpeechSynthesisUtterance(cleanText);
-            
             const vozElegida = obtenerVozPorGenero(currentPersonaGender);
+            
             if (vozElegida) {
                 utterance.voice = vozElegida;
             } else {
                 utterance.lang = 'es-AR';
             }
 
-            // Modulación de tono (pitch) para garantizar voz percibida masculina o femenina en celulares
-            if (currentPersonaGender === 'female') {
-                utterance.pitch = 1.2; // Tono femenino más agudo
-                utterance.rate = 1.0;
-            } else {
-                utterance.pitch = 0.72; // Tono masculino más grave (indispensable en celulares Android/iOS)
-                utterance.rate = 0.94;
-            }
+            // Tono natural limpio
+            utterance.pitch = 1.0;
+            utterance.rate = 0.98;
 
             speechSynthesis.speak(utterance);
-        }
-
-        function stopVoice() {
-            if ('speechSynthesis' in window) {
-                speechSynthesis.cancel();
-            }
         }
 
         function toggleVoice() {
