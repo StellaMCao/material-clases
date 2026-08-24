@@ -946,10 +946,15 @@
 <body>
 
     <div class="app-container">
-        <!-- Settings Cog Button -->
-        <button id="settings-trigger" class="settings-trigger" title="Configurar API Key">
-            <i class="fas fa-cog"></i>
-        </button>
+        <!-- Settings Cog Button & Phone QR Trigger -->
+        <div style="position:absolute; top:20px; right:20px; display:flex; gap:8px; z-index:100;">
+            <button onclick="openAppQrModal()" class="settings-trigger" style="position:static;" title="Escanear QR para abrir en tu celular">
+                <i class="fas fa-qrcode"></i>
+            </button>
+            <button id="settings-trigger" class="settings-trigger" style="position:static;" title="Configurar API Key">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
 
         <!-- Main App Header -->
         <div class="app-header">
@@ -1376,24 +1381,67 @@
         </div>
     </div>
 
-    <!-- MODAL 2: Print Name Request -->
+    <!-- MODAL 4: QR Code para Celulares -->
+    <div id="app-qr-modal" class="modal">
+        <div class="modal-content" style="max-width:380px; text-align:center;">
+            <span class="modal-close" onclick="closeAppQrModal()">&times;</span>
+            <div class="modal-title" style="justify-content:center;">
+                <i class="fas fa-mobile-screen-button" style="color:var(--accent-purple);"></i>
+                <span>Abrir App en tu Celular</span>
+            </div>
+            <p class="modal-description">Escaneá este código QR con la cámara de tu celular para charlar directamente desde tu dispositivo:</p>
+            
+            <div style="background:white; padding:12px; border-radius:16px; display:inline-block; margin:10px 0; border:2px solid var(--accent-purple); box-shadow:0 8px 24px rgba(168,85,247,0.3);">
+                <img id="app-qr-image" src="" alt="QR App Expo Alicia" style="width:200px; height:200px; display:block;" />
+            </div>
+            
+            <p style="font-size:0.78rem; color:#6ee7b7; font-weight:600; margin-top:6px;">
+                ✨ Escaneá para charlar con los personajes en tu propio teléfono
+            </p>
+            <button class="modal-btn secondary" onclick="closeAppQrModal()" style="margin-top:12px; width:100%;">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: Print & Email Souvenir Modal -->
     <div id="print-modal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closePrintModal()">&times;</span>
             <div class="modal-title">
-                <i class="fas fa-print"></i>
-                <span>Imprimir Conversación</span>
+                <i class="fas fa-paper-plane" style="color:var(--accent-purple);"></i>
+                <span>Guardar, Enviar o Imprimir Recuerdo</span>
             </div>
-            <p class="modal-description">Escribí tu nombre para incluirlo en la hoja de recuerdo de la Expo Alicia:</p>
+            <p class="modal-description">Completá tus datos para personalizar tu hoja de recuerdo de la Expo Alicia 2026:</p>
             
             <div class="form-group">
-                <label class="form-label">Tu Nombre y Apellido</label>
-                <input type="text" id="print-name-input" class="custom-input" placeholder="Ej: Juan Pérez">
+                <label class="form-label">Tu Nombre y Apellido (*)</label>
+                <input type="text" id="print-name-input" class="custom-input" placeholder="Ej: Sofía Gómez">
             </div>
 
-            <div class='form-group'><label class='form-label'>Tu reflexión (opcional)</label><textarea id='print-reflection-input' class='custom-input' rows='2' placeholder='Una frase o idea que te haya quedado...' style='resize:none; font-family:inherit;'></textarea></div>
+            <div class="form-group">
+                <label class="form-label">Correo Electrónico Destinatario (para recibir tu recuerdo por mail)</label>
+                <input type="email" id="print-email-input" class="custom-input" placeholder="Ej: mi.email@gmail.com">
+                <span style="font-size:0.74rem; color:#6ee7b7; margin-top:4px; display:block;">
+                    ✉️ Remitente oficial: <strong>stella.psico.cfe@gmail.com</strong>
+                </span>
+            </div>
 
-            <div class='modal-buttons'><button class='modal-btn secondary' onclick='closePrintModal()'>Cancelar</button><button class='modal-btn secondary' onclick='executeEmail()' style='border-color:rgba(59,130,246,0.4);color:#93c5fd;'>Email</button><button class='modal-btn primary' onclick='executePrint()'>Imprimir</button></div>
+            <div class="form-group">
+                <label class="form-label">Tu reflexión personal (opcional)</label>
+                <textarea id="print-reflection-input" class="custom-input" rows="2" placeholder="Una frase, valor o idea vocacional que te haya quedado..." style="resize:none; font-family:inherit;"></textarea>
+            </div>
+
+            <div class="modal-buttons" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
+                <button class="modal-btn secondary" onclick="closePrintModal()" style="flex:1; min-width:80px;">Cancelar</button>
+                <button class="modal-btn secondary" onclick="executeGmailWeb()" style="flex:1.2; min-width:120px; border-color:rgba(59,130,246,0.4); color:#93c5fd; background:rgba(59,130,246,0.12);">
+                    <i class="fas fa-envelope"></i> Gmail Web
+                </button>
+                <button class="modal-btn secondary" onclick="executeWhatsApp()" style="flex:1.2; min-width:120px; border-color:rgba(34,197,94,0.4); color:#86efac; background:rgba(34,197,94,0.12);">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="modal-btn primary" onclick="executePrint()" style="flex:1.2; min-width:120px;">
+                    <i class="fas fa-print"></i> Imprimir / PDF
+                </button>
+            </div>
         </div>
     </div>
 
@@ -3296,50 +3344,119 @@ ${turnRule}
             }, 600);
         }
 
-        function executeEmail() {
-            const nombre = document.getElementById('print-name-input').value.trim();
-            if (!nombre) { alert('Por favor, ingresá tu nombre antes de enviar por email.'); return; }
-            const reflection = (document.getElementById('print-reflection-input')?.value || '').trim();
+        function openAppQrModal() {
+            const publicUrl = window.location.protocol.startsWith('http') 
+                ? window.location.href 
+                : 'https://stellamcao.github.io/material-clases/expoalicia/';
+            const qrImg = document.getElementById('app-qr-image');
+            if (qrImg) {
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(publicUrl)}`;
+            }
+            document.getElementById('app-qr-modal').style.display = 'flex';
+        }
+
+        function closeAppQrModal() {
+            document.getElementById('app-qr-modal').style.display = 'none';
+        }
+
+        function buildFullSouvenirText(nombre, destEmail, reflection) {
             const profile = characterProfiles[currentPersona] || {};
             const fecha = new Date().toLocaleDateString('es-AR');
             const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-            let body = 'EXPO ALICIA 2026\n=================================\n';
-            body += 'Conversacion entre: ' + nombre + ' y ' + currentPersona + '\n';
-            body += 'Fecha: ' + fecha + ' a las ' + hora + ' hs.\n\n--- DIALOGO ---\n\n';
+
+            let body = 'EXPO ALICIA 2026 - IES N°1 "Dra. Alicia Moreau de Justo"\n';
+            body += '===================================================\n';
+            body += 'Remitente oficial: stella.psico.cfe@gmail.com\n';
+            if (destEmail) body += 'Destinatario: ' + destEmail + '\n';
+            body += 'Conversación entre: ' + nombre + ' y ' + currentPersona + '\n';
+            body += 'Fecha: ' + fecha + ' a las ' + hora + ' hs.\n\n';
+            body += '--- DIÁLOGO COMPLETO ---\n\n';
+
             const bubbles = document.querySelectorAll('.chat-messages .message-bubble:not(.typing-bubble)');
             bubbles.forEach(bubble => {
                 const isUser = bubble.classList.contains('user-bubble');
                 const sender = isUser ? nombre : currentPersona;
-                body += '[' + sender + ']\n' + bubble.textContent + '\n\n';
+                body += '[' + sender + ']: ' + bubble.textContent + '\n\n';
             });
-            if (profile.vocation) body += '--- CLAVE VOCACIONAL DE ' + currentPersona.toUpperCase() + ' ---\n"' + profile.vocation + '"\n\n';
-            if (reflection) body += '--- MI REFLEXION ---\n"' + reflection + '"\n\n';
-            body += '=================================\nDesarrollado para el IES N1 Dra. Alicia Moreau de Justo | Expo Alicia 2026\nMaterial extra: ' + PRINT_QR_DATA;
 
-            // 1. Copiar automáticamente el texto completo al portapapeles (resguardo 100% infalible para celulares)
+            if (profile.vocation) {
+                body += '--- CLAVE VOCACIONAL DE ' + currentPersona.toUpperCase() + ' ---\n"' + profile.vocation + '"\n\n';
+            }
+            if (reflection) {
+                body += '--- MI REFLEXIÓN PERSONAL ---\n"' + reflection + '"\n\n';
+            }
+            body += '===================================================\n';
+            body += 'Desarrollado para el IES N°1 "Dra. Alicia Moreau de Justo" | Expo Alicia 2026\n';
+            body += 'Material extra: ' + PRINT_QR_DATA;
+            return { body, fecha, hora };
+        }
+
+        function executeGmailWeb() {
+            const nombre = document.getElementById('print-name-input').value.trim();
+            if (!nombre) {
+                alert('Por favor, ingresá tu nombre antes de enviar por email.');
+                document.getElementById('print-name-input').focus();
+                return;
+            }
+
+            const destEmail = document.getElementById('print-email-input')?.value.trim() || '';
+            const reflection = (document.getElementById('print-reflection-input')?.value || '').trim();
+            const { body, fecha, hora } = buildFullSouvenirText(nombre, destEmail, reflection);
+
+            // 1. Descargar archivo de recuerdo HTML
+            const souvenirFileName = `Recuerdo_Expo_Alicia_${currentPersona.replace(/\s+/g, '_')}.html`;
+            const fullHtmlSouvenir = generateSouvenirHTMLFile(nombre, destEmail || 'Destinatario', fecha, hora, reflection);
+            downloadSouvenirFile(souvenirFileName, fullHtmlSouvenir);
+
+            // 2. Copiar texto al portapapeles
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(body).catch(() => {});
             }
 
-            // 2. Formatear URL de mailto para cliente de correo nativo
+            // 3. Abrir redacción directa en Gmail Web
+            const subject = 'Expo Alicia 2026 - Mi charla con ' + currentPersona + ' | ' + nombre;
             let shortBody = body;
-            if (shortBody.length > 900) {
-                shortBody = shortBody.substring(0, 900) + '\n\n[...Texto completo copiado al portapapeles]\nMaterial extra: ' + PRINT_QR_DATA;
+            if (shortBody.length > 1500) {
+                shortBody = shortBody.substring(0, 1500) + '\n\n[...Texto completo copiado al portapapeles y adjunto descargado]\nMaterial extra: ' + PRINT_QR_DATA;
             }
 
-            const subject = 'Expo Alicia 2026 - Charla con ' + currentPersona + ' | ' + nombre;
-            const mailUrl = 'mailto:stella.psico.cfe@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(shortBody);
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(destEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
 
             closePrintModal();
+            showToast('✉️ ¡Adjunto ' + souvenirFileName + ' descargado! Abriendo Gmail Web...', 5000);
+            window.open(gmailUrl, '_blank');
+        }
 
-            showToast('📋 Texto copiado al portapapeles. Abriendo correo...', 4000);
-
-            // 3. Intentar redirección y fallback seguro
-            try {
-                window.location.href = mailUrl;
-            } catch (e) {
-                console.error("Error disparando mailto:", e);
+        function executeWhatsApp() {
+            const nombre = document.getElementById('print-name-input').value.trim();
+            if (!nombre) {
+                alert('Por favor, ingresá tu nombre antes de compartir por WhatsApp.');
+                document.getElementById('print-name-input').focus();
+                return;
             }
+
+            const reflection = (document.getElementById('print-reflection-input')?.value || '').trim();
+            const profile = characterProfiles[currentPersona] || {};
+            const fecha = new Date().toLocaleDateString('es-AR');
+            const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+
+            let waText = '✨ *Expo Alicia 2026 - Recuerdo de Orientación Vocacional*\n';
+            waText += '👤 *' + nombre + '* conversó con *' + currentPersona + '* (' + fecha + ')\n\n';
+            
+            if (profile.vocation) waText += '💡 *Clave Vocacional:* "' + profile.vocation + '"\n\n';
+            if (reflection) waText += '📝 *Mi reflexión:* "' + reflection + '"\n\n';
+            waText += '🔗 *Proba la app acá:* ' + PRINT_QR_DATA;
+
+            // Descargar archivo de recuerdo HTML
+            const souvenirFileName = `Recuerdo_Expo_Alicia_${currentPersona.replace(/\s+/g, '_')}.html`;
+            const fullHtmlSouvenir = generateSouvenirHTMLFile(nombre, 'WhatsApp', fecha, hora, reflection);
+            downloadSouvenirFile(souvenirFileName, fullHtmlSouvenir);
+
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(waText)}`;
+            
+            closePrintModal();
+            showToast('💬 ¡Adjunto descargado! Abriendo WhatsApp para compartir...', 5000);
+            window.open(waUrl, '_blank');
         }
 
         // ==================================================================
