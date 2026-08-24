@@ -646,27 +646,43 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 100;
+            z-index: 9999;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(10, 5, 20, 0.85);
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 5, 20, 0.88);
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
         .modal-content {
-            background: rgba(25, 15, 45, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
+            background: rgba(25, 15, 45, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
             width: 100%;
-            max-width: 420px;
-            padding: 28px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            max-width: 440px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
             position: relative;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            margin: auto;
             animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-content * {
+            box-sizing: border-box;
+            max-width: 100%;
         }
         .modal-close {
             position: absolute;
@@ -935,6 +951,23 @@
                 position: relative;
                 z-index: 25;
                 pointer-events: auto !important;
+            }
+            .modal {
+                padding: 10px !important;
+            }
+            .modal-content {
+                padding: 18px 14px !important;
+                border-radius: 16px !important;
+                max-width: 100% !important;
+                max-height: 92vh !important;
+            }
+            .form-label {
+                font-size: 0.82rem !important;
+                flex-wrap: wrap !important;
+                gap: 4px !important;
+            }
+            .form-group {
+                margin-bottom: 14px !important;
             }
         }
         
@@ -2559,8 +2592,13 @@
         // ==================================================================
         // === QUIZ VOCACIONAL (¿A QUIÉN ELEGIR?) ===
         // ==================================================================
+        function closeAllModals() {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+        }
+
         let quizAnswers = {};
         function openQuizModal() {
+            closeAllModals();
             quizAnswers = {};
             document.getElementById('quiz-step-1').style.display = 'block';
             document.getElementById('quiz-step-2').style.display = 'none';
@@ -3049,6 +3087,7 @@ ${turnRule}
         }
 
         function openSettings() {
+            closeAllModals();
             document.getElementById('settings-modal').style.display = 'flex';
             const savedProvider = localStorage.getItem('primary_provider') || 'openai';
             const savedGroq = localStorage.getItem('groq_api_key');
@@ -3189,6 +3228,7 @@ ${turnRule}
         // === PROCESO DE IMPRESIÓN ===
         // ==================================================================
         function triggerPrintModal() {
+            closeAllModals();
             document.getElementById('print-modal').style.display = 'flex';
             document.getElementById('print-name-input').focus();
         }
@@ -3345,6 +3385,7 @@ ${turnRule}
         }
 
         function openAppQrModal() {
+            closeAllModals();
             const publicUrl = window.location.protocol.startsWith('http') 
                 ? window.location.href 
                 : 'https://stellamcao.github.io/material-clases/expoalicia/';
