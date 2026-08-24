@@ -1372,8 +1372,8 @@
                     </div>
                 </div>
 
-                <!-- Info Sidebar -->
-                <div class="chat-sidebar" id="chat-sidebar">
+                <!-- Info Sidebar — hidden on mobile via JS -->
+                <div class="chat-sidebar" id="chat-sidebar" style="display:none;">
                     <div class="sidebar-avatar" id="sidebar-avatar">🤖</div>
                     <h3 class="sidebar-name" id="sidebar-name">Nombre</h3>
                     <span class="sidebar-tag" id="sidebar-tag">Tag</span>
@@ -2218,6 +2218,25 @@
 
             // Inicializar Web Speech Recognition si está disponible
             setupSpeechRecognition();
+
+            // Ajustar visibilidad responsive al cambiar orientación o tamaño
+            function applyResponsiveLayout() {
+                const isMobile = window.innerWidth <= 900;
+                // Sidebar: solo visible en pantallas anchas (cuando hay un chat activo)
+                const sidebar = document.getElementById('chat-sidebar');
+                if (sidebar && sidebar.dataset.active === 'true') {
+                    sidebar.style.display = isMobile ? 'none' : 'flex';
+                }
+                // Botones secundarios del header
+                document.querySelectorAll('.secondary-action').forEach(el => {
+                    el.style.display = isMobile ? 'none' : '';
+                });
+                document.querySelectorAll('.btn-label').forEach(el => {
+                    el.style.display = isMobile ? 'none' : '';
+                });
+            }
+            window.addEventListener('resize', applyResponsiveLayout);
+            applyResponsiveLayout();
         });
 
         // ==================================================================
@@ -2249,7 +2268,12 @@
             document.getElementById('chat-persona-name').textContent = personaName;
             document.getElementById('chat-avatar').textContent = profile.emoji;
 
-            // Configurar Barra Lateral (Sidebar)
+            // Configurar Barra Lateral (Sidebar) — solo en pantallas anchas
+            const sidebarEl = document.getElementById('chat-sidebar');
+            const showSidebar = window.innerWidth > 900;
+            sidebarEl.style.display = showSidebar ? 'flex' : 'none';
+            sidebarEl.dataset.active = 'true';
+
             document.getElementById('sidebar-avatar').textContent = profile.emoji || '🤖';
             document.getElementById('sidebar-name').textContent = personaName;
             document.getElementById('sidebar-tag').textContent = profile.tag || 'Personalizado';
