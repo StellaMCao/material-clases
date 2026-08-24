@@ -41,12 +41,19 @@
             background: var(--bg-gradient);
             color: var(--text-main);
             min-height: 100vh;
+            min-height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
             overflow-x: hidden;
             position: relative;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 0 !important;
+                align-items: stretch !important;
+            }
         }
 
         /* --- Ambient Background Glows --- */
@@ -91,11 +98,22 @@
             width: 98vw;
             max-width: 1400px;
             height: 96vh;
+            height: 96dvh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
             animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @media (max-width: 768px) {
+            .app-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                border-radius: 0 !important;
+                border: none !important;
+            }
         }
 
         @keyframes scaleIn {
@@ -129,10 +147,11 @@
 
         /* --- App Header --- */
         .app-header {
-            padding: 24px;
+            padding: 18px 24px;
             text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             background: rgba(15, 5, 29, 0.3);
+            flex-shrink: 0;
         }
         .app-header h1 {
             font-size: 1.8rem;
@@ -147,6 +166,14 @@
             font-size: 0.9rem;
             color: var(--text-muted);
             font-weight: 400;
+        }
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 12px 14px !important;
+            }
+            .app-header h1 {
+                font-size: 1.25rem !important;
+            }
         }
 
         /* --- Screen 1: Selection Grid --- */
@@ -177,34 +204,42 @@
         /* Character Grid */
         .character-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        @media(min-width: 480px) {
-            .character-grid {
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             gap: 8px;
         }
+        @media (max-width: 400px) {
+            .character-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+        }
+        @media (min-width: 401px) and (max-width: 768px) {
+            .character-grid {
+                grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+                gap: 7px;
+            }
+        }
+        /* Card base — works at all sizes */
         .character-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 10px 8px;
+            border-radius: 12px;
+            padding: 8px 6px;
             cursor: pointer;
             transition: var(--transition-smooth);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
-        .character-card:hover {
+        .character-card:hover, .character-card:active {
             background: rgba(168, 85, 247, 0.08);
             border-color: rgba(168, 85, 247, 0.4);
             transform: translateY(-2px);
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
         }
         .character-emoji {
-            font-size: 1.45rem;
+            font-size: 1.4rem;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
             transition: var(--transition-smooth);
         }
@@ -212,16 +247,17 @@
             transform: scale(1.1);
         }
         .character-name {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             font-weight: 600;
             color: var(--text-main);
             text-align: center;
+            line-height: 1.2;
         }
         .character-tag {
-            font-size: 0.68rem;
+            font-size: 0.64rem;
             color: var(--text-muted);
             background: rgba(255, 255, 255, 0.05);
-            padding: 2px 7px;
+            padding: 1px 6px;
             border-radius: 20px;
         }
 
@@ -3247,12 +3283,96 @@ ${turnRule}
             document.getElementById('print-name-input').focus();
         }
 
+        // ==================================================================
+        // === GENERACIÓN Y DESCARGA DEL RECUERDO HTML ===
+        // ==================================================================
+        function downloadSouvenirFile(filename, htmlContent) {
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url  = URL.createObjectURL(blob);
+            const a    = document.createElement('a');
+            a.href     = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 2000);
+        }
+
+        function generateSouvenirHTMLFile(nombre, destinatario, fecha, hora, reflexion) {
+            const profile  = characterProfiles[currentPersona] || {};
+            const emoji    = profile.emoji || '🌟';
+            const vocation = profile.vocation || '';
+            const logoUrl  = window.location.origin + window.location.pathname.replace(/[^/]*$/, '') + 'imagenes/logo-alicia.png';
+            const qrUrl    = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(PRINT_QR_DATA)}`;
+
+            let dialogoHTML = '';
+            document.querySelectorAll('.chat-messages .message-bubble:not(.typing-bubble)').forEach(b => {
+                const isUser  = b.classList.contains('user-bubble');
+                const sender  = isUser ? nombre : currentPersona;
+                const bgColor = isUser ? '#f3e8ff' : '#faf5ff';
+                const align   = isUser ? 'right' : 'left';
+                dialogoHTML  += `
+                    <div style="margin:8px 0; text-align:${align};">
+                        <span style="font-size:10px;font-weight:700;color:#6d28d9;display:block;margin-bottom:2px;">${sender}</span>
+                        <span style="display:inline-block;background:${bgColor};border-radius:12px;padding:8px 12px;font-size:11.5px;line-height:1.45;color:#1e1b4b;max-width:80%;text-align:left;">${b.textContent.trim()}</span>
+                    </div>`;
+            });
+
+            const vocationBlock = vocation
+                ? `<div style="background:#f5f3ff;border:1px solid #ddd6fe;border-left:4px solid #7c3aed;border-radius:8px;padding:12px 16px;margin:16px 0;color:#3730a3;">
+                      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6d28d9;margin-bottom:4px;">💡 Clave Vocacional de ${currentPersona}:</div>
+                      <div style="font-size:12px;font-style:italic;line-height:1.4;">"${vocation}"</div>
+                   </div>` : '';
+
+            const reflexionBlock = reflexion
+                ? `<div style="background:#fef3c7;border-left:4px solid #f59e0b;border-radius:0 8px 8px 0;padding:10px 14px;margin:16px 0;font-style:italic;color:#78350f;">
+                      <strong>📝 Mi reflexión:</strong> ${reflexion}
+                   </div>` : '';
+
+            return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recuerdo Expo Alicia 2026 — ${currentPersona}</title>
+<style>
+  body{font-family:Arial,sans-serif;background:#faf5ff;color:#1e1b4b;margin:0;padding:20px;max-width:700px;margin:auto;}
+  .card{background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(109,40,217,0.12);padding:28px;border-top:6px solid #7c3aed;}
+  h1{font-size:22px;font-weight:800;color:#581c87;margin:0 0 4px;}
+  .sub{font-size:13px;color:#6b7280;margin-bottom:16px;}
+  .dialog-box{background:#f9f7ff;border:1px solid #e9d5ff;border-radius:12px;padding:14px;margin:16px 0;max-height:400px;overflow-y:auto;}
+  .footer{margin-top:24px;border-top:1px solid #e9d5ff;padding-top:12px;font-size:10px;color:#9ca3af;text-align:center;}
+  @media print{body{padding:0;}.card{box-shadow:none;border-radius:0;}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px;">
+    <div>
+      <h1>${emoji} Expo Alicia 2026</h1>
+      <p class="sub">Conversación entre <strong>${nombre}</strong> y <strong>${currentPersona}</strong><br>
+         ${fecha} a las ${hora} hs.</p>
+    </div>
+    <div style="text-align:center;flex-shrink:0;">
+      <img src="${qrUrl}" alt="QR" style="width:80px;height:80px;border:1px solid #ddd;padding:3px;background:white;border-radius:6px;" />
+      <div style="font-size:8px;color:#7c3aed;font-weight:700;margin-top:2px;">Psicología AMJ</div>
+    </div>
+  </div>
+  ${vocationBlock}
+  <div class="dialog-box">${dialogoHTML}</div>
+  ${reflexionBlock}
+  <div class="footer">IES N°1 "Dra. Alicia Moreau de Justo" | Expo Alicia 2026 | ${PRINT_QR_DATA}</div>
+</div>
+</body>
+</html>`;
+        }
+
         function closePrintModal() {
             document.getElementById('print-modal').style.display = 'none';
             document.getElementById('print-name-input').value = '';
             const reflInput = document.getElementById('print-reflection-input');
             if (reflInput) reflInput.value = '';
         }
+
 
         function executePrint() {
             const nombre = document.getElementById('print-name-input').value.trim();
@@ -3265,6 +3385,7 @@ ${turnRule}
 
             // Armar Versión de Impresión
             const printArea = document.getElementById('print-version');
+            printArea.style.display = 'block'; // ← mostrar antes de imprimir
             const fecha = new Date().toLocaleDateString('es-AR');
             const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
             
