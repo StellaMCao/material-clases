@@ -952,22 +952,40 @@
                 z-index: 25;
                 pointer-events: auto !important;
             }
+            /* Force modals to fit phone screens */
             .modal {
-                padding: 10px !important;
+                padding: 8px !important;
+                align-items: flex-start !important;
+                padding-top: 24px !important;
             }
             .modal-content {
-                padding: 18px 14px !important;
-                border-radius: 16px !important;
+                padding: 16px 14px !important;
+                border-radius: 14px !important;
+                width: 100% !important;
                 max-width: 100% !important;
-                max-height: 92vh !important;
+                max-height: 88vh !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+            }
+            .modal-title {
+                font-size: 1.05rem !important;
+            }
+            .modal-description {
+                font-size: 0.82rem !important;
             }
             .form-label {
-                font-size: 0.82rem !important;
-                flex-wrap: wrap !important;
-                gap: 4px !important;
+                font-size: 0.8rem !important;
             }
             .form-group {
-                margin-bottom: 14px !important;
+                margin-bottom: 12px !important;
+            }
+            .modal-btn {
+                font-size: 0.85rem !important;
+                padding: 10px 14px !important;
+            }
+            input.custom-input, textarea.custom-input {
+                font-size: 0.92rem !important;
+                padding: 10px 12px !important;
             }
         }
         
@@ -1416,22 +1434,19 @@
 
     <!-- MODAL 4: QR Code para Celulares -->
     <div id="app-qr-modal" class="modal">
-        <div class="modal-content" style="max-width:380px; text-align:center;">
+        <div class="modal-content" style="max-width:340px; text-align:center;">
             <span class="modal-close" onclick="closeAppQrModal()">&times;</span>
             <div class="modal-title" style="justify-content:center;">
                 <i class="fas fa-mobile-screen-button" style="color:var(--accent-purple);"></i>
                 <span>Abrir App en tu Celular</span>
             </div>
-            <p class="modal-description">Escaneá este código QR con la cámara de tu celular para charlar directamente desde tu dispositivo:</p>
+            <p class="modal-description">Escaneá este código QR con la cámara de tu celular. Las claves de IA quedan cargadas automáticamente:</p>
             
-            <div style="background:white; padding:12px; border-radius:16px; display:inline-block; margin:10px 0; border:2px solid var(--accent-purple); box-shadow:0 8px 24px rgba(168,85,247,0.3);">
-                <img id="app-qr-image" src="" alt="QR App Expo Alicia" style="width:200px; height:200px; display:block;" />
+            <div style="background:white; padding:10px; border-radius:14px; display:inline-block; margin:8px 0; border:2px solid var(--accent-purple); box-shadow:0 8px 24px rgba(168,85,247,0.3);">
+                <img id="app-qr-image" src="" alt="QR App Expo Alicia" style="width:190px; height:190px; display:block;" />
             </div>
-            
-            <p style="font-size:0.78rem; color:#6ee7b7; font-weight:600; margin-top:6px;">
-                ✨ Escaneá para charlar con los personajes en tu propio teléfono
-            </p>
-            <button class="modal-btn secondary" onclick="closeAppQrModal()" style="margin-top:12px; width:100%;">Cerrar</button>
+            <p id="app-qr-hint" style="font-size:0.73rem; color:#6ee7b7; font-weight:600; margin-top:6px; line-height:1.4;">✨ La app se abre lista para usar en tu teléfono</p>
+            <button class="modal-btn secondary" onclick="closeAppQrModal()" style="margin-top:10px; width:100%;">Cerrar</button>
         </div>
     </div>
 
@@ -1440,41 +1455,34 @@
         <div class="modal-content">
             <span class="modal-close" onclick="closePrintModal()">&times;</span>
             <div class="modal-title">
-                <i class="fas fa-paper-plane" style="color:var(--accent-purple);"></i>
-                <span>Guardar, Enviar o Imprimir Recuerdo</span>
+                <i class="fas fa-star" style="color:var(--accent-purple);"></i>
+                <span>Guardá tu Recuerdo</span>
             </div>
-            <p class="modal-description">Completá tus datos para personalizar tu hoja de recuerdo de la Expo Alicia 2026:</p>
+            <p class="modal-description">Completá tus datos para personalizar tu recuerdo de la Expo Alicia 2026:</p>
             
             <div class="form-group">
                 <label class="form-label">Tu Nombre y Apellido (*)</label>
-                <input type="text" id="print-name-input" class="custom-input" placeholder="Ej: Sofía Gómez">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Correo Electrónico Destinatario (para recibir tu recuerdo por mail)</label>
-                <input type="email" id="print-email-input" class="custom-input" placeholder="Ej: mi.email@gmail.com">
-                <span style="font-size:0.74rem; color:#6ee7b7; margin-top:4px; display:block;">
-                    ✉️ Remitente oficial: <strong>stella.psico.cfe@gmail.com</strong>
-                </span>
+                <input type="text" id="print-name-input" class="custom-input" placeholder="Ej: Sofía Gómez" autocomplete="name">
             </div>
 
             <div class="form-group">
                 <label class="form-label">Tu reflexión personal (opcional)</label>
-                <textarea id="print-reflection-input" class="custom-input" rows="2" placeholder="Una frase, valor o idea vocacional que te haya quedado..." style="resize:none; font-family:inherit;"></textarea>
+                <textarea id="print-reflection-input" class="custom-input" rows="2" placeholder="Una frase o idea vocacional que te haya quedado..." style="resize:none; font-family:inherit;"></textarea>
             </div>
 
-            <div class="modal-buttons" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;">
-                <button class="modal-btn secondary" onclick="closePrintModal()" style="flex:1; min-width:80px;">Cancelar</button>
-                <button class="modal-btn secondary" onclick="executeGmailWeb()" style="flex:1.2; min-width:120px; border-color:rgba(59,130,246,0.4); color:#93c5fd; background:rgba(59,130,246,0.12);">
-                    <i class="fas fa-envelope"></i> Gmail Web
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:16px;">
+                <button class="modal-btn primary" onclick="executeDownloadAndShare()" style="width:100%; font-size:0.95rem;">
+                    <i class="fas fa-share-nodes"></i> Descargar y Compartir Recuerdo
                 </button>
-                <button class="modal-btn secondary" onclick="executeWhatsApp()" style="flex:1.2; min-width:120px; border-color:rgba(34,197,94,0.4); color:#86efac; background:rgba(34,197,94,0.12);">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
+                <button class="modal-btn secondary" onclick="executePrint()" style="width:100%;">
+                    <i class="fas fa-print"></i> Imprimir / Guardar como PDF
                 </button>
-                <button class="modal-btn primary" onclick="executePrint()" style="flex:1.2; min-width:120px;">
-                    <i class="fas fa-print"></i> Imprimir / PDF
-                </button>
+                <button class="modal-btn secondary" onclick="closePrintModal()" style="width:100%; opacity:0.7;">Cancelar</button>
             </div>
+
+            <p style="font-size:0.73rem; color:var(--text-muted); margin-top:12px; text-align:center; line-height:1.4;">
+                💡 El archivo se descarga a tu dispositivo. En celulares podés compartirlo por WhatsApp, Mail u otras apps.
+            </p>
         </div>
     </div>
 
@@ -3197,24 +3205,30 @@ ${turnRule}
                 const params = new URLSearchParams(hash.substring(1));
                 let updated = false;
 
+                // Provider can be explicit via 'prov' key
+                if (params.has('prov')) {
+                    localStorage.setItem('primary_provider', params.get('prov'));
+                    updated = true;
+                }
+
                 if (params.has('openai')) {
                     localStorage.setItem('openai_api_key', params.get('openai'));
-                    localStorage.setItem('primary_provider', 'openai');
+                    if (!params.has('prov')) localStorage.setItem('primary_provider', 'openai');
                     updated = true;
                 }
                 if (params.has('gemini')) {
                     localStorage.setItem('gemini_api_key', params.get('gemini'));
-                    localStorage.setItem('primary_provider', 'gemini');
+                    if (!params.has('prov') && !params.has('openai')) localStorage.setItem('primary_provider', 'gemini');
                     updated = true;
                 }
                 if (params.has('groq')) {
                     localStorage.setItem('groq_api_key', params.get('groq'));
-                    localStorage.setItem('primary_provider', 'groq');
+                    if (!params.has('prov') && !params.has('openai') && !params.has('gemini')) localStorage.setItem('primary_provider', 'groq');
                     updated = true;
                 }
 
                 if (updated) {
-                    showToast('🔑 Claves configuradas automáticamente', 4000);
+                    showToast('🔑 Claves de IA configuradas automáticamente. ¡Listo para chatear!', 4500);
                     // Ocultar la clave de la barra de navegación de forma inmediata por seguridad
                     history.replaceState(null, document.title, window.location.pathname + window.location.search);
                 }
@@ -3386,12 +3400,34 @@ ${turnRule}
 
         function openAppQrModal() {
             closeAllModals();
-            const publicUrl = window.location.protocol.startsWith('http') 
-                ? window.location.href 
-                : 'https://stellamcao.github.io/material-clases/expoalicia/';
+
+            // Build a magic link with API keys if available, so phone users are pre-configured
+            const BASE_URL = 'https://stellamcao.github.io/material-clases/expoalicia/';
+            const openaiKey = localStorage.getItem('openai_api_key') || '';
+            const geminiKey = localStorage.getItem('gemini_api_key') || '';
+            const groqKey   = localStorage.getItem('groq_api_key') || '';
+            const provider  = localStorage.getItem('primary_provider') || '';
+
+            let hash = '';
+            const parts = [];
+            if (provider) parts.push('prov=' + encodeURIComponent(provider));
+            if (openaiKey) parts.push('openai=' + encodeURIComponent(openaiKey));
+            if (geminiKey) parts.push('gemini=' + encodeURIComponent(geminiKey));
+            if (groqKey)   parts.push('groq='   + encodeURIComponent(groqKey));
+            if (parts.length) hash = '#' + parts.join('&');
+
+            const magicUrl = BASE_URL + hash;
+
+            const hintEl = document.getElementById('app-qr-hint');
+            if (hintEl) {
+                hintEl.textContent = parts.length
+                    ? '✅ El QR incluye tus claves de IA. El celular abre la app lista para usar.'
+                    : '📱 Escaneá para abrir la app en tu teléfono (configurá claves en Ajustes primero para incluirlas).';
+            }
+
             const qrImg = document.getElementById('app-qr-image');
             if (qrImg) {
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(publicUrl)}`;
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(magicUrl)}`;
             }
             document.getElementById('app-qr-modal').style.display = 'flex';
         }
@@ -3432,72 +3468,67 @@ ${turnRule}
             return { body, fecha, hora };
         }
 
-        function executeGmailWeb() {
+        async function executeDownloadAndShare() {
             const nombre = document.getElementById('print-name-input').value.trim();
             if (!nombre) {
-                alert('Por favor, ingresá tu nombre antes de enviar por email.');
-                document.getElementById('print-name-input').focus();
-                return;
-            }
-
-            const destEmail = document.getElementById('print-email-input')?.value.trim() || '';
-            const reflection = (document.getElementById('print-reflection-input')?.value || '').trim();
-            const { body, fecha, hora } = buildFullSouvenirText(nombre, destEmail, reflection);
-
-            // 1. Descargar archivo de recuerdo HTML
-            const souvenirFileName = `Recuerdo_Expo_Alicia_${currentPersona.replace(/\s+/g, '_')}.html`;
-            const fullHtmlSouvenir = generateSouvenirHTMLFile(nombre, destEmail || 'Destinatario', fecha, hora, reflection);
-            downloadSouvenirFile(souvenirFileName, fullHtmlSouvenir);
-
-            // 2. Copiar texto al portapapeles
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(body).catch(() => {});
-            }
-
-            // 3. Abrir redacción directa en Gmail Web
-            const subject = 'Expo Alicia 2026 - Mi charla con ' + currentPersona + ' | ' + nombre;
-            let shortBody = body;
-            if (shortBody.length > 1500) {
-                shortBody = shortBody.substring(0, 1500) + '\n\n[...Texto completo copiado al portapapeles y adjunto descargado]\nMaterial extra: ' + PRINT_QR_DATA;
-            }
-
-            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(destEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(shortBody)}`;
-
-            closePrintModal();
-            showToast('✉️ ¡Adjunto ' + souvenirFileName + ' descargado! Abriendo Gmail Web...', 5000);
-            window.open(gmailUrl, '_blank');
-        }
-
-        function executeWhatsApp() {
-            const nombre = document.getElementById('print-name-input').value.trim();
-            if (!nombre) {
-                alert('Por favor, ingresá tu nombre antes de compartir por WhatsApp.');
+                alert('Por favor, ingresá tu nombre para personalizar el recuerdo.');
                 document.getElementById('print-name-input').focus();
                 return;
             }
 
             const reflection = (document.getElementById('print-reflection-input')?.value || '').trim();
-            const profile = characterProfiles[currentPersona] || {};
             const fecha = new Date().toLocaleDateString('es-AR');
-            const hora = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-
-            let waText = '✨ *Expo Alicia 2026 - Recuerdo de Orientación Vocacional*\n';
-            waText += '👤 *' + nombre + '* conversó con *' + currentPersona + '* (' + fecha + ')\n\n';
-            
-            if (profile.vocation) waText += '💡 *Clave Vocacional:* "' + profile.vocation + '"\n\n';
-            if (reflection) waText += '📝 *Mi reflexión:* "' + reflection + '"\n\n';
-            waText += '🔗 *Proba la app acá:* ' + PRINT_QR_DATA;
-
-            // Descargar archivo de recuerdo HTML
+            const hora  = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
             const souvenirFileName = `Recuerdo_Expo_Alicia_${currentPersona.replace(/\s+/g, '_')}.html`;
-            const fullHtmlSouvenir = generateSouvenirHTMLFile(nombre, 'WhatsApp', fecha, hora, reflection);
-            downloadSouvenirFile(souvenirFileName, fullHtmlSouvenir);
+            const htmlContent = generateSouvenirHTMLFile(nombre, nombre, fecha, hora, reflection);
 
-            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(waText)}`;
-            
+            // Try Web Share API (native share sheet on iOS/Android — can send to WhatsApp, Mail, Drive, etc.)
+            if (navigator.share && navigator.canShare) {
+                try {
+                    const file = new File([htmlContent], souvenirFileName, { type: 'text/html' });
+                    if (navigator.canShare({ files: [file] })) {
+                        closePrintModal();
+                        await navigator.share({
+                            title: 'Expo Alicia 2026 — Mi charla con ' + currentPersona,
+                            text: `Hola! Te comparto mi recuerdo de la Expo Alicia 2026 donde charlé con ${currentPersona}. ${PRINT_QR_DATA}`,
+                            files: [file]
+                        });
+                        showToast('✅ ¡Recuerdo compartido exitosamente!', 4000);
+                        return;
+                    }
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        console.warn('Web Share con archivo falló, intentando solo texto...', err);
+                    } else {
+                        // User cancelled — don't fall through to download
+                        return;
+                    }
+                }
+
+                // Fallback: share just text (no file) if file sharing not supported
+                try {
+                    const profile = characterProfiles[currentPersona] || {};
+                    let shareText = `✨ Expo Alicia 2026 — Mi charla con ${currentPersona}\n`;
+                    shareText += `👤 ${nombre} | ${fecha}\n`;
+                    if (profile.vocation) shareText += `💡 Clave Vocacional: "${profile.vocation}"\n`;
+                    if (reflection) shareText += `📝 Mi reflexión: "${reflection}"\n`;
+                    shareText += `🔗 ${PRINT_QR_DATA}`;
+                    closePrintModal();
+                    await navigator.share({ title: 'Expo Alicia 2026', text: shareText });
+                    // Also download the file
+                    downloadSouvenirFile(souvenirFileName, htmlContent);
+                    showToast('✅ ¡Recuerdo compartido! Archivo descargado también.', 4000);
+                    return;
+                } catch (err2) {
+                    if (err2.name === 'AbortError') return;
+                    console.warn('Web Share texto también falló:', err2);
+                }
+            }
+
+            // Desktop fallback: download the file
+            downloadSouvenirFile(souvenirFileName, htmlContent);
             closePrintModal();
-            showToast('💬 ¡Adjunto descargado! Abriendo WhatsApp para compartir...', 5000);
-            window.open(waUrl, '_blank');
+            showToast('📥 Recuerdo descargado: ' + souvenirFileName + '. Adjuntalo a tu mail o WhatsApp Web.', 6000);
         }
 
         // ==================================================================
