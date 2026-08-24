@@ -939,7 +939,7 @@
         }
         
         #print-version {
-            display: none;
+            display: none !important;
         }
     </style>
 </head>
@@ -3237,6 +3237,14 @@ ${turnRule}
                 img.src = src;
             });
         }
+
+        window.addEventListener('afterprint', () => {
+            const printArea = document.getElementById('print-version');
+            if (printArea) {
+                printArea.innerHTML = '';
+                printArea.style.display = 'none';
+            }
+        });
 
         // ==================================================================
         // === EMAIL & FINISH EARLY FUNCTIONS ===
