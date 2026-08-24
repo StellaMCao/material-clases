@@ -49,7 +49,7 @@
             overflow-x: hidden;
             position: relative;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             body {
                 padding: 0 !important;
                 align-items: stretch !important;
@@ -105,7 +105,7 @@
             position: relative;
             animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .app-container {
                 width: 100% !important;
                 max-width: 100% !important;
@@ -167,7 +167,7 @@
             color: var(--text-muted);
             font-weight: 400;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .app-header {
                 padding: 12px 14px !important;
             }
@@ -338,6 +338,7 @@
         }
         .chat-sidebar {
             width: 280px;
+            flex-shrink: 0;
             background: rgba(10, 5, 20, 0.35);
             border-left: 1px solid rgba(255, 255, 255, 0.06);
             padding: 16px;
@@ -346,8 +347,9 @@
             align-items: center;
             gap: 12px;
             overflow-y: auto;
-            flex-shrink: 0;
-            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            overflow-x: hidden;
+            scrollbar-width: none;
+            transition: width 0.3s, padding 0.3s;
         }
         .chat-sidebar::-webkit-scrollbar {
             display: none; /* Hide scrollbar for Chrome/Edge */
@@ -936,12 +938,21 @@
         }
         
         /* Mobile Layout Optimizations */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .chat-sidebar {
                 display: none !important;
+                width: 0 !important;
+                min-width: 0 !important;
+                max-width: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                overflow: hidden !important;
+                flex-shrink: 1 !important;
             }
             .chat-main-area {
                 width: 100% !important;
+                min-width: 0 !important;
+                flex-grow: 1 !important;
             }
             .message-bubble {
                 max-width: 90% !important;
@@ -994,6 +1005,44 @@
                 align-items: flex-start !important;
                 padding-top: 24px !important;
             }
+            /* Hide non-essential chat header buttons on mobile */
+            .secondary-action {
+                display: none !important;
+            }
+            .btn-label {
+                display: none !important;
+            }
+            .chat-header {
+                padding: 6px 8px !important;
+                gap: 4px !important;
+            }
+            .chat-actions {
+                gap: 4px !important;
+                flex-wrap: nowrap !important;
+                flex-shrink: 1 !important;
+                min-width: 0 !important;
+            }
+            .chat-action-btn {
+                padding: 6px 9px !important;
+                font-size: 0.78rem !important;
+                flex-shrink: 0 !important;
+            }
+            .chat-identity {
+                flex-shrink: 1 !important;
+                min-width: 0 !important;
+                overflow: hidden !important;
+            }
+            .chat-persona-name {
+                font-size: 0.88rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                max-width: 120px !important;
+            }
+            #ai-provider-badge {
+                display: none !important;
+            }
+
             .modal-content {
                 padding: 16px 14px !important;
                 border-radius: 14px !important;
@@ -1279,23 +1328,22 @@
                     </div>
                 </div>
                 <div class="chat-actions">
-                    <button id='projector-btn' class='chat-action-btn' onclick='toggleProjectorMode()' title='Modo pantalla grande'>TV</button>
-                    <div style='display:flex;gap:4px;'><button class='chat-action-btn' onclick='changeFontSize(-1)' title='Reducir texto' style='padding:8px 10px;font-size:0.8rem;font-weight:700;'>A-</button><button class='chat-action-btn' onclick='changeFontSize(1)' title='Aumentar texto' style='padding:8px 10px;font-size:0.8rem;font-weight:700;'>A+</button></div>
-                    <button id="mute-voice-btn" class="chat-action-btn speak-control-btn" onclick="toggleVoice()" title="Silenciar/Activar voz">
+                    <button id='projector-btn' class='chat-action-btn secondary-action' onclick='toggleProjectorMode()' title='Modo pantalla grande'>TV</button>
+                    <div class='secondary-action' style='display:flex;gap:4px;'><button class='chat-action-btn' onclick='changeFontSize(-1)' title='Reducir texto' style='padding:6px 9px;font-size:0.8rem;font-weight:700;'>A-</button><button class='chat-action-btn' onclick='changeFontSize(1)' title='Aumentar texto' style='padding:6px 9px;font-size:0.8rem;font-weight:700;'>A+</button></div>
+                    <button id="mute-voice-btn" class="chat-action-btn" onclick="toggleVoice()" title="Silenciar/Activar voz">
                         <i class="fas fa-volume-up"></i>
                     </button>
-                    <button class="chat-action-btn stop-voice-btn" onclick="stopVoice()" title="Detener voz/respuesta hablada" style="border-color:rgba(239,68,68,0.3); color:#fca5a5;">
+                    <button class="chat-action-btn stop-voice-btn secondary-action" onclick="stopVoice()" title="Detener voz" style="border-color:rgba(239,68,68,0.3); color:#fca5a5;">
                         <i class="fas fa-stop-circle"></i>
-                        <span>Cortar</span>
                     </button>
-                    <button class="chat-action-btn finish-early-btn" onclick="finishChatEarly()" title="Finalizar charla ahora" style="border-color:rgba(234,179,8,0.3); color:#fef08a;">
+                    <button class="chat-action-btn finish-early-btn" onclick="finishChatEarly()" title="Finalizar y guardar" style="border-color:rgba(234,179,8,0.3); color:#fef08a;">
                         <i class="fas fa-flag-checkered"></i>
-                        <span>Finalizar</span>
+                        <span class="btn-label">Finalizar</span>
                     </button>
-                    <button class='chat-action-btn restart-btn' onclick='restartCurrentChat()' title='Empezar de nuevo con este personaje'><i class='fas fa-redo'></i><span>Reiniciar</span></button>
-                    <button class="chat-action-btn print-btn" onclick="triggerPrintModal()" title="Imprimir conversación">
-                        <i class="fas fa-print"></i>
-                        <span>Imprimir</span>
+                    <button class='chat-action-btn restart-btn secondary-action' onclick='restartCurrentChat()' title='Empezar de nuevo'><i class='fas fa-redo'></i><span class="btn-label">Reiniciar</span></button>
+                    <button class="chat-action-btn print-btn" onclick="triggerPrintModal()" title="Guardar recuerdo">
+                        <i class="fas fa-download"></i>
+                        <span class="btn-label">Guardar</span>
                     </button>
                     <span id="ai-provider-badge" style="font-size:0.68rem; padding:3px 8px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); color:var(--text-muted); flex-shrink:0; display:none;"></span>
                 </div>
