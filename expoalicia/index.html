@@ -3572,11 +3572,6 @@ ${turnRule}
             // Mensaje de cierre amable
             addMessageBubble('¡Ha sido un placer enorme charlar con vos! Espero que esta experiencia te inspire a seguir investigando y estudiando. ¡Éxitos en tu futuro!', 'ai');
 
-            // Enviar registro silencioso preventivo a Google Forms
-            const profile = characterProfiles[currentPersona] || {};
-            const { body: fullText } = buildFullSouvenirText('Alumno Expo', '', '');
-            sendSilentFormSubmission('Alumno Expo', currentPersona, profile.vocation || '', fullText);
-
             // Agregar botón para volver o imprimir
             const container = document.getElementById('chat-messages');
             const backActionDiv = document.createElement('div');
@@ -3670,8 +3665,18 @@ ${turnRule}
             return { body, fecha, hora };
         }
 
+        let lastSubmittedHash = '';
+
         function sendSilentFormSubmission(nombre, persona, claveVocacional, conversacion) {
             try {
+                // Prevenir duplicados del mismo contenido en una misma sesión
+                const currentHash = `${nombre}_${persona}_${(conversacion || '').length}`;
+                if (lastSubmittedHash === currentHash) {
+                    console.log("Envío omitido: registro duplicado detectado.");
+                    return;
+                }
+                lastSubmittedHash = currentHash;
+
                 const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScAH_NdMqJzUG3QZlXlDTk7nrN0kjrC8fbfp49EuIqwCWOH-A/formResponse";
                 
                 // 1. Crear iframe oculto objetivo si no existe
@@ -3684,7 +3689,7 @@ ${turnRule}
                     document.body.appendChild(iframe);
                 }
 
-                // 2. Crear formulario HTML oculto para envío garantizado en PC y celular
+                // 2. Crear formulario HTML oculto para envío único y garantizado
                 const form = document.createElement('form');
                 form.action = FORM_URL;
                 form.method = 'POST';
@@ -3709,12 +3714,6 @@ ${turnRule}
                 document.body.appendChild(form);
                 form.submit();
                 setTimeout(() => { form.remove(); }, 2000);
-
-                // Respaldar también con sendBeacon
-                if (navigator.sendBeacon) {
-                    const params = new URLSearchParams(data);
-                    navigator.sendBeacon(FORM_URL, params);
-                }
             } catch (e) {
                 console.warn("Silent submission error:", e);
             }
