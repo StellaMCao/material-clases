@@ -3484,7 +3484,6 @@ ${turnRule}
             const logoUrl = 'imagenes/logo-alicia.png';
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(PRINT_QR_DATA)}`;
 
-            const profile = characterProfiles[currentPersona] || {};
             const vocationHTML = profile.vocation ? `
                 <div style="background:#f5f3ff; border:1px solid #ddd6fe; border-left:4px solid #7c3aed; border-radius:8px; padding:12px 16px; margin:16px 0; color:#3730a3;">
                     <div style="font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#6d28d9; margin-bottom:4px;">💡 Clave Vocacional de ${currentPersona}:</div>
@@ -3669,17 +3668,22 @@ ${turnRule}
         function sendSilentFormSubmission(nombre, persona, claveVocacional, conversacion) {
             try {
                 const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScAH_NdMqJzUG3QZlXlDTk7nrN0kjrC8fbfp49EuIqwCWOH-A/formResponse";
-                const formData = new FormData();
-                formData.append("entry.1609700156", nombre || "Alumno Expo");
-                formData.append("entry.2120789266", persona || "Desconocido");
-                formData.append("entry.953226647", claveVocacional || "");
-                formData.append("entry.1634441803", conversacion || "");
+                const params = new URLSearchParams();
+                params.append("entry.1609700156", nombre || "Alumno Expo");
+                params.append("entry.2120789266", persona || "Desconocido");
+                params.append("entry.953226647", claveVocacional || "");
+                params.append("entry.1634441803", conversacion || "");
 
-                fetch(FORM_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    body: formData
-                }).catch(err => console.warn("Google Form submit failed silently:", err));
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon(FORM_URL, params);
+                } else {
+                    fetch(FORM_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: params.toString()
+                    }).catch(err => console.warn("Google Form submit failed silently:", err));
+                }
             } catch (e) {
                 console.warn("Silent submission error:", e);
             }
@@ -3729,7 +3733,6 @@ ${turnRule}
 
                 // Fallback: share just text (no file) if file sharing not supported
                 try {
-                    const profile = characterProfiles[currentPersona] || {};
                     let shareText = `✨ Expo Alicia 2026 — Mi charla con ${currentPersona}\n`;
                     shareText += `👤 ${nombre} | ${fecha}\n`;
                     if (profile.vocation) shareText += `💡 Clave Vocacional: "${profile.vocation}"\n`;
