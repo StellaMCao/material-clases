@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Reflexión: Teoría de Jean Piaget</title>
+    <!-- Google Fonts: Outfit (Titulares) e Inter (Cuerpo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Paleta de Colores de Alta Gama (Estilo Educativo Premium) */
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --secondary: #0f172a;
+            --accent: #0d9488;
+            --accent-light: #f0fdfa;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        /* Estilos Generales */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Cabecera / Encabezado */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #1e293b 100%);
+            color: white;
+            padding: 40px 30px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .badge {
+            background-color: rgba(37, 99, 235, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+            font-weight: 350;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Barra de Modos de Visualización */
+        .toolbar {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 15px 25px;
+            border-radius: var(--radius-md);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .view-modes {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-mode {
+            background: none;
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-mode:hover {
+            color: var(--text-main);
+            background-color: #f1f5f9;
+        }
+
+        .btn-mode.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-print {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-print:hover {
+            background-color: #0f766e;
+        }
+
+        /* Fichas Informativas / Contenedores */
+        .info-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            padding: 25px;
+            border-radius: var(--radius-md);
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-card h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .info-card ul {
+            margin-left: 20px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .info-card ul li {
+            margin-bottom: 6px;
+        }
+
+        /* Secciones de Preguntas */
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            color: var(--secondary);
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-badge {
+            background-color: #f1f5f9;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 50px;
+            text-transform: uppercase;
+        }
+
+        /* Tarjeta de Pregunta */
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .question-num {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.95rem;
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .question-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--secondary);
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .question-score {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background-color: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 50px;
+            white-space: nowrap;
+        }
+
+        /* Campo de texto para preguntas abiertas */
+        .response-area {
+            width: 100%;
+            height: 120px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 15px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            resize: none;
+            background-color: #fafafa;
+            margin-top: 15px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .response-area:focus {
+            border-color: var(--primary);
+            background-color: #ffffff;
+        }
+
+        /* Opciones de opción múltiple */
+        .options-list {
+            list-style: none;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-item {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .option-item:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .option-marker {
+            min-width: 24px;
+            height: 24px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .option-item:hover .option-marker {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Selección de opciones mediante JS */
+        .option-item.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .option-item.selected .option-marker {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Estilo para las opciones correctas/incorrectas en el solucionario */
+        .option-item.correct {
+            border-color: var(--accent);
+            background-color: var(--accent-light);
+        }
+
+        .option-item.correct .option-marker {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* Bloque de Solución (Solucionario) */
+        .solution-block {
+            margin-top: 25px;
+            background-color: #f8fafc;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            display: none; /* Se activa mediante el toolbar */
+        }
+
+        .solution-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .solution-text {
+            font-size: 0.92rem;
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .rubric-block {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .rubric-title {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            color: var(--secondary);
+            letter-spacing: 0.05em;
+        }
+
+        /* Mostrar el solucionario según el estado de la aplicación */
+        .mode-teacher .solution-block {
+            display: block;
+        }
+
+        .mode-teacher .response-area {
+            background-color: #f1f5f9;
+            color: #64748b;
+            pointer-events: none;
+        }
+
+        /* Solucionario General (Footer del Documento) */
+        .general-solutions {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 35px;
+            margin-top: 40px;
+            box-shadow: var(--shadow-sm);
+            display: none;
+        }
+
+        .mode-teacher .general-solutions {
+            display: block;
+        }
+
+        .general-solutions h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Estilos de Impresión */
+        @media print {
+            body {
+                background-color: #ffffff;
+                color: #000000;
+                padding: 0;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            header {
+                background: none !important;
+                color: #000000 !important;
+                padding: 0 0 20px 0 !important;
+                border-bottom: 3px double #000000 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                margin-bottom: 30px !important;
+            }
+
+            header::before {
+                display: none;
+            }
+
+            .badge {
+                border: 1px solid #000000 !important;
+                color: #000000 !important;
+                background: none !important;
+                padding: 4px 10px !important;
+            }
+
+            .subtitle {
+                color: #555555 !important;
+            }
+
+            .toolbar, .btn-mode, .btn-print {
+                display: none !important;
+            }
+
+            .info-card {
+                border: 1px solid #000000 !important;
+                border-left: 5px solid #000000 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+
+            .question-card {
+                border: 1px solid #000000 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                page-break-inside: avoid;
+                margin-bottom: 30px !important;
+            }
+
+            .question-num {
+                background-color: #e2e8f0 !important;
+                border: 1px solid #000000 !important;
+                color: #000000 !important;
+            }
+
+            .response-area {
+                height: 150px !important;
+                border: 1px solid #94a3b8 !important;
+                background-color: #ffffff !important;
+            }
+
+            .option-item {
+                border: 1px solid #94a3b8 !important;
+                border-radius: 0 !important;
+            }
+
+            .option-item.selected {
+                background-color: #f1f5f9 !important;
+                font-weight: bold;
+            }
+
+            /* Forzar visualización de respuestas si está en modo docente al imprimir */
+            .solution-block {
+                border: 1px dashed #000000 !important;
+                border-left: 4px solid #000000 !important;
+                background-color: #fafafa !important;
+                page-break-inside: avoid;
+            }
+
+            .general-solutions {
+                border: 2px solid #000000 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body class="mode-student">
+
+    <div class="container">
+        <!-- CABECERA -->
+        <header>
+            <span class="badge">Nivel Superior / Universitario</span>
+            <h1>Guía de Reflexión y Evaluación: Teoría de Jean Piaget</h1>
+            <p class="subtitle">Herramienta didáctica de análisis crítico sobre los mecanismos de equilibración, estadios del desarrollo y las implicancias educativas del enfoque psicogenético.</p>
+        </header>
+
+        <!-- BARRA DE HERRAMIENTAS INTERACTIVA -->
+        <div class="toolbar">
+            <div class="view-modes">
+                <button id="btnStudent" class="btn-mode active" onclick="setMode('student')">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Vista Estudiante
+                </button>
+                <button id="btnTeacher" class="btn-mode" onclick="setMode('teacher')">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Vista Docente (Solucionario)
+                </button>
+            </div>
+            <button class="btn-print" onclick="window.print()">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-3a2 2 0 00-2-2H9a2 2 0 00-2 2v3a2 2 0 002 2zm5-17h-6a1 1 0 00-1 1v3h8V4a1 1 0 00-1-1z" />
+                </svg>
+                Imprimir Guía
+            </button>
+        </div>
+
+        <!-- CONTEXTO DIDÁCTICO -->
+        <div class="info-card">
+            <h2>
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color: var(--primary);">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Orientación Metodológica para el Estudiante
+            </h2>
+            <p>La presente guía tiene como propósito consolidar la apropiación analítica y la transferencia de la teoría psicogenética a escenarios reales de enseñanza. Se recomienda realizar una lectura reflexiva de los textos fuentes de Jean Piaget sobre equilibración y desarrollo antes de proceder a la resolución.</p>
+            <p><strong>Criterios generales de evaluación:</strong> Precisión terminológica (uso correcto de nociones como esquema, asimilación, acomodación, etc.), capacidad de argumentación crítica y justificación psicopedagógica basada en evidencia teórica.</p>
+        </div>
+
+        <!-- SECCIÓN 1: PREGUNTAS ABIERTAS -->
+        <div class="section-title">
+            <span>I. Preguntas Abiertas de Aplicación Crítica</span>
+            <span class="section-badge">Desarrollo Teórico</span>
+        </div>
+
+        <!-- PREGUNTA 1 -->
+        <div class="question-card">
+            <div class="question-header">
+                <span class="question-num">1</span>
+                <span class="question-text">El conflicto cognitivo como motor del desarrollo</span>
+                <span class="question-score">3 Puntos</span>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 15px;">
+                <strong>Situación Escenario:</strong> Un alumno de nivel inicial observa una bola de plastilina que luego es transformada en una "salchicha" alargada frente a sus ojos. El niño sostiene con firmeza que la "salchicha" tiene más materia porque "es más larga". Sin embargo, cuando el docente le pide colocar ambas piezas en una balanza de dos platillos, la balanza queda perfectamente equilibrada. El niño muestra confusión física, guarda silencio y vuelve a observar los platillos detenidamente.
+            </p>
+            <p style="font-size: 0.95rem; color: var(--text-main); font-weight: 500;">
+                Consigna: Explique paso a paso la secuencia descrita utilizando obligatoriamente los siguientes términos piagetianos: <em>esquema de asimilación</em>, <em>perturbación/conflicto cognitivo</em>, <em>acomodación</em> y <em>equilibración maximizadora (majorante)</em>.
+            </p>
+            <textarea class="response-area" placeholder="Escriba su fundamentación teórica aquí..."></textarea>
+
+            <!-- Solucionario Pregunta 1 -->
+            <div class="solution-block">
+                <div class="solution-title">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    Respuesta Esperada y Justificación Pedagógica:
+                </div>
+                <div class="solution-text">
+                    La respuesta del estudiante debe articular las siguientes fases teóricas:
+                    <ol style="margin-left: 20px; margin-top: 5px;">
+                        <li><strong>Asimilación inicial:</strong> El niño aplica su <em>esquema de asimilación unidimensional</em> (centración en la longitud) para interpretar la transformación. Interpreta que a mayor longitud, mayor cantidad de plastilina.</li>
+                        <li><strong>Perturbación / Conflicto cognitivo:</strong> La balanza actúa como un dato de la realidad que contradice las predicciones del esquema del niño. El equilibrio de los platillos desmiente su juicio óptico. Esto genera un <em>conflicto cognitivo</em> o perturbación que fractura el equilibrio previo.</li>
+                        <li><strong>Acomodación:</strong> El niño no puede negar la evidencia empírica de la balanza, lo cual le obliga a modificar sus esquemas conceptuales existentes (reconocer que otra variable, el grosor, compensa la longitud). Esta reestructuración es la <em>acomodación</em>.</li>
+                        <li><strong>Equilibración maximizadora (majorante):</strong> El tránsito del desequilibrio a un nuevo equilibrio más estable y comprensivo (que integra longitud y grosor) representa la equilibración majorante, motor del desarrollo intelectual.</li>
+                    </ol>
+                </div>
+                <div class="rubric-block">
+                    <div class="rubric-title">Criterio de Corrección (Docente)</div>
+                    Asignar 3 puntos si articula con precisión los 4 términos en la secuencia causal correcta. 2 puntos si define los conceptos pero falla al vincularlos con el escenario práctico. 0 puntos si incurre en errores conceptuales graves (ej. confundir asimilación con acumulación de información pasiva).
+                </div>
+            </div>
+        </div>
+
+        <!-- PREGUNTA 2 -->
+        <div class="question-card">
+            <div class="question-header">
+                <span class="question-num">2</span>
+                <span class="question-text">Los límites de la "aceleración" del desarrollo y la "pregunta americana"</span>
+                <span class="question-score">3 Puntos</span>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-main); font-weight: 500; margin-bottom: 15px;">
+                Consigna: Analice críticamente la viabilidad y conveniencia de acelerar de forma sistemática el paso por las distintas etapas del desarrollo intelectual (por ejemplo, enseñando álgebra abstracta o nociones formales en el periodo de operaciones concretas). ¿Cómo se fundamenta desde la teoría de la equilibración la necesidad de un "tiempo de duración"?
+            </p>
+            <textarea class="response-area" placeholder="Escriba su fundamentación teórica aquí..."></textarea>
+
+            <!-- Solucionario Pregunta 2 -->
+            <div class="solution-block">
+                <div class="solution-title">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    Respuesta Esperada y Justificación Pedagógica:
+                </div>
+                <div class="solution-text">
+                    La fundamentación de Piaget contra la aceleración forzada reposa en que:
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li><strong>La equilibración requiere tiempo intrínseco:</strong> El aprendizaje no es una mera transmisión de información asociativa externa, sino un proceso de autoorganización del sujeto. Asimilar un esquema operacional requiere múltiples tanteos y reorganizaciones internas que no pueden forzarse externamente sin consecuencias.</li>
+                        <li><strong>El riesgo del aprendizaje superficial/deformación:</strong> Si se le enseña a un niño algoritmos formales (como fórmulas algebraicas) antes de consolidar el pensamiento operacional concreto, el niño simplemente memorizará verbalmente las estructuras sintácticas, sin comprender la semántica lógica profunda subyacente. Se produce un pseudoaprendizaje verbalista.</li>
+                        <li><strong>Desfases y orden de sucesión:</strong> Cada etapa requiere una base de estructuras lógicas construidas en la etapa previa. Acelerar de forma artificial rompe el proceso de asimilación real y genera estructuras cognitivas inestables y desconectadas.</li>
+                    </ul>
+                </div>
+                <div class="rubric-block">
+                    <div class="rubric-title">Criterio de Corrección (Docente)</div>
+                    El alumno debe destacar el papel activo del sujeto en la construcción de estructuras y advertir contra los pseudoaprendizajes puramente lingüísticos o memorísticos. Debe demostrar comprensión de que la maduración física es un límite biológico para la velocidad de la asimilación cognitiva.
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: OPCIÓN MÚLTIPLE -->
+        <div class="section-title">
+            <span>II. Preguntas de Opción Múltiple</span>
+            <span class="section-badge">Evaluación Conceptual</span>
+        </div>
+
+        <!-- PREGUNTA 3 -->
+        <div class="question-card">
+            <div class="question-header">
+                <span class="question-num">3</span>
+                <span class="question-text">Identificación del desfase horizontal</span>
+                <span class="question-score">1 Punto</span>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 15px;">
+                Un estudiante de escuela primaria puede resolver una tarea de conservación de la materia sólida (masa de la plastilina) a los 7 u 8 años, pero falla de manera persistente al intentar resolver la conservación del peso del mismo objeto, que recién comprende a los 9 o 10 años, y la del volumen a los 11 o 12.
+            </p>
+            <p style="font-size: 0.95rem; color: var(--text-main); font-weight: 500;">
+                ¿Cuál es la denominación conceptual exacta que Piaget asigna a este desfase temporal en la adquisición de nociones equivalentes sobre un mismo contenido material?
+            </p>
+            <div class="options-list">
+                <div class="option-item" onclick="selectOption(this, '3', 'A')">
+                    <div class="option-marker">A</div>
+                    <span>Desfase vertical, puesto que implica la reestructuración completa de las operaciones mentales en un estadio evolutivo superior.</span>
+                </div>
+                <div class="option-item" onclick="selectOption(this, '3', 'B')">
+                    <div class="option-marker">B</div>
+                    <span>Desfase asimilativo, debido a que el sujeto es incapaz de acomodar sus esquemas de forma inmediata al medio circundante.</span>
+                </div>
+                <div class="option-item" onclick="selectOption(this, '3', 'C')">
+                    <div class="option-marker">C</div>
+                    <span>Desfase horizontal, puesto que el niño aplica una misma estructura lógica (conservación) a diferentes dimensiones físicas (masa, peso, volumen) en momentos cronológicos diferentes.</span>
+                </div>
+                <div class="option-item" onclick="selectOption(this, '3', 'D')">
+                    <div class="option-marker">D</div>
+                    <span>Regresión adaptativa, resultante del egocentrismo residual y la centración perceptiva propia del inicio del periodo formal.</span>
+                </div>
+            </div>
+
+            <!-- Solucionario Pregunta 3 -->
+            <div class="solution-block">
+                <div class="solution-title">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    Opción Correcta: C
+                </div>
+                <div class="solution-text">
+                    <strong>Justificación:</strong> El <em>desfase horizontal</em> describe la dificultad o retraso temporal en aplicar una misma operación lógica (en este caso, la ley de la conservación) a propiedades físicas distintas del objeto (masa, peso y finalmente volumen). Ocurre dentro del mismo estadio de las operaciones concretas. En cambio, el <em>desfase vertical</em> implica reconstruir una estructura de un estadio anterior en un plano superior (por ejemplo, pasar de la inteligencia sensorio-motriz al plano de la representación simbólica).
+                </div>
+            </div>
+        </div>
+
+        <!-- PREGUNTA 4 -->
+        <div class="question-card">
+            <div class="question-header">
+                <span class="question-num">4</span>
+                <span class="question-text">El papel del factor social en el desarrollo intelectual</span>
+                <span class="question-score">1 Punto</span>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-main); font-weight: 500;">
+                ¿Cuál es la postura epistemológica precisa de Piaget en relación con la "transmisión social" (la enseñanza y el lenguaje transmitidos en el aula escolar) como factor explicativo del desarrollo cognitivo?
+            </p>
+            <div class="options-list">
+                <div class="option-item" onclick="selectOption(this, '4', 'A')">
+                    <div class="option-marker">A</div>
+                    <span>Es el factor determinante absoluto, puesto que los estadios del desarrollo son constructos lingüísticos que el sujeto interioriza pasivamente del medio social.</span>
+                </div>
+                <div class="option-item" onclick="selectOption(this, '4', 'B')">
+                    <div class="option-marker">B</div>
+                    <span>Es un factor necesario pero insuficiente, dado que la transmisión social solo es efectiva si el sujeto dispone de estructuras de asimilación activas para comprender y procesar el mensaje instructivo.</span>
+                </div>
+                <div class="option-item" onclick="selectOption(this, '4', 'C')">
+                    <div class="option-marker">C</div>
+                    <span>Es un factor irrelevante, ya que Piaget postula que el desarrollo intelectual depende de manera exclusiva y autárquica de la maduración neurológica y la herencia genética.</span>
+                </div>
+                <div class="option-item" onclick="selectOption(this, '4', 'D')">
+                    <div class="option-marker">D</div>
+                    <span>Funciona únicamente como un elemento inhibidor del pensamiento racional, puesto que el egocentrismo infantil se fortalece por el influjo cultural de la escolarización formal.</span>
+                </div>
+            </div>
+
+            <!-- Solucionario Pregunta 4 -->
+            <div class="solution-block">
+                <div class="solution-title">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    Opción Correcta: B
+                </div>
+                <div class="solution-text">
+                    <strong>Justificación:</strong> Piaget establece que la educación y la transmisión social son fundamentales para el desarrollo, pero no actúan de forma directa o pasiva. Para que un niño asimile la información social (instrucción escolar, explicaciones orales), debe poseer un nivel de desarrollo cognitivo y estructuras lógico-matemáticas previas que le permitan otorgar sentido y estructura a ese conocimiento. Si el sujeto no posee la estructura de asimilación idónea, la instrucción verbal es simplemente ignorada o deformada por sus propios esquemas infantiles.
+                </div>
+            </div>
+        </div>
+
+        <!-- SOLUCIONARIO GENERAL -->
+        <div class="general-solutions">
+            <h2>
+                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color: var(--accent);">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                Solucionario Analítico y Justificación Pedagógica
+            </h2>
+            <p style="margin-bottom: 20px; font-size: 0.95rem;">
+                Este solucionario sirve como clave de corrección para el docente y como autoevaluación reflexiva para los estudiantes universitarios. Expone el fundamento lógico que discrimina las respuestas correctas de las desviaciones conceptuales.
+            </p>
+            <div style="background-color: var(--accent-light); border: 1px solid rgba(13, 148, 136, 0.2); padding: 20px; border-radius: var(--radius-sm); font-size: 0.9rem;">
+                <p><strong>Resumen de Claves Opción Múltiple:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px; list-style-type: square;">
+                    <li style="margin-bottom: 5px;"><strong>Pregunta 3:</strong> Opción <strong>C</strong> (Desfase horizontal). La noción lógica permanece, pero se retrasa su aplicación a contenidos materiales diferentes por el nivel de resistencia física que plantean las distintas magnitudes.</li>
+                    <li><strong>Pregunta 4:</strong> Opción <strong>B</strong> (Necesario pero insuficiente). Rechaza el empirismo puro (el conocimiento entra de afuera) y defiende el constructivismo interactionista: el estímulo social sólo es asimilable si hay una estructura interna receptora previa.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cambiar el modo de visualización de la guía (Estudiante / Docente)
+        function setMode(mode) {
+            const body = document.body;
+            const btnStudent = document.getElementById('btnStudent');
+            const btnTeacher = document.getElementById('btnTeacher');
+
+            if (mode === 'student') {
+                body.classList.remove('mode-teacher');
+                body.classList.add('mode-student');
+                btnStudent.classList.add('active');
+                btnTeacher.classList.remove('active');
+                resetSelectedOptionsClasses();
+            } else {
+                body.classList.remove('mode-student');
+                body.classList.add('mode-teacher');
+                btnTeacher.classList.add('active');
+                btnStudent.classList.remove('active');
+                highlightCorrectOptions();
+            }
+        }
+
+        // Selección interactiva de opciones por parte del alumno
+        function selectOption(element, questionNum, optionLetter) {
+            // Si está en modo docente, no se permite cambiar selección en simulación
+            if (document.body.classList.contains('mode-teacher')) return;
+
+            const card = element.closest('.question-card');
+            const items = card.querySelectorAll('.option-item');
+            
+            items.forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            element.classList.add('selected');
+        }
+
+        // Resaltar opciones correctas al pasar a vista docente
+        function highlightCorrectOptions() {
+            // Pregunta 3 -> Opción C (índice 2)
+            const q3Options = document.querySelectorAll('.question-card')[2].querySelectorAll('.option-item');
+            q3Options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === 2) opt.classList.add('correct');
+            });
+
+            // Pregunta 4 -> Opción B (índice 1)
+            const q4Options = document.querySelectorAll('.question-card')[3].querySelectorAll('.option-item');
+            q4Options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === 1) opt.classList.add('correct');
+            });
+        }
+
+        // Limpiar clases del solucionario
+        function resetSelectedOptionsClasses() {
+            const allOptions = document.querySelectorAll('.option-item');
+            allOptions.forEach(opt => {
+                opt.classList.remove('correct');
+            });
+        }
+    </script>
+</body>
+</html>

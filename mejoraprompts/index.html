@@ -3,684 +3,2247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Optimizador Inteligente de Prompts de IA para Educación (Argentina)</title>
+    <title>Optimizador inteligente de prompts de IA para educación (Argentina)</title>
     <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            line-height: 1.7;
+        /* Variables de diseño y temas */
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #4b5563;
+            --border-color: #e5e7eb;
+            
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: rgba(79, 70, 229, 0.1);
+            
+            --secondary: #0d9488;
+            --secondary-hover: #0f766e;
+            
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --success-dark: #065f46;
+            
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --warning-dark: #92400e;
+
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --font: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+            
+            /* Colores de código de la vista previa */
+            --color-role: #0284c7;
+            --color-goal: #4f46e5;
+            --color-context: #0d9488;
+            --color-extension: #b45309;
+            --color-files: #db2777;
+            --color-examples: #4b5563;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0b0f19;
+            --card-bg: #151f32;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: #1e293b;
+            
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: rgba(99, 102, 241, 0.15);
+            
+            --secondary: #14b8a6;
+            --secondary-hover: #0d9488;
+            
+            --success: #10b981;
+            --success-light: rgba(16, 185, 129, 0.15);
+            --success-dark: #34d399;
+            
+            --danger: #f87171;
+            --danger-hover: #ef4444;
+
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+            
+            /* Colores de código de la vista previa en modo oscuro */
+            --color-role: #38bdf8;
+            --color-goal: #818cf8;
+            --color-context: #2dd4bf;
+            --color-extension: #fbbf24;
+            --color-files: #f472b6;
+            --color-examples: #9ca3af;
+        }
+
+        /* Estilos generales */
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            font-family: var(--font);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
             padding: 20px;
-            background-color: #f4f7f6;
-            color: #333;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
-        .container {
+
+        header {
+            max-width: 1200px;
             width: 100%;
-            max-width: 1000px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 40px 50px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-            flex: 1;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
         }
-        h1 {
-            color: #1a2a6c;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 2.6em;
-            letter-spacing: -1px;
+
+        .header-title-container {
+            flex-grow: 1;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 4px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Botón de cambio de tema */
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            color: var(--text-color);
+            margin-left: 20px;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* Contenedor principal de dos columnas */
+        .main-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 24px;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 992px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tarjetas y paneles */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .sticky-sidebar {
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        @media (max-width: 992px) {
+            .sticky-sidebar {
+                position: static;
+                height: auto;
+            }
+        }
+
+        /* Títulos de sección responsivos con soporte de toggle */
+        h2.section-title {
+            font-size: 1.3rem;
             font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-color);
+            width: 100%;
         }
-        .subtitle {
-            text-align: center;
-            color: #555;
-            font-size: 1.1em;
-            margin-bottom: 30px;
-            font-weight: 500;
+
+        .title-text-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        h2 {
-            color: #007bff;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 1.7em;
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 8px;
+
+        h2.section-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+
+        /* Interruptor de palanca visual (toggles) */
+        .switch-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
             font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
         }
-        h3 {
-            color: #2c3e50;
-            margin-top: 20px;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-            font-weight: 600;
+
+        .switch-container input[type="checkbox"] {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
         }
+
+        .switch-slider {
+            position: relative;
+            display: inline-block;
+            width: 38px;
+            height: 22px;
+            background-color: var(--border-color);
+            border-radius: 20px;
+            transition: background-color 0.2s;
+        }
+
+        .switch-slider::before {
+            content: "";
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+
+        input[type="checkbox"]:checked + .switch-slider {
+            background-color: var(--primary);
+        }
+
+        input[type="checkbox"]:checked + .switch-slider::before {
+            transform: translateX(16px);
+        }
+
+        /* Estado deshabilitado visualmente para la tarjeta al apagarse */
+        .card-disabled {
+            border-style: dashed;
+        }
+
+        .card-disabled .field, 
+        .card-disabled .file-list, 
+        .card-disabled .btn-add-file, 
+        .card-disabled .explanation {
+            opacity: 0.4;
+            pointer-events: none !important;
+        }
+
+        /* Formularios e inputs */
+        .field {
+            margin-bottom: 18px;
+        }
+
         label {
             display: block;
-            margin-bottom: 10px;
+            font-size: 0.9rem;
             font-weight: 600;
-            color: #2c3e50;
-            font-size: 1.05em;
+            margin-bottom: 6px;
+            color: var(--text-color);
         }
-        textarea, select, input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 14px 18px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 1em;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        textarea:focus, select:focus, input[type="text"]:focus, input[type="number"]:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
-            outline: none;
-        }
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        .field-group {
-            background-color: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #dee2e6;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
-        }
-        .field-group h2 {
-            margin-top: 0;
-            text-align: center;
-            font-size: 1.5em;
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 20px;
-            color: #1a2a6c;
-        }
+
         .explanation {
-            font-size: 0.85em;
-            color: #6c757d;
-            margin-top: -15px;
-            margin-bottom: 15px;
-            font-style: italic;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 16px 35px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.25em;
-            font-weight: 600;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            display: block;
-            width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 15px;
-        }
-        button:hover {
-            background-color: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
-        }
-        .copy-button {
-            background-color: #007bff;
-            margin-top: 10px;
-            font-size: 1em;
-            padding: 12px 25px;
-            width: auto;
-            display: inline-block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .copy-button:hover {
-            background-color: #0056b3;
-        }
-        .results-section {
-            margin-top: 35px;
-            background-color: #e9ecef;
-            padding: 30px;
-            border-radius: 10px;
-            border-left: 8px solid #007bff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-        }
-        .results-section h2 {
-            margin-top: 0;
-            font-size: 1.9em;
-            border-bottom: none;
-            color: #0056b3;
-            text-align: center;
-        }
-        .prompt-display-container {
-            position: relative;
-            margin-bottom: 25px;
-        }
-        .original-prompt-display, .optimized-prompt-display {
-            font-family: 'Source Code Pro', monospace;
-            background-color: #fdfdfe;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            font-size: 1em;
-            line-height: 1.8;
-            border-left: 8px solid #6c757d;
-            position: relative;
-            padding-right: 70px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .optimized-prompt-display {
-            background-color: #d4edda;
-            border-left: 8px solid #28a745;
-            font-weight: bold;
-            color: #155724;
-            border-color: #28a745;
-        }
-        .hidden {
-            display: none;
-        }
-        .footer {
-            margin-top: auto;
-            padding: 30px;
-            background-color: #e9ecef;
-            text-align: center;
-            font-size: 0.9em;
-            color: #6c757d;
-            border-top: 1px solid #dee2e6;
-        }
-        .footer .copyright {
-             display: block;
-        }
-        .info-box {
-            background-color: #e7f3ff;
-            border-left: 5px solid #007bff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 30px;
-            margin-bottom: 25px;
-            font-size: 0.95em;
-            color: #004085;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .info-box h4 {
-            margin-top: 0;
-            margin-bottom: 12px;
-            color: #0056b3;
-            font-weight: 700;
-        }
-        .info-box ul {
-            margin-left: 20px;
-            margin-bottom: 0;
-            padding-left: 5px;
-        }
-        .info-box li {
+            font-size: 0.8rem;
+            color: var(--text-muted);
             margin-bottom: 8px;
         }
-        .suggestion-item {
+
+        textarea, select, input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-family: var(--font);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        textarea:focus, select:focus, input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 576px) {
+            .row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+
+        /* Animación de resaltado */
+        @keyframes pulse-highlight {
+            0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); border-color: var(--primary); }
+            70% { box-shadow: 0 0 0 10px rgba(79, 70, 229, 0); border-color: var(--primary); }
+            100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+        }
+
+        .highlight-glow {
+            animation: pulse-highlight 1.5s ease-out;
+        }
+
+        /* Controles ocultos condicionales */
+        .hidden {
+            display: none !important;
+        }
+
+        .mt-2 {
+            margin-top: 8px;
+        }
+
+        /* Constructor dinámico de funciones de archivo */
+        .file-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background-color: var(--bg-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+        }
+
+        .file-item input {
+            flex-grow: 1;
+            padding: 6px 10px;
+            background-color: var(--card-bg);
+            font-size: 0.9rem;
+        }
+
+        .file-item span {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .btn-delete:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .btn-delete svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .btn-add-file {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            border: 1px dashed var(--primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .btn-add-file:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-add-file svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+        }
+
+        /* Selector de Plantillas (Presets) */
+        .presets-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .preset-badge {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .preset-badge:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Evaluador de Calidad */
+        .quality-card {
+            padding: 16px 20px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .quality-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .quality-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .quality-score {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .quality-bar-bg {
+            background-color: var(--bg-color);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
             margin-bottom: 12px;
-            font-size: 0.98em;
-            color: #495057;
-            line-height: 1.8;
         }
-        /* Estilos para los títulos principales H1 */
-        h1.title-case {
-             /* El texto del H1 ya está escrito con la capitalización correcta */
+
+        .quality-bar-fill {
+            background-color: var(--primary);
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.4s ease;
         }
-        /* Adaptaciones para móviles */
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px 25px;
-            }
-            h1 {
-                font-size: 2em;
-            }
-            h2 {
-                font-size: 1.5em;
-            }
-            button {
-                font-size: 1.1em;
-            }
+
+        .quality-tips {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .quality-tip-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .quality-tip-item svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+        }
+
+        .quality-tip-item.done {
+            color: var(--success);
+        }
+
+        .quality-tip-item.pending {
+            color: var(--text-muted);
+        }
+
+        /* Pestañas de la barra lateral (Tabs) */
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 8px 12px 10px 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-color);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .tab-content {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        /* Vista previa y botones */
+        .preview-box {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            flex-grow: 1;
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        /* Resaltados de colores del prompt */
+        .preview-role { color: var(--color-role); font-weight: 600; }
+        .preview-goal { color: var(--color-goal); font-weight: 600; }
+        .preview-context { color: var(--color-context); }
+        .preview-files { color: var(--color-files); font-weight: 600; }
+        .preview-extension { color: var(--color-extension); font-weight: 600; }
+        .preview-examples { color: var(--color-examples); font-style: italic; }
+
+        .preview-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            flex-grow: 1;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* Sección de Teoría */
+        .theory-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .theory-item {
+            margin-bottom: 16px;
+            background-color: var(--bg-color);
+            padding: 12px 14px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .theory-item h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .theory-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .btn-link {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Sección de Historial */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 12px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            position: relative;
+            padding-right: 40px;
+        }
+
+        .history-item:hover {
+            border-color: var(--primary);
+        }
+
+        .history-item-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            color: var(--text-color);
+            margin-bottom: 4px;
+        }
+
+        .history-item-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .btn-delete-history {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .btn-delete-history:hover {
+            color: var(--danger);
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .btn-delete-history svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Estilos del modal de personalización */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 28px;
+            width: 90%;
+            max-width: 480px;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.open .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 750;
+            color: var(--text-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-close:hover {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .theme-options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .theme-option-card {
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .theme-option-card:hover {
+            border-color: var(--primary);
+        }
+
+        .theme-option-card.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .color-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .color-options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .color-option-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .color-option-row:hover {
+            border-color: var(--primary);
+        }
+
+        .color-option-row.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+            color: var(--primary);
         }
     </style>
+    <!-- Fuente premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lógica de detección y aplicación de temas PRIORIZADA en el HEAD para evitar parpadeos visuales (FOUC) -->
+    <script>
+        const colorPalettes = {
+            indigo: {
+                primary: '#4f46e5',
+                primaryHover: '#4338ca',
+                primaryLight: 'rgba(79, 70, 229, 0.1)'
+            },
+            emerald: {
+                primary: '#059669',
+                primaryHover: '#047857',
+                primaryLight: 'rgba(5, 150, 105, 0.1)'
+            },
+            sunset: {
+                primary: '#ea580c',
+                primaryHover: '#c2410c',
+                primaryLight: 'rgba(234, 88, 12, 0.1)'
+            },
+            amethyst: {
+                primary: '#7c3aed',
+                primaryHover: '#6d28d9',
+                primaryLight: 'rgba(124, 58, 237, 0.1)'
+            },
+            rose: {
+                primary: '#db2777',
+                primaryHover: '#be185d',
+                primaryLight: 'rgba(219, 39, 119, 0.1)'
+            }
+        };
+
+        const savedMode = localStorage.getItem('theme_mode') || 'light';
+        const savedPalette = localStorage.getItem('theme_palette') || 'indigo';
+        
+        // Aplicación síncrona inmediata en el documento
+        document.documentElement.setAttribute('data-theme', savedMode);
+        const palette = colorPalettes[savedPalette] || colorPalettes.indigo;
+        document.documentElement.style.setProperty('--primary', palette.primary);
+        document.documentElement.style.setProperty('--primary-hover', palette.primaryHover);
+        document.documentElement.style.setProperty('--primary-light', palette.primaryLight);
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title-case">Optimizador inteligente de prompts de IA para Educación (Argentina)</h1>
-        <p class="subtitle">Crea instrucciones precisas y efectivas para modelos de lenguaje con esta herramienta interactiva.</p>
 
-        <div id="prompt-input-section">
-            <h2>Define la tarea principal</h2>
-            <label for="initial-prompt">¿Qué quieres que haga la IA?</label>
-            <p class="explanation">Describe la acción principal o el contenido que necesitas. Sé lo más directo posible.</p>
-            <textarea id="initial-prompt" placeholder="Ej: Crea un plan de lección sobre el ciclo del agua para tercer grado." rows="3"></textarea>
+    <header>
+        <div class="header-title-container">
+            <h1>Optimizador inteligente de prompts de IA para educación (Argentina)</h1>
+            <p>Escribe instrucciones claras y estructuradas para el aula utilizando la teoría de la ingeniería de prompts.</p>
+        </div>
+        <button class="theme-toggle" id="theme-btn" title="Personalizar tema y colores" onclick="openThemeModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12c0 2.22 1.5 3.5 2 5.5.5 2 2 2.5 8 2.5z"></path><path d="M7.5 10.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path><path d="M11.5 7.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path><path d="M16.5 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path><path d="M15.5 14.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path></svg>
+        </button>
+    </header>
 
-            <div class="field-group">
-                <h2>Añade detalles y refinamientos educativos (Argentina)</h2>
-
-                <label for="prompt-goal">Objetivo educativo específico:</label>
-                <p class="explanation">El propósito principal de la tarea educativa. ¿Qué resultado de aprendizaje buscas?</p>
-                <select id="prompt-goal">
-                    <option value="">-- Selecciona el objetivo de aprendizaje --</option>
-                    <option value="generar_plan_leccion">generar un plan de lección detallado</option>
-                    <option value="crear_actividad_evaluacion">crear una actividad o evaluación (examen, quiz, proyecto)</option>
-                    <option value="explicar_concepto">explicar un concepto complejo de forma sencilla</option>
-                    <option value="diseñar_ejercicios">diseñar ejercicios prácticos o de refuerzo</option>
-                    <option value="desarrollar_material_didactico">desarrollar material didáctico (guía, infografía, presentación)</option>
-                    <option value="simular_dialogo">simular un diálogo o debate educativo</option>
-                    <option value="generar_ideas_proyecto">generar ideas para proyectos estudiantiles</option>
-                    <option value="adaptar_contenido">adaptar contenido para diferentes niveles educativos</option>
-                    <option value="otro_objetivo_educativo">otro (especificar)</option>
-                </select>
-                <input type="text" id="prompt-goal-other" class="hidden" placeholder="Describe tu objetivo educativo específico aquí">
-
-                <label for="prompt-context">Contexto educativo relevante:</label>
-                <p class="explanation">Información de fondo sobre el curso, tema, estudiantes o recursos disponibles.</p>
-                <textarea id="prompt-context" placeholder="Ej: La lección es para estudiantes de 3er grado (8-9 años). Los estudiantes ya tienen conocimientos básicos sobre el agua. El objetivo es que comprendan las fases del ciclo. Se dispondrá de pizarra y materiales visuales."></textarea>
-
-                <label for="prompt-role-select">Rol del IA como Educador:</label>
-                <p class="explanation">Define el rol que la IA debe asumir (ej. 'Profesor de física', 'Tutor de matemáticas').</p>
-                <select id="prompt-role-select">
-                    <option value="">-- Selecciona un rol educativo o escribe uno --</option>
-                    <option value="profesor_experto">un profesor experto en la materia</option>
-                    <option value="diseñador_curricular">un diseñador curricular</option>
-                    <option value="tutor_personalizado">un tutor personalizado</option>
-                    <option value="creador_contenido_educativo">un creador de contenido educativo</option>
-                    <option value="evaluador_experto">un experto en evaluación educativa</option>
-                    <option value="guia_estudios">un guía de estudios</option>
-                    <option value="otro_rol_educativo">otro (especificar)</option>
-                </select>
-                <input type="text" id="prompt-role-other" class="hidden" placeholder="Ej: Profesor de historia antigua especializado en Egipto...">
-
-                <label for="prompt-audience-select">Nivel y Perfil del Estudiante (Argentina):</label>
-                <p class="explanation">Especifica el nivel educativo según el sistema argentino y características de los estudiantes.</p>
-                <select id="prompt-audience-select">
-                    <option value="">-- Selecciona el nivel/perfil o describe --</option>
-                    <option value="educacion_inicial">educación inicial (sala de 3, 4 y 5 años)</option>
-                    <option value="educacion_primaria">educación primaria (1º a 6º/7º grado)</option>
-                    <option value="educacion_secundaria_obligatoria">educación secundaria (1º a 5º/6º año - EGB/Polimodal/Secundaria)</option>
-                    <option value="educacion_superior_terciaria">educación superior (terciaria/institutos)</option>
-                    <option value="educacion_superior_universitaria">educación superior (universitaria - grado)</option>
-                    <option value="educacion_superior_posgrado">educación superior (posgrado)</option>
-                    <option value="educacion_adultos">educación para adultos (CEFA / FINES)</option>
-                    <option value="estudiantes_capacitacion_laboral">estudiantes de capacitación laboral</option>
-                    <option value="estudiantes_necesidades_especiales">estudiantes con necesidades educativas especiales</option>
-                    <option value="otro_perfil_estudiante_arg">otro (especificar)</option>
-                </select>
-                <input type="text" id="prompt-audience-other" class="hidden" placeholder="Ej: Estudiantes de primer año de ingeniería con conocimientos básicos de cálculo...">
-
-                <label for="prompt-format-select">Formato del material educativo:</label>
-                <p class="explanation">Cómo debe presentarse el resultado (ej. lección estructurada, quiz de opción múltiple).</p>
-                <select id="prompt-format-select">
-                    <option value="">-- Selecciona el formato o describe uno --</option>
-                    <option value="plan_leccion_estructurado">un plan de lección estructurado (objetivos, actividades, evaluación)</option>
-                    <option value="actividad_interactiva">una actividad interactiva (ej. juego de roles, simulación)</option>
-                    <option value="examen_opcion_multiple">un examen/quiz de opción múltiple</option>
-                    <option value="examen_respuesta_corta">un examen/quiz con preguntas de respuesta corta</option>
-                    <option value="rubrica_evaluacion">una rúbrica de evaluación</option>
-                    <option value="lista_recursos">una lista de recursos educativos (libros, webs, vídeos)</option>
-                    <option value="presentacion_diapositivas">un esquema para presentación de diapositivas</option>
-                    <option value="infografia_esquema">un esquema para infografía</option>
-                    <option value="explicacion_paso_a_paso">una explicación paso a paso</option>
-                    <option value="otro_formato_educativo">otro (especificar)</option>
-                </select>
-                <input type="text" id="prompt-format-other" class="hidden" placeholder="Ej: Tabla comparativa de teorías, mapa conceptual...">
-
-                <label for="prompt-tone-select">Tono y estilo pedagógico:</label>
-                <p class="explanation">El estilo de comunicación apropiado para el contexto educativo.</p>
-                <select id="prompt-tone-select">
-                    <option value="">-- Selecciona el tono o describe uno --</option>
-                    <option value="pedagogico_claro">pedagógico y claro</option>
-                    <option value="inspirador_motivador">inspirador y motivador</option>
-                    <option value="formal_academico">formal y académico</option>
-                    <option value="ameno_interesante">divertido y ameno</option>
-                    <option value="neutral_informativo">neutral e informativo</option>
-                    <option value="critico_reflexivo">fomentando el pensamiento crítico y reflexivo</option>
-                    <option value="pragmatico_aplicado">enfocado en la aplicación práctica</option>
-                    <option value="otro_tono_educativo">otro (especificar)</option>
-                </select>
-                <input type="text" id="prompt-tone-other" class="hidden" placeholder="Ej: Entusiasta y cercano...">
-
-                <label for="prompt-length-select">Duración o extensión estimada:</label>
-                <p class="explanation">Indica la duración de la lección, el número de páginas, o la extensión deseada.</p>
-                <select id="prompt-length-select">
-                    <option value="">-- Selecciona la duración o indica una medida --</option>
-                    <option value="corta_sesion">corta (ej. 30 minutos, 1 página)</option>
-                    <option value="sesion_estandar">estándar (ej. 45-60 minutos, 2-3 páginas)</option>
-                    <option value="modulo_completo">módulo completo (ej. varias sesiones, 5-10 páginas)</option>
-                    <option value="unidad_didactica">unidad didáctica (varios módulos)</option>
-                    <option value="puntos_clave">solo puntos clave</option>
-                    <option value="nivel_detalle">nivel de detalle específico (ej. 500 palabras)</option>
-                    <option value="cualquier_duracion">cualquier duración / no especificado</option>
-                    <option value="otra_longitud_educativa">otra (especificar)</option>
-                </select>
-                <input type="text" id="prompt-length-other" class="hidden" placeholder="Ej: Aproximadamente 90 minutos, un documento de 15 páginas...">
-
-                <label for="prompt-include-keywords">Conceptos clave a incluir:</label>
-                <p class="explanation">Términos o conceptos que deben ser cubiertos en el material. Separar por comas.</p>
-                <input type="text" id="prompt-include-keywords" placeholder="Ej: Ciclo del agua, evaporación, condensación, precipitación, colección, importancia del agua">
-
-                <label for="prompt-exclude-keywords">Conceptos o enfoques a evitar:</label>
-                <p class="explanation">Temas o enfoques que no deben incluirse. Separar por comas.</p>
-                <input type="text" id="prompt-exclude-keywords" placeholder="Ej: Complejidad química del agua, aspectos económicos, contaminación (a menos que sea el foco)">
-
-                <label for="prompt-examples">Ejemplos de actividades o preguntas (Few-Shot):</label>
-                <p class="explanation">Proporciona ejemplos del tipo de actividad, pregunta o ejercicio que buscas.</p>
-                <textarea id="prompt-examples" placeholder="Formato:\nEjemplo de actividad: Pregunta de reflexión sobre la importancia del agua en la vida diaria.\nEjemplo de pregunta: ¿Qué pasaría si la lluvia dejara de caer por un mes?\n---\nEjemplo de actividad: Realizar un dibujo del ciclo del agua."></textarea>
+    <div class="main-container">
+        
+        <!-- Columna Izquierda: Formulario -->
+        <div class="form-column">
+            
+            <div class="card" id="card-presets">
+                <h2 class="section-title">
+                    <span class="title-text-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                        Plantillas rápidas
+                    </span>
+                    <label class="switch-container">
+                        <input type="checkbox" id="toggle-presets" checked onchange="toggleSection('card-presets', 'toggle-presets')">
+                        <span class="switch-slider"></span>
+                        <span class="switch-text">Activar</span>
+                    </label>
+                </h2>
+                <div class="explanation">Elige una plantilla para preconfigurar los campos del formulario con mejores prácticas.</div>
+                <div class="presets-container">
+                    <button class="preset-badge" onclick="loadPreset('secuencia')">🎒 Secuencia didáctica</button>
+                    <button class="preset-badge" onclick="loadPreset('plan_diario')">📝 Plan de clase diario</button>
+                    <button class="preset-badge" onclick="loadPreset('rubrica')">📊 Rúbrica de evaluación</button>
+                    <button class="preset-badge" onclick="loadPreset('simplificar')">💡 Simplificar concepto</button>
+                    <button class="preset-badge" onclick="loadPreset('proyectos')">🚀 Proyectos (ABP)</button>
+                    <button class="preset-badge" onclick="loadPreset('flipped')">🧩 Aula invertida</button>
+                    <button class="preset-badge" onclick="loadPreset('inclusion')">🌈 Inclusión y TDAH</button>
+                    <button class="preset-badge" onclick="loadPreset('gamificada')">🎮 Trivia gamificada</button>
+                    <button class="preset-badge" onclick="loadPreset('estudio_caso')">📖 Estudio de caso</button>
+                    <button class="preset-badge" onclick="loadPreset('guia_practica')">✏️ Guía práctica</button>
+                </div>
             </div>
 
-            <button onclick="generateOptimizedPrompt()">Generar Prompt Optimizado</button>
-        </div>
-
-        <div id="results-section" class="results-section hidden">
-            <h2>Tu prompt optimizado</h2>
-
-            <div class="prompt-display-container">
-                <h3>Instrucción completa generada:</h3>
-                <div id="optimized-prompt-display" class="optimized-prompt-display"></div>
-                <button class="copy-button" onclick="copyToClipboard()">Copiar Prompt</button>
+            <div class="card" id="card-prompt-topic">
+                <h2 class="section-title">
+                    <span class="title-text-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        Tema de la clase
+                    </span>
+                </h2>
+                <div class="field" id="field-prompt-topic">
+                    <label for="prompt-topic">Tema o contenido curricular central:</label>
+                    <div class="explanation">Especifica el tema académico o el contenido a enseñar (por ejemplo: "los dinosaurios", "fracciones equivalentes", "el ciclo del agua").</div>
+                    <input type="text" id="prompt-topic" placeholder="Ej: Los estados de la materia" oninput="updatePrompt()">
+                </div>
             </div>
 
-            <h3>Consejos para refinar</h3>
-            <ul id="tips-list" style="padding-left: 20px;">
-                <!-- Las sugerencias se añadirán aquí -->
-            </ul>
+            <div class="card" id="card-initial-prompt">
+                <h2 class="section-title">
+                    <span class="title-text-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"></path></svg>
+                        Instrucción principal
+                    </span>
+                </h2>
+                <div class="field" id="field-initial-prompt">
+                    <label for="initial-prompt">¿Qué consigna o tarea principal quieres realizar?</label>
+                    <div class="explanation">Describe la acción principal que le pides a la IA (por ejemplo: "crea una guía de preguntas", "escribe un cuento didáctico").</div>
+                    <textarea id="initial-prompt" placeholder="Ej: Crea una guía de actividades teóricas y prácticas para el aula." rows="3" oninput="updatePrompt()"></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">
+                    <span class="title-text-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        Detalles pedagógicos
+                    </span>
+                </h2>
+
+                <div class="field" id="field-prompt-goal">
+                    <label for="prompt-goal">Objetivo de aprendizaje:</label>
+                    <div class="explanation">¿Qué competencia o conocimiento buscas que logren los estudiantes con este material?</div>
+                    <select id="prompt-goal" onchange="toggleCustomSelect('prompt-goal', 'prompt-goal-other')">
+                        <option value="">-- Selecciona un objetivo o escribe uno --</option>
+                        <option value="generar un plan de clase detallado">generar un plan de clase detallado</option>
+                        <option value="diseñar una secuencia didáctica">diseñar una secuencia didáctica estructurada</option>
+                        <option value="crear un instrumento de evaluación (rúbrica, prueba)">crear un instrumento de evaluación (rúbrica o prueba)</option>
+                        <option value="explicar un concepto abstracto de manera sencilla">explicar un concepto abstracto de manera sencilla</option>
+                        <option value="diseñar ejercicios prácticos y de fijación">diseñar ejercicios prácticos y de fijación</option>
+                        <option value="desarrollar material de lectura adaptado">desarrollar material de lectura adaptado</option>
+                        <option value="diseñar un proyecto interdisciplinario">diseñar un proyecto interdisciplinario</option>
+                        <option value="otro">otro (especificar)</option>
+                    </select>
+                    <input type="text" id="prompt-goal-other" class="hidden mt-2" placeholder="Escribe el objetivo de aprendizaje específico..." oninput="updatePrompt()">
+                </div>
+
+                <div class="field" id="field-prompt-role">
+                    <label for="prompt-role-select">Rol pedagógico de la IA:</label>
+                    <div class="explanation">Define la especialidad y el perfil docente que debe adoptar la IA.</div>
+                    <select id="prompt-role-select" onchange="toggleCustomSelect('prompt-role-select', 'prompt-role-other')">
+                        <option value="">-- Selecciona un rol o escribe uno --</option>
+                        <option value="un docente experto en la asignatura">docente experto en la asignatura</option>
+                        <option value="un especialista en diseño de currículos escolares">especialista en diseño de currículos</option>
+                        <option value="un tutor pedagógico especializado en educación inclusiva">tutor pedagógico de educación inclusiva</option>
+                        <option value="un diseñador de materiales didácticos innovadores">diseñador de materiales didácticos</option>
+                        <option value="un evaluador educativo profesional">evaluador educativo profesional</option>
+                        <option value="otro">otro (especificar)</option>
+                    </select>
+                    <input type="text" id="prompt-role-other" class="hidden mt-2" placeholder="Ej: Profesor universitario de química orgánica..." oninput="updatePrompt()">
+                </div>
+
+                <div class="field" id="field-prompt-audience">
+                    <label for="prompt-audience-select">Estudiantes y nivel educativo (Argentina):</label>
+                    <div class="explanation">Especifica la sala, grado o año escolar para ajustar la complejidad del vocabulario.</div>
+                    <select id="prompt-audience-select" onchange="toggleCustomSelect('prompt-audience-select', 'prompt-audience-other')">
+                        <option value="">-- Selecciona el nivel educativo o escribe uno --</option>
+                        <option value="educación inicial (sala de 3 a 5 años)">educación inicial (sala de 3 a 5 años)</option>
+                        <option value="educación primaria (primer ciclo - 1° a 3° grado)">educación primaria (primer ciclo - 1° a 3° grado)</option>
+                        <option value="educación primaria (segundo ciclo - 4° a 6°/7° grado)">educación primaria (segundo ciclo - 4° a 6°/7° grado)</option>
+                        <option value="educación secundaria (ciclo básico - 1° a 3° año)">educación secundaria (ciclo básico - 1° a 3° año)</option>
+                        <option value="educación secundaria (ciclo orientado - 4° a 5°/6° año)">educación secundaria (ciclo orientado - 4° a 5°/6° año)</option>
+                        <option value="educación superior (institutos terciarios o universitarios)">educación superior (terciario / universitario)</option>
+                        <option value="educación de jóvenes y adultos (modalidad de adultos)">educación de jóvenes y adultos</option>
+                        <option value="otro">otro (especificar)</option>
+                    </select>
+                    <input type="text" id="prompt-audience-other" class="hidden mt-2" placeholder="Ej: Estudiantes con conocimientos previos avanzados en biología..." oninput="updatePrompt()">
+                </div>
+
+                <div class="field" id="field-prompt-context">
+                    <label for="prompt-context">Contexto y saberes previos:</label>
+                    <div class="explanation">Describe la situación del aula, los saberes que ya conocen o recursos del entorno.</div>
+                    <textarea id="prompt-context" placeholder="Ej: El grupo tiene 25 estudiantes. Ya conocen los saberes previos básicos del tema. Contamos con proyector y conexión a internet." oninput="updatePrompt()"></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">
+                    <span class="title-text-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="21" y1="18" x2="3" y2="18"></line></svg>
+                        Extensión del resultado final
+                    </span>
+                </h2>
+                <div class="explanation">Define con precisión la longitud, el tiempo y la organización requeridos en el material generado.</div>
+
+                <div class="row">
+                    <div class="field" id="field-prompt-length">
+                        <label for="prompt-length-select">Extensión física esperada:</label>
+                        <select id="prompt-length-select" onchange="toggleCustomSelect('prompt-length-select', 'prompt-length-other')">
+                            <option value="">-- Selecciona la extensión del texto --</option>
+                            <option value="corta (máximo 1 página o 300 palabras)">corta (máximo 1 página o 300 palabras)</option>
+                            <option value="mediana (aproximadamente 2 a 3 páginas)">mediana (aproximadamente 2 a 3 páginas)</option>
+                            <option value="detallada (más de 4 páginas o desarrollo extenso)">detallada (desarrollo extenso)</option>
+                            <option value="otro">otro (especificar)</option>
+                        </select>
+                        <input type="text" id="prompt-length-other" class="hidden mt-2" placeholder="Ej: Máximo 500 palabras, lista de 10 ítems..." oninput="updatePrompt()">
+                    </div>
+
+                    <div class="field" id="field-prompt-pedagogical-time">
+                        <label for="prompt-pedagogical-time">Alcance temporal pedagógico:</label>
+                        <select id="prompt-pedagogical-time" onchange="toggleCustomSelect('prompt-pedagogical-time', 'prompt-pedagogical-time-other')">
+                            <option value="">-- Selecciona el tiempo didáctico --</option>
+                            <option value="una actividad corta de 15 a 20 minutos">actividad de 15 a 20 minutos</option>
+                            <option value="una clase estándar (de 40 a 80 minutos)">clase de 40 a 80 minutos</option>
+                            <option value="una secuencia didáctica para 2 a 4 clases">secuencia de 2 a 4 clases</option>
+                            <option value="un proyecto didáctico mensual">proyecto didáctico de 1 mes</option>
+                            <option value="otro">otro (especificar)</option>
+                        </select>
+                        <input type="text" id="prompt-pedagogical-time-other" class="hidden mt-2" placeholder="Ej: Un taller especial de 3 horas..." oninput="updatePrompt()">
+                    </div>
+                </div>
+
+                <div class="field" id="field-prompt-format">
+                    <label for="prompt-format-select">Formato del material:</label>
+                    <div class="explanation">¿Cómo debe organizarse el material (rúbrica, tabla, cuestionario, etc.)?</div>
+                    <select id="prompt-format-select" onchange="toggleCustomSelect('prompt-format-select', 'prompt-format-other')">
+                        <option value="">-- Selecciona el formato de salida --</option>
+                        <option value="un plan de clase con objetivos, inicio, desarrollo y cierre">plan de clase (inicio, desarrollo, cierre)</option>
+                        <option value="una rúbrica analítica organizada en tabla con niveles y criterios">rúbrica analítica organizada en tabla</option>
+                        <option value="un cuestionario de preguntas abiertas y de opción múltiple con solucionario">cuestionario con solucionario</option>
+                        <option value="una narrativa didáctica explicativa con ejemplos prácticos">narrativa didáctica explicativa</option>
+                        <option value="un listado numerado de consignas de trabajo">listado numerado de consignas de trabajo</option>
+                        <option value="otro">otro (especificar)</option>
+                    </select>
+                    <input type="text" id="prompt-format-other" class="hidden mt-2" placeholder="Ej: Una carta dirigida a estudiantes de primaria..." oninput="updatePrompt()">
+                </div>
+
+                <div class="field" id="field-prompt-tone">
+                    <label for="prompt-tone-select">Tono y estilo pedagógico:</label>
+                    <select id="prompt-tone-select" onchange="toggleCustomSelect('prompt-tone-select', 'prompt-tone-other')">
+                        <option value="">-- Selecciona el tono pedagógico --</option>
+                        <option value="pedagógico, estructurado y claro">pedagógico, estructurado y claro</option>
+                        <option value="cercano, motivador y lúdico para fomentar la participación">cercano, motivador y lúdico</option>
+                        <option value="académico, formal y riguroso para la lectura">académico, formal y riguroso</option>
+                        <option value="reflexivo, impulsando el análisis crítico de los estudiantes">reflexivo (pensamiento crítico)</option>
+                        <option value="otro">otro (especificar)</option>
+                    </select>
+                    <input type="text" id="prompt-tone-other" class="hidden mt-2" placeholder="Ej: Entusiasta y de divulgación científica sencilla..." oninput="updatePrompt()">
+                </div>
+            </div>
+
+            <!-- Card con Toggle de archivos de contexto -->
+            <div class="card" id="card-files">
+                <h2 class="section-title">
+                    <span class="title-text-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        Archivos de contexto adicionales
+                    </span>
+                    <label class="switch-container">
+                        <input type="checkbox" id="toggle-files" checked onchange="toggleSection('card-files', 'toggle-files')">
+                        <span class="switch-slider"></span>
+                        <span class="switch-text">Incluir</span>
+                    </label>
+                </h2>
+                <div class="explanation">Si vas a adjuntar archivos en tu conversación con la IA (como un programa o texto), actívalo y agrega su función.</div>
+                
+                <div class="file-list" id="file-list-container">
+                    <!-- Los elementos de archivo dinámicos aparecerán aquí -->
+                </div>
+                
+                <button type="button" class="btn-add-file" onclick="addFileReference()">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Agregar función de archivo
+                </button>
+            </div>
+
+            <!-- Card con Toggle de restricciones -->
+            <div class="card" id="card-restrictions">
+                <h2 class="section-title">
+                    <span class="title-text-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 22 22 22"></polygon><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        Restricciones y palabras clave
+                    </span>
+                    <label class="switch-container">
+                        <input type="checkbox" id="toggle-restrictions" checked onchange="toggleSection('card-restrictions', 'toggle-restrictions')">
+                        <span class="switch-slider"></span>
+                        <span class="switch-text">Incluir</span>
+                    </label>
+                </h2>
+
+                <div class="field" id="field-prompt-include">
+                    <label for="prompt-include-keywords">Conceptos obligatorios a incluir:</label>
+                    <input type="text" id="prompt-include-keywords" placeholder="Ej: Concepto clave A, concepto clave B, terminología técnica" oninput="updatePrompt()">
+                </div>
+
+                <div class="field" id="field-prompt-exclude">
+                    <label for="prompt-exclude-keywords">Temas, enfoques o tecnicismos a evitar:</label>
+                    <input type="text" id="prompt-exclude-keywords" placeholder="Ej: Explicaciones excesivamente complejas, tecnicismos avanzados" oninput="updatePrompt()">
+                </div>
+            </div>
+
+            <!-- Card con Toggle de few shots (muestras) -->
+            <div class="card" id="card-examples">
+                <h2 class="section-title">
+                    <span class="title-text-group">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        Muestra de ejemplo (Few-shot)
+                    </span>
+                    <label class="switch-container">
+                        <input type="checkbox" id="toggle-examples" checked onchange="toggleSection('card-examples', 'toggle-examples')">
+                        <span class="switch-slider"></span>
+                        <span class="switch-text">Incluir</span>
+                    </label>
+                </h2>
+                <div class="explanation">Proporcionar un ejemplo del tipo de ejercicio o pregunta ayuda enormemente a la IA a comprender tus expectativas de estilo.</div>
+                
+                <div class="field" id="field-prompt-examples">
+                    <label for="prompt-examples">Escribe un ejemplo breve del resultado esperado:</label>
+                    <textarea id="prompt-examples" placeholder="Ej:&#10;Pregunta de ejemplo: [Pregunta corta o consigna de la actividad]&#10;Respuesta esperada: [Explicación sencilla o respuesta modelo esperada]" rows="4" oninput="updatePrompt()"></textarea>
+                </div>
+            </div>
+
         </div>
 
-        <div class="info-box">
-            <h4>¿Qué es el Few-Shot Prompting?</h4>
-            <p>El <strong>Few-Shot Prompting</strong> es una técnica donde proporcionas a la IA algunos ejemplos (pocos 'shots') de lo que esperas como salida, junto con tu instrucción principal. Esto ayuda a la IA a entender mejor el formato, estilo o tipo de respuesta deseada, especialmente para tareas complejas o cuando buscas un resultado muy específico.</p>
-            <p>En esta herramienta, el campo 'Ejemplos (Few-Shot Prompting)' te permite introducir estos pares de entrada/salida o ejemplos de actividades/preguntas. Los saltos de línea (`\n`) que uses en este campo se respetarán en el prompt final, lo cual es útil para separar claramente los ejemplos.</p>
+        <!-- Columna Derecha: Sidebar pegajosa (Vista previa, calidad, teoría) -->
+        <div class="sidebar-column">
+            <div class="sticky-sidebar">
+                
+                <!-- Tarjeta de Calidad del Prompt -->
+                <div class="card quality-card">
+                    <div class="quality-header">
+                        <span class="quality-title">Calidad estimada de tu instrucción:</span>
+                        <span class="quality-score" id="quality-pct">0%</span>
+                    </div>
+                    <div class="quality-bar-bg">
+                        <div class="quality-bar-fill" id="quality-bar"></div>
+                    </div>
+                    <div class="quality-tips" id="quality-tips-container">
+                        <!-- Las sugerencias dinámicas se cargan aquí -->
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Pestañas (Tabs) -->
+                <div class="card" style="flex-grow: 1; display: flex; flex-direction: column; margin-bottom: 0;">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" onclick="switchTab('tab-preview')" id="btn-tab-preview">
+                            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            Vista previa
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('tab-theory')" id="btn-tab-theory">
+                            <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                            Teoría de prompts
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('tab-history')" id="btn-tab-history">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            Historial
+                        </button>
+                    </div>
+
+                    <!-- Contenido Pestaña 1: Vista Previa -->
+                    <div class="tab-content" id="tab-preview">
+                        <div class="preview-box" id="prompt-preview-content">El prompt optimizado aparecerá aquí a medida que completes el formulario de la izquierda...</div>
+                        <div class="preview-actions">
+                            <button class="btn btn-primary" onclick="copyToClipboard()">
+                                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                Copiar
+                            </button>
+                            <button class="btn btn-secondary" onclick="downloadPrompt()">
+                                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                Descargar (.md)
+                            </button>
+                            <button class="btn btn-secondary" onclick="saveToHistory()" title="Guardar prompt actual en el historial">
+                                <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Contenido Pestaña 2: Teoría de Prompts -->
+                    <div class="tab-content hidden" id="tab-theory">
+                        <div class="theory-scroll">
+                            
+                            <div class="theory-item">
+                                <h4>
+                                    <span>Instrucción (prompt)</span>
+                                </h4>
+                                <p>Un prompt es el conjunto de indicaciones o texto de entrada que le damos a una inteligencia artificial para ordenarle una tarea. La calidad del resultado depende de cuán precisas sean estas instrucciones.</p>
+                            </div>
+
+                            <div class="theory-item">
+                                <h4>
+                                    <span>Estructura S-C-I-L-P</span>
+                                    <button class="btn-link" onclick="highlightFields(['field-initial-prompt', 'field-prompt-role', 'field-prompt-audience', 'field-prompt-context', 'field-prompt-length', 'field-prompt-format'])">Ver campos 🔍</button>
+                                </h4>
+                                <p>Es un modelo en español para estructurar instrucciones de forma robusta:</p>
+                                <p style="font-size: 0.8rem; padding-left: 8px;">
+                                    • <strong>S</strong>ituación: El contexto de la clase.<br>
+                                    • <strong>C</strong>omportamiento: El rol que asume la IA.<br>
+                                    • <strong>I</strong>nstrucción: La tarea principal a resolver.<br>
+                                    • <strong>L</strong>ímites: Temas o conceptos a evitar.<br>
+                                    • <strong>E</strong>jemplos: Muestras del formato esperado.<br>
+                                    • <strong>P</strong>roducto: La extensión y formato final.
+                                </p>
+                            </div>
+
+                            <div class="theory-item">
+                                <h4>
+                                    <span>Muestra de ejemplos (few-shot)</span>
+                                    <button class="btn-link" onclick="highlightFields(['field-prompt-examples'])">Ver campo 🔍</button>
+                                </h4>
+                                <p>Consiste en darle a la IA uno o dos ejemplos reales de preguntas y respuestas deseadas antes de pedirle que genere contenido nuevo. Esto define el estilo y formato exacto, evitando que la IA delire o invente estructuras extrañas.</p>
+                            </div>
+
+                            <div class="theory-item">
+                                <h4>
+                                    <span>Delimitadores de estructura</span>
+                                    <button class="btn-link" onclick="highlightFields(['file-list-container'])">Ver campo 🔍</button>
+                                </h4>
+                                <p>Utilizar etiquetas claras como <code>&lt;archivo_de_contexto&gt;</code> o comillas triples <code>"""</code> para envolver y separar los diferentes bloques de información. Esto le ayuda a la IA a comprender dónde termina una orden y dónde comienza el texto de análisis.</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Contenido Pestaña 3: Historial -->
+                    <div class="tab-content hidden" id="tab-history">
+                        <div class="history-list" id="history-items-container">
+                            <!-- Los prompts guardados aparecerán aquí -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
 
     </div>
 
-    <footer class="footer">
-        <span class="copyright">Copyright © 2025 Stella M. Cao. Herramienta creada para la optimización de interacciones con IA.</span>
+    <!-- Modal de Selección de Temas -->
+    <div class="modal-overlay" id="theme-modal" onclick="closeThemeModalOnOverlay(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Personalizar tema</h3>
+                <button class="modal-close" onclick="closeThemeModal()" title="Cerrar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            
+            <div class="field">
+                <label>Modo de pantalla:</label>
+                <div class="theme-options-grid">
+                    <div class="theme-option-card" id="theme-opt-light" onclick="setScreenMode('light')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        Modo claro
+                    </div>
+                    <div class="theme-option-card" id="theme-opt-dark" onclick="setScreenMode('dark')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        Modo oscuro
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Paleta de colores (Acento):</label>
+                <div class="color-options-list">
+                    <div class="color-option-row" id="color-opt-indigo" onclick="setColorPalette('indigo')">
+                        <span>Azul índigo (Predeterminado)</span>
+                        <span class="color-dot" style="background-color: #4f46e5;"></span>
+                    </div>
+                    <div class="color-option-row" id="color-opt-emerald" onclick="setColorPalette('emerald')">
+                        <span>Verde esmeralda</span>
+                        <span class="color-dot" style="background-color: #059669;"></span>
+                    </div>
+                    <div class="color-option-row" id="color-opt-sunset" onclick="setColorPalette('sunset')">
+                        <span>Naranja atardecer</span>
+                        <span class="color-dot" style="background-color: #ea580c;"></span>
+                    </div>
+                    <div class="color-option-row" id="color-opt-amethyst" onclick="setColorPalette('amethyst')">
+                        <span>Violeta amatista</span>
+                        <span class="color-dot" style="background-color: #7c3aed;"></span>
+                    </div>
+                    <div class="color-option-row" id="color-opt-rose" onclick="setColorPalette('rose')">
+                        <span>Rosa cerezo</span>
+                        <span class="color-dot" style="background-color: #db2777;"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="closeThemeModal()" style="width: 100%; margin-top: 10px;">Aplicar cambios</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Copyright © 2025 Stella M. Cao. Optimizador pedagógico adaptado a la teoría de ingeniería de instrucciones.</p>
     </footer>
 
     <script>
-        // Función para capitalizar la primera letra de una cadena
-        function capitalizeFirstLetterOfSentence(string) {
-            if (!string) return "";
-            string = string.trim();
-            return string.charAt(0).toUpperCase() + string.slice(1);
+        // Contador de ID para archivos de contexto
+        let fileIdCounter = 0;
+        const fileReferences = [];
+
+        // Inicialización de la UI tras cargar el DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar historial
+            loadHistory();
+            
+            // Sincronizar selectores del modal de temas con el estado cargado en el HEAD
+            const savedMode = localStorage.getItem('theme_mode') || 'light';
+            const savedPalette = localStorage.getItem('theme_palette') || 'indigo';
+            applyTheme(savedMode, savedPalette);
+            
+            // Inicializar estados de los interruptores de sección (toggles)
+            initializeSectionToggles();
+
+            // Generar prompt inicial
+            updatePrompt();
+        });
+
+        // Inicializa el estilo de desactivación en base a las casillas
+        function initializeSectionToggles() {
+            toggleSection('card-presets', 'toggle-presets', false);
+            toggleSection('card-files', 'toggle-files', false);
+            toggleSection('card-restrictions', 'toggle-restrictions', false);
+            toggleSection('card-examples', 'toggle-examples', false);
         }
 
-        // Función para formatear una oración: capitalizar inicio y añadir punto final si es necesario.
-        function formatSentenceProperly(sentence) {
-            if (!sentence) return "";
-            sentence = sentence.trim();
-
-            let processedSentence = sentence;
-
-            // Capitalizar solo si la oración empieza con una letra y no con un artículo o pronombre que ya esté bien capitalizado.
-            if (processedSentence.length > 0 && !processedSentence.match(/^([Ee]l|[Ll]a|[Ll]os|[Ll]as|[Uu]n|[Uu]na|[Uu]nos|[Uu]nas|[Mm]i|[Tt]u|[Ss]u|[Mm]is|[Tt]us|[Ss]us|[Nn]uestro|[Nn]uestra|[Nn]uestros|[Nn]uestras|[Vv]uestro|[Vv]uestra|[Vv]uestros|[Vv]uestras|[Ee]ste|[Ee]sta|[Ee]stos|[Ee]stas|[Aa]quel|[Aa]quella|[Aa]quellos|[Aa]quellas|[Cc]ada|[Aa]lgún|[Aa]lguna|[Aa]lgunos|[Aa]lgunas|[Nn]ingún|[Nn]inguna|[Nn]ingunos|[Nn]ingunas|[Tt]odo|[Tt]oda|[Tt]odos|[Tt]odas|[Qq]ue|[Qq]uien|[Qq]uienes|[Cc]omo|[Cc]uando|[Dd]onde|[Cc]ual|[Cc]uales|[Aa]ctúa|[Cc]onsidera)$/i)) {
-                processedSentence = capitalizeFirstLetterOfSentence(processedSentence);
+        // Habilitar o deshabilitar una sección mediante su interruptor
+        function toggleSection(cardId, checkboxId, shouldUpdate = true) {
+            const checkbox = document.getElementById(checkboxId);
+            const card = document.getElementById(cardId);
+            
+            if (checkbox && card) {
+                const children = Array.from(card.children);
+                children.forEach(child => {
+                    if (child.tagName !== 'H2') {
+                        if (checkbox.checked) {
+                            card.classList.remove('card-disabled');
+                        } else {
+                            card.classList.add('card-disabled');
+                        }
+                    }
+                });
             }
-
-            // Asegurar que la oración termine con un punto si no tiene signos de puntuación finales.
-            if (processedSentence.length > 0 && !processedSentence.match(/[.!?]$/)) {
-                processedSentence += '.';
-            }
-            return processedSentence;
-        }
-
-
-        // Función para obtener el artículo correcto (el/la/los/las) basado en la primera palabra
-        function getDefiniteArticleForWord(word) {
-            if (!word) return "";
-            word = word.trim().toLowerCase();
-
-            // Eliminar artículos iniciales si ya existen para analizar la palabra base
-            if (word.startsWith('el ') || word.startsWith('la ') || word.startsWith('los ') || word.startsWith('las ') || word.startsWith('un ') || word.startsWith('una ') || word.startsWith('unos ') || word.startsWith('unas ')) {
-                word = word.split(' ').slice(1).join(' ');
-            }
-
-            const firstWord = word.split(' ')[0];
-
-            // Lógica simplificada para determinar género y número
-            if (firstWord.endsWith('a') || firstWord.endsWith('ad') || firstWord.endsWith('ión') || firstWord.endsWith('ie') || firstWord.endsWith('z') || firstWord.endsWith('dad') || firstWord.endsWith('tad') || firstWord.endsWith('umbre') || firstWord.endsWith('cia') || firstWord.endsWith('gia') || firstWord.endsWith('sis')) {
-                // Femenino
-                 if (firstWord.endsWith('as') || firstWord.endsWith('ades') || firstWord.endsWith('iones') || firstWord.endsWith('dades') || firstWord.endsWith('tades') || firstWord.endsWith('umbres') || firstWord.endsWith('cias') || firstWord.endsWith('gias') || firstWord.endsWith('ses')) return 'las';
-                 return 'la';
-            } else if (firstWord.endsWith('o') || firstWord.endsWith('or') || firstWord.endsWith('án') || firstWord.endsWith('ín') || firstWord.endsWith('e') || firstWord.endsWith('u') || firstWord.endsWith('l') || firstWord.endsWith('r') || firstWord.endsWith('n') || firstWord.endsWith('s')) {
-                // Masculino
-                 if (firstWord.endsWith('os') || firstWord.endsWith('ores') || firstWord.endsWith('anes') || firstWord.endsWith('ines') || firstWord.endsWith('es') || firstWord.endsWith('ls') || firstWord.endsWith('rs') || firstWord.endsWith('ns') || firstWord.endsWith('is')) return 'los';
-                 // Casos especiales como 'el estudiante' o 'el docente' que terminan en 'e'
-                 if (firstWord.length > 1 && (firstWord.endsWith('e') || firstWord.endsWith('u') || firstWord.endsWith('l') || firstWord.endsWith('r') || firstWord.endsWith('n'))) return 'el';
-                 return 'el';
-            } else if (firstWord.endsWith('s')) { // Si termina en 's' y no encaja en reglas anteriores
-                 // Podría ser plural. Asumimos femenino plural como default si termina en 's'
-                 return 'las';
-            }
-            else {
-                return 'el'; // Por defecto, o si no se puede determinar
+            if (shouldUpdate) {
+                updatePrompt();
             }
         }
 
+        // Funciones del Modal de Temas
+        function openThemeModal() {
+            document.getElementById('theme-modal').classList.add('open');
+        }
 
-        function generateOptimizedPrompt() {
+        function closeThemeModal() {
+            document.getElementById('theme-modal').classList.remove('open');
+        }
+
+        function closeThemeModalOnOverlay(event) {
+            if (event.target === document.getElementById('theme-modal')) {
+                closeThemeModal();
+            }
+        }
+
+        function setScreenMode(mode) {
+            const currentPalette = localStorage.getItem('theme_palette') || 'indigo';
+            applyTheme(mode, currentPalette);
+        }
+
+        function setColorPalette(paletteName) {
+            const currentMode = localStorage.getItem('theme_mode') || 'light';
+            applyTheme(currentMode, paletteName);
+        }
+
+        function applyTheme(screenMode, colorPalette) {
+            document.documentElement.setAttribute('data-theme', screenMode);
+            
+            const palette = colorPalettes[colorPalette] || colorPalettes.indigo;
+            document.documentElement.style.setProperty('--primary', palette.primary);
+            document.documentElement.style.setProperty('--primary-hover', palette.primaryHover);
+            document.documentElement.style.setProperty('--primary-light', palette.primaryLight);
+            
+            document.querySelectorAll('.theme-option-card').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.color-option-row').forEach(el => el.classList.remove('active'));
+            
+            const modeEl = document.getElementById(`theme-opt-${screenMode}`);
+            const paletteEl = document.getElementById(`color-opt-${colorPalette}`);
+            
+            if (modeEl) modeEl.classList.add('active');
+            if (paletteEl) paletteEl.classList.add('active');
+            
+            localStorage.setItem('theme_mode', screenMode);
+            localStorage.setItem('theme_palette', colorPalette);
+        }
+
+        // Navegar entre pestañas de la barra lateral
+        function switchTab(tabId) {
+            document.getElementById('tab-preview').classList.add('hidden');
+            document.getElementById('tab-theory').classList.add('hidden');
+            document.getElementById('tab-history').classList.add('hidden');
+            
+            document.getElementById('btn-tab-preview').classList.remove('active');
+            document.getElementById('btn-tab-theory').classList.remove('active');
+            document.getElementById('btn-tab-history').classList.remove('active');
+            
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+        }
+
+        // Manejar la visualización de inputs "Otro (especificar)"
+        function toggleCustomSelect(selectId, otherInputId) {
+            const selectElement = document.getElementById(selectId);
+            const otherInputElement = document.getElementById(otherInputId);
+            
+            if (selectElement.value === 'otro') {
+                otherInputElement.classList.remove('hidden');
+                otherInputElement.focus();
+            } else {
+                otherInputElement.classList.add('hidden');
+                otherInputElement.value = '';
+            }
+            updatePrompt();
+        }
+
+        // Resaltar temporalmente campos del formulario (Link con Teoría)
+        function highlightFields(fieldIds) {
+            fieldIds.forEach((id, index) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    if (index === 0) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    element.classList.add('highlight-glow');
+                    setTimeout(() => {
+                        element.classList.remove('highlight-glow');
+                    }, 2000);
+                }
+            });
+        }
+
+        // Gestión dinámica y numeración de archivos de contexto
+        function addFileReference(descriptionValue = '') {
+            fileIdCounter++;
+            const id = fileIdCounter;
+            
+            const container = document.getElementById('file-list-container');
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.id = `file-item-${id}`;
+            
+            fileItem.innerHTML = `
+                <span></span>
+                <input type="text" id="file-desc-${id}" placeholder="Ej: Lectura base sobre el ciclo del agua para los estudiantes..." value="${descriptionValue}" oninput="updatePrompt()">
+                <button type="button" class="btn-delete" onclick="removeFileReference(${id})" title="Eliminar este archivo">
+                    <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                </button>
+            `;
+            
+            container.appendChild(fileItem);
+            fileReferences.push(id);
+            updateFileLabels();
+            
+            // Activar automáticamente el toggle de la sección al agregar un archivo
+            const toggle = document.getElementById('toggle-files');
+            if (toggle && !toggle.checked) {
+                toggle.checked = true;
+                toggleSection('card-files', 'toggle-files', false);
+            }
+
+            updatePrompt();
+        }
+
+        function removeFileReference(id) {
+            const element = document.getElementById(`file-item-${id}`);
+            if (element) {
+                element.remove();
+            }
+            const index = fileReferences.indexOf(id);
+            if (index > -1) {
+                fileReferences.splice(index, 1);
+            }
+            updateFileLabels();
+            updatePrompt();
+        }
+
+        // Corrige la numeración en base al orden físico real en el DOM
+        function updateFileLabels() {
+            const labels = document.querySelectorAll('#file-list-container .file-item span');
+            labels.forEach((label, idx) => {
+                label.textContent = `Archivo ${idx + 1}:`;
+            });
+        }
+
+        // Obtener el valor de un campo, considerando la opción "Otro"
+        function getFieldValue(selectId, otherId) {
+            const select = document.getElementById(selectId);
+            if (!select) return '';
+            
+            if (select.value === 'otro') {
+                return document.getElementById(otherId).value.trim();
+            }
+            return select.value;
+        }
+
+        // Construir el prompt optimizado y actualizar el evaluador de calidad
+        function updatePrompt() {
+            // Lectura de valores del formulario
             const initialPrompt = document.getElementById('initial-prompt').value.trim();
-            const promptGoal = document.getElementById('prompt-goal').value;
-            const promptGoalOther = document.getElementById('prompt-goal-other').value.trim();
-            const promptContext = document.getElementById('prompt-context').value.trim();
-            const promptRoleSelect = document.getElementById('prompt-role-select').value;
-            const promptRoleOther = document.getElementById('prompt-role-other').value.trim();
-            const promptAudienceSelect = document.getElementById('prompt-audience-select').value;
-            const promptAudienceOther = document.getElementById('prompt-audience-other').value.trim();
-            const promptFormatSelect = document.getElementById('prompt-format-select').value;
-            const promptFormatOther = document.getElementById('prompt-format-other').value.trim();
-            const promptToneSelect = document.getElementById('prompt-tone-select').value;
-            const promptToneOther = document.getElementById('prompt-tone-other').value.trim();
-            const promptLengthSelect = document.getElementById('prompt-length-select').value;
-            const promptLengthOther = document.getElementById('prompt-length-other').value.trim();
-            const promptIncludeKeywords = document.getElementById('prompt-include-keywords').value.trim();
-            const promptExcludeKeywords = document.getElementById('prompt-exclude-keywords').value.trim();
-            const promptExamples = document.getElementById('prompt-examples').value.trim();
+            const classTopic = document.getElementById('prompt-topic').value.trim();
+            const goal = getFieldValue('prompt-goal', 'prompt-goal-other');
+            const role = getFieldValue('prompt-role-select', 'prompt-role-other');
+            const audience = getFieldValue('prompt-audience-select', 'prompt-audience-other');
+            const context = document.getElementById('prompt-context').value.trim();
+            
+            const length = getFieldValue('prompt-length-select', 'prompt-length-other');
+            const pedagogicalTime = getFieldValue('prompt-pedagogical-time', 'prompt-pedagogical-time-other');
+            const format = getFieldValue('prompt-format-select', 'prompt-format-other');
+            const tone = getFieldValue('prompt-tone-select', 'prompt-tone-other');
+            
+            const includeKeywords = document.getElementById('prompt-include-keywords').value.trim();
+            const excludeKeywords = document.getElementById('prompt-exclude-keywords').value.trim();
+            const examples = document.getElementById('prompt-examples').value.trim();
 
-            let promptSections = [];
+            // Toggles de activación
+            const includeFilesSwitch = document.getElementById('toggle-files').checked;
+            const includeRestrictionsSwitch = document.getElementById('toggle-restrictions').checked;
+            const includeExamplesSwitch = document.getElementById('toggle-examples').checked;
+
+            const previewContainer = document.getElementById('prompt-preview-content');
+            
+            if (!initialPrompt && !classTopic) {
+                previewContainer.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">El prompt optimizado aparecerá aquí en tiempo real a medida que completes el "Tema de la clase" o la "Instrucción principal" de la izquierda...</span>`;
+                updateQualityMeter(0, []);
+                return;
+            }
+
+            let textHTML = '';
+            let rawText = '';
+            let score = 10;
             let tips = [];
 
-            // --- Construcción del prompt optimizado ---
-
-            // 1. Rol (si existe)
-            let finalRole = "";
-            if (promptRoleSelect === "otro_rol_educativo" && promptRoleOther) {
-                finalRole = promptRoleOther;
-            } else if (promptRoleSelect && promptRoleSelect !== "") {
-                finalRole = document.querySelector(`#prompt-role-select option[value="${promptRoleSelect}"]`).textContent;
-            }
-            if (finalRole) {
-                promptSections.push(`Actúa como ${finalRole}`);
-                tips.push("Definir el rol de la IA ayuda a enfocar su conocimiento y estilo pedagógico.");
-            }
-
-            // 2. Objetivo Principal
-            let goalDescription = "";
-            if (promptGoal === "otro_objetivo_educativo" && promptGoalOther) {
-                goalDescription = promptGoalOther;
-            } else if (promptGoal && promptGoal !== "") {
-                goalDescription = document.querySelector(`#prompt-goal option[value="${promptGoal}"]`).textContent;
-            }
-            if (goalDescription) {
-                promptSections.push(`mi objetivo es ${goalDescription}`);
-                tips.push("Sé específico con el objetivo de aprendizaje. ¿Qué deben saber o poder hacer los estudiantes al final?");
+            // 1. Rol pedagógico
+            if (role) {
+                const roleSentence = `[ROL PEDAGÓGICO]: Actúa como ${role}.\n`;
+                textHTML += `<span class="preview-role">${roleSentence.replace(/\n/g, '<br>')}</span>`;
+                rawText += roleSentence;
+                score += 15;
+                tips.push('✓ Rol de inteligencia artificial asignado');
             } else {
-                tips.push("Es crucial definir un objetivo de aprendizaje claro para guiar la creación del material.");
+                tips.push('⚡ Asigna un Rol Pedagógico para enfocar la especialidad de la IA (+15%)');
             }
 
-            // 3. Tarea Principal (Prompt Base)
+            // 2. Objetivo de aprendizaje
+            if (goal) {
+                const goalSentence = `[OBJETIVO DE APRENDIZAJE]: Mi objetivo de aprendizaje es ${goal}.\n`;
+                textHTML += `<span class="preview-goal">${goalSentence.replace(/\n/g, '<br>')}</span>`;
+                rawText += goalSentence;
+                score += 15;
+                tips.push('✓ Objetivo de aprendizaje detallado');
+            } else {
+                tips.push('⚡ Agrega el Objetivo de Aprendizaje que buscas lograr (+15%)');
+            }
+
+            // 2.5 Tema de la clase
+            if (classTopic) {
+                const topicSentence = `[TEMA DE LA CLASE]: ${classTopic}.\n`;
+                textHTML += `<span class="preview-context">${topicSentence.replace(/\n/g, '<br>')}</span>`;
+                rawText += topicSentence;
+                score += 15;
+                tips.push('✓ Tema de la clase definido');
+            } else {
+                tips.push('⚡ Agrega el Tema de la clase para enfocar el contenido (+15%)');
+            }
+
+            // 3. Tarea Principal (Instrucción Base)
             if (initialPrompt) {
-                promptSections.push(initialPrompt);
+                const instructionText = `[CONSIGNA PRINCIPAL]: ${initialPrompt}.\n`;
+                textHTML += `<span>${instructionText.replace(/\n/g, '<br>')}</span>`;
+                rawText += instructionText;
+                score += 15;
+                tips.push('✓ Instrucción principal definida');
+            } else {
+                tips.push('⚡ Escribe una Instrucción principal para detallar la tarea (+15%)');
             }
 
-            // 4. Contexto (si existe)
-            if (promptContext) {
-                promptSections.push(`Considera el siguiente contexto educativo: ${promptContext}`);
-                tips.push("El contexto es fundamental. Añade detalles sobre el nivel, tema, recursos y conocimientos previos de los estudiantes.");
-            }
-
-            // 5. Audiencia (si existe)
-            let finalAudience = "";
-            if (promptAudienceSelect === "otro_perfil_estudiante_arg" && promptAudienceOther) {
-                finalAudience = promptAudienceOther;
-            } else if (promptAudienceSelect && promptAudienceSelect !== "") {
-                finalAudience = document.querySelector(`#prompt-audience-select option[value="${promptAudienceSelect}"]`).textContent;
-            }
-            if (finalAudience) {
-                // Asegurarse de que la frase introductoria sea correcta para el artículo
-                let audiencePhrase = `el material debe ser adecuado para ${finalAudience}`;
-                promptSections.push(audiencePhrase);
-                tips.push("Especificar el nivel y perfil del estudiante ayuda a adaptar el lenguaje y la complejidad.");
-            }
-
-            // 6. Palabras Clave a Incluir (si existen)
-            if (promptIncludeKeywords) {
-                promptSections.push(`asegúrate de cubrir los siguientes conceptos clave: ${promptIncludeKeywords}`);
-                tips.push("Incluir conceptos clave asegura que el material aborde los temas esenciales.");
-            }
-
-            // 7. Palabras Clave a Evitar (si existen)
-            if (promptExcludeKeywords) {
-                promptSections.push(`evita centrarte en o incluir: ${promptExcludeKeywords}`);
-                tips.push("Indicar qué evitar ayuda a mantener el enfoque en los objetivos de aprendizaje.");
-            }
-
-            // 8. Formato de Salida (si existe)
-            let finalFormat = "";
-            if (promptFormatSelect === "otro_formato_educativo" && promptFormatOther) {
-                finalFormat = promptFormatOther;
-            } else if (promptFormatSelect && promptFormatSelect !== "") {
-                finalFormat = document.querySelector(`#prompt-format-select option[value="${promptFormatSelect}"]`).textContent;
-            }
-            if (finalFormat) {
-                promptSections.push(`el formato del material educativo debe ser ${finalFormat}`);
-                tips.push("Pedir un formato específico asegura que el material sea útil y fácil de usar.");
-            }
-
-            // 9. Tono y Estilo (si existe)
-            let finalTone = "";
-            if (promptToneSelect === "otro_tono_educativo" && promptToneOther) {
-                finalTone = promptToneOther;
-            } else if (promptToneSelect && promptToneSelect !== "") {
-                finalTone = document.querySelector(`#prompt-tone-select option[value="${promptToneSelect}"]`).textContent;
-            }
-            if (finalTone) {
-                promptSections.push(`el tono y estilo pedagógico deben ser ${finalTone}`);
-                tips.push("El tono pedagógico adecuado facilita la conexión con los estudiantes.");
-            }
-
-            // 10. Longitud (si existe)
-            let finalLength = "";
-            if (promptLengthSelect === "otra_longitud_educativa" && promptLengthOther) {
-                finalLength = promptLengthOther;
-            } else if (promptLengthSelect && promptLengthSelect !== "") {
-                finalLength = document.querySelector(`#prompt-length-select option[value="${promptLengthSelect}"]`).textContent;
-            }
-            if (finalLength) {
-                promptSections.push(`la duración o extensión estimada es ${finalLength}`);
-                tips.push("Indicar la duración o extensión ayuda a planificar la lección o actividad.");
-            }
-
-            // 11. Ejemplos (Few-Shot) (si existen)
-            if (promptExamples) {
-                promptSections.push(`Aquí tienes ejemplos de actividades o preguntas deseadas:\n${promptExamples}`);
-                tips.push("Los ejemplos (few-shot) son muy útiles para guiar la IA en la creación de actividades o preguntas específicas.");
-            }
-
-            // Unir todas las secciones, formateando cada una como una oración
-            let optimizedPrompt = promptSections.map(section => {
-                // Simplemente capitalizamos el inicio de cada sección y añadimos un punto al final si falta.
-                return formatSentenceProperly(section);
-            }).join(' ');
-
-            // Limpieza final de caracteres extraños
-            optimizedPrompt = optimizedPrompt.replace(/\.\s*\./g, '.');
-            optimizedPrompt = optimizedPrompt.replace(/\s{2,}/g, ' ');
-            optimizedPrompt = optimizedPrompt.replace(/ \. /g, '. ');
-
-            // Mensaje si no se ingresó nada o muy poco
-            if (optimizedPrompt.length < 20 && !initialPrompt) {
-                 optimizedPrompt = "Por favor, proporciona más detalles o tu prompt base para generar una instrucción optimizada.";
-            }
-
-            // --- Mostrar resultados ---
-            document.getElementById('optimized-prompt-display').textContent = optimizedPrompt;
-
-            const tipsList = document.getElementById('tips-list');
-            tipsList.innerHTML = ''; // Limpiar sugerencias anteriores
-
-            // Añadir consejos generales si faltan
-            if (tips.length < 3) {
-                 tips.push("Considera usar el campo de 'Ejemplos' para mostrar el formato exacto de una pregunta o actividad.");
-                 tips.push("Asegúrate de que los conceptos clave y el contexto sean lo suficientemente específicos para el nivel educativo.");
-                 tips.push("Revisa si el tono y el formato elegidos son apropiados para la edad y el nivel de los estudiantes.");
-            }
-
-            tips.forEach(tip => {
-                const li = document.createElement('li');
-                li.textContent = tip;
-                li.className = 'suggestion-item';
-                tipsList.appendChild(li);
-            });
-
-            document.getElementById('results-section').classList.remove('hidden');
-        }
-
-        // Funciones para manejar la visibilidad de los campos "otro"
-        function setupCustomInput(selectId, otherInputId) {
-            const selectElement = document.getElementById(selectId);
-            const otherInput = document.getElementById(otherInputId);
-
-            if (!selectElement || !otherInput) return;
-
-            const toggleOtherInput = () => {
-                const triggerValues = ['otro', 'otro_objetivo_educativo', 'otro_rol_educativo', 'otro_perfil_estudiante_arg', 'otro_formato_educativo', 'otro_tono_educativo', 'otra_longitud_educativa'];
-                if (triggerValues.includes(selectElement.value)) {
-                    otherInput.classList.remove('hidden');
-                    otherInput.focus();
-                } else {
-                    otherInput.classList.add('hidden');
-                    otherInput.value = '';
+            // 4. Contexto y saberes previos
+            if (context || audience) {
+                let contextBlocks = '[CONTEXTO EDUCATIVO]: ';
+                if (audience) {
+                    contextBlocks += `El material se dirigirá a estudiantes de ${audience}. `;
                 }
-            };
+                if (context) {
+                    contextBlocks += `${context}.`;
+                }
+                contextBlocks += '\n';
+                textHTML += `<span class="preview-context">${contextBlocks.replace(/\n/g, '<br>')}</span>`;
+                rawText += contextBlocks;
+                score += 15;
+                tips.push('✓ Contexto del aula y perfil del estudiante definidos');
+            } else {
+                tips.push('⚡ Detalla el perfil del estudiante y el contexto de la clase (+15%)');
+            }
 
-            selectElement.addEventListener('change', toggleOtherInput);
-            document.addEventListener('DOMContentLoaded', toggleOtherInput);
+            // 5. Extensión y Estructura del Resultado Final
+            if (length || pedagogicalTime || format || tone) {
+                let extensionBlocks = '[FORMATO Y REQUISITOS]:\n';
+                
+                if (format) {
+                    extensionBlocks += `- Estructura el material en formato de ${format}.\n`;
+                }
+                if (length) {
+                    extensionBlocks += `- La extensión física debe ser de ${length}.\n`;
+                }
+                if (pedagogicalTime) {
+                    extensionBlocks += `- El contenido debe estar planificado para cubrir ${pedagogicalTime}.\n`;
+                }
+                if (tone) {
+                    extensionBlocks += `- Usa un estilo y tono de comunicación que sea ${tone}.\n`;
+                }
+                
+                textHTML += `<span class="preview-extension">${extensionBlocks.replace(/\n/g, '<br>')}</span>`;
+                rawText += extensionBlocks;
+                score += 15;
+                tips.push('✓ Especificaciones de formato, tono y extensión completadas');
+            } else {
+                tips.push('⚡ Añade límites físicos, formato o tonos pedagógicos específicos (+15%)');
+            }
+
+            // 6. Archivos de contexto dinámicos estructurados por orden de lista (si está activado)
+            const activeFiles = [];
+            document.querySelectorAll('#file-list-container .file-item input').forEach(input => {
+                const val = input.value.trim();
+                if (val) activeFiles.push(val);
+            });
+                
+            if (includeFilesSwitch && activeFiles.length > 0) {
+                let filesBlock = `\n[ARCHIVOS DE CONTEXTO]:\nSe adjunta(n) ${activeFiles.length} archivo(s) con las siguientes funciones:\n`;
+                activeFiles.forEach((desc, idx) => {
+                    filesBlock += `- Archivo ${idx + 1}: ${desc}\n`;
+                });
+                textHTML += `<span class="preview-files">${filesBlock.replace(/\n/g, '<br>')}</span>`;
+                rawText += filesBlock;
+                score += 10;
+                tips.push('✓ Relación y función de archivos de contexto especificada');
+            } else if (includeFilesSwitch && document.querySelectorAll('#file-list-container .file-item').length > 0) {
+                tips.push('⚡ Escribe la función de los archivos creados para vincularlos al prompt');
+            } else if (!includeFilesSwitch) {
+                tips.push('⏸️ Inclusión de archivos de contexto desactivada');
+            }
+
+            // 7. Restricciones y palabras clave (si está activado)
+            if (includeRestrictionsSwitch && (includeKeywords || excludeKeywords)) {
+                let restrictionsBlock = '\n[REQUISITOS DE CONTENIDO]:\n';
+                if (includeKeywords) {
+                    restrictionsBlock += `- Conceptos obligatorios a incluir: ${includeKeywords}.\n`;
+                }
+                if (excludeKeywords) {
+                    restrictionsBlock += `- Temas o enfoques a evitar: ${excludeKeywords}.\n`;
+                }
+                textHTML += `<span class="preview-extension">${restrictionsBlock.replace(/\n/g, '<br>')}</span>`;
+                rawText += restrictionsBlock;
+                score += 10;
+                tips.push('✓ Restricciones y conceptos clave incluidos');
+            } else if (!includeRestrictionsSwitch) {
+                tips.push('⏸️ Sección de restricciones y exclusiones desactivada');
+            }
+
+            // 8. Muestras de ejemplo (Few-shot) (si está activado)
+            if (includeExamplesSwitch && examples) {
+                const examplesBlock = `\n[EJEMPLO DE ESTRUCTURA ESPERADA]:\n"""\n${examples}\n"""\n`;
+                textHTML += `<span class="preview-examples">${examplesBlock.replace(/\n/g, '<br>')}</span>`;
+                rawText += examplesBlock;
+                score += 10;
+                tips.push('✓ Muestra de ejemplos (Few-shot) incluida para guiar el formato');
+            } else if (includeExamplesSwitch && !examples) {
+                tips.push('⚡ Agrega un Ejemplo Práctico (Few-shot) para guiar la estructura de salida (+10%)');
+            } else if (!includeExamplesSwitch) {
+                tips.push('⏸️ Muestra de ejemplos desactivada');
+            }
+
+            previewContainer.innerHTML = textHTML;
+            previewContainer.dataset.rawPrompt = rawText;
+
+            updateQualityMeter(score, tips);
         }
 
-        // Inicializar para todos los campos "otro"
-        setupCustomInput('prompt-goal', 'prompt-goal-other');
-        setupCustomInput('prompt-role-select', 'prompt-role-other');
-        setupCustomInput('prompt-audience-select', 'prompt-audience-other');
-        setupCustomInput('prompt-format-select', 'prompt-format-other');
-        setupCustomInput('prompt-tone-select', 'prompt-tone-other');
-        setupCustomInput('prompt-length-select', 'prompt-length-other');
+        // Actualizar el medidor visual de calidad
+        function updateQualityMeter(score, tips) {
+            const bar = document.getElementById('quality-bar');
+            const pct = document.getElementById('quality-pct');
+            const tipsContainer = document.getElementById('quality-tips-container');
 
-        // Función para copiar al portapapeles
+            bar.style.width = `${score}%`;
+            pct.textContent = `${score}%`;
+
+            if (score < 40) {
+                bar.style.backgroundColor = 'var(--danger)';
+            } else if (score < 75) {
+                bar.style.backgroundColor = 'var(--warning)';
+            } else {
+                bar.style.backgroundColor = 'var(--success)';
+            }
+
+            tipsContainer.innerHTML = '';
+            tips.forEach(tip => {
+                const item = document.createElement('div');
+                
+                let stateClass = 'pending';
+                if (tip.startsWith('✓')) {
+                    stateClass = 'done';
+                } else if (tip.startsWith('⏸️')) {
+                    stateClass = 'pending'; // Mantener como pendiente de forma neutra
+                }
+
+                item.className = 'quality-tip-item ' + stateClass;
+                
+                let svgIcon = '';
+                if (tip.startsWith('✓')) {
+                    svgIcon = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                } else if (tip.startsWith('⏸️')) {
+                    svgIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="10" y1="15" x2="10" y2="9"></line><line x1="14" y1="15" x2="14" y2="9"></line></svg>`;
+                } else {
+                    svgIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+                }
+                
+                item.innerHTML = `${svgIcon} <span>${tip}</span>`;
+                tipsContainer.appendChild(item);
+            });
+        }
+
+        // Cargar plantillas de preajuste (Presets)
+        function loadPreset(presetName) {
+            if (!document.getElementById('toggle-presets').checked) return;
+
+            // Limpiar archivos anteriores
+            const container = document.getElementById('file-list-container');
+            container.innerHTML = '';
+            fileReferences.length = 0;
+
+            // Asegurarse de activar todos los switches para que los presets se muestren completos
+            document.getElementById('toggle-files').checked = true;
+            document.getElementById('toggle-restrictions').checked = true;
+            document.getElementById('toggle-examples').checked = true;
+            
+            toggleSection('card-files', 'toggle-files', false);
+            toggleSection('card-restrictions', 'toggle-restrictions', false);
+            toggleSection('card-examples', 'toggle-examples', false);
+
+            // Se conservan los valores ingresados por el usuario para no borrar su tema, contexto o palabras clave
+
+            if (presetName === 'secuencia') {
+                document.getElementById('prompt-topic').placeholder = "Ej: Los estados de agregación de la materia";
+                document.getElementById('initial-prompt').placeholder = "Ej: Diseña una secuencia didáctica sobre el tema de tu clase.";
+                document.getElementById('prompt-goal').value = "diseñar una secuencia didáctica";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un diseñador de materiales didácticos innovadores";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación primaria (segundo ciclo - 4° a 6°/7° grado)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: El grupo tiene 20 estudiantes. Ya conocen los saberes previos básicos del tema. Contamos con laboratorio.";
+                document.getElementById('prompt-length-select').value = "mediana (aproximadamente 2 a 3 páginas)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "una secuencia didáctica para 2 a 4 clases";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "un plan de clase con objetivos, inicio, desarrollo y cierre";
+                document.getElementById('prompt-format-other').classList.add('hidden');
+                document.getElementById('prompt-tone-select').value = "cercano, motivador y lúdico para fomentar la participación";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+                
+                addFileReference("Diseño curricular jurisdiccional del área correspondiente.");
+                
+            } else if (presetName === 'plan_diario') {
+                document.getElementById('prompt-topic').placeholder = "Ej: El sistema circulatorio, fracciones equivalentes, relieve de Argentina";
+                document.getElementById('initial-prompt').placeholder = "Ej: Diseña un plan de clase diario detallado para la clase de hoy.";
+                document.getElementById('prompt-goal').value = "generar un plan de clase detallado";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un docente experto en la asignatura";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación primaria (segundo ciclo - 4° a 6°/7° grado)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: Es una sesión de una hora. El grupo ya leyó sobre el tema y se busca aplicar el concepto en una actividad grupal rápida.";
+                document.getElementById('prompt-length-select').value = "mediana (aproximadamente 2 a 3 páginas)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "una clase estándar (de 40 a 80 minutos)";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "un plan de clase con objetivos, inicio, desarrollo y cierre";
+                document.getElementById('prompt-format-other').classList.add('hidden');
+                document.getElementById('prompt-tone-select').value = "pedagógico, estructurado y claro";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+                
+                addFileReference("Diseño curricular jurisdiccional del área correspondiente.");
+
+            } else if (presetName === 'rubrica') {
+                document.getElementById('prompt-topic').placeholder = "Ej: Un informe de laboratorio de mezclas y soluciones, maqueta a escala";
+                document.getElementById('initial-prompt').placeholder = "Ej: Diseña una rúbrica para evaluar la actividad o el proyecto de tu clase.";
+                document.getElementById('prompt-goal').value = "crear un instrumento de evaluación (rúbrica, prueba)";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un evaluador educativo profesional";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación primaria (segundo ciclo - 4° a 6°/7° grado)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: Los estudiantes trabajaron de forma colaborativa en grupos para realizar el trabajo.";
+                document.getElementById('prompt-length-select').value = "corta (máximo 1 página o 300 palabras)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "una actividad corta de 15 a 20 minutos";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "una rúbrica analítica organizada en tabla con niveles y criterios";
+                document.getElementById('prompt-format-other').classList.add('hidden');
+                document.getElementById('prompt-tone-select').value = "pedagógico, estructurado y claro";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+                
+                addFileReference("Borrador del informe escrito o pautas del trabajo entregadas.");
+ 
+            } else if (presetName === 'simplificar') {
+                document.getElementById('prompt-topic').placeholder = "Ej: La fuerza de gravedad, números enteros, la fotosíntesis";
+                document.getElementById('initial-prompt').placeholder = "Ej: Explica de manera simple el tema o concepto abstracto de tu clase.";
+                document.getElementById('prompt-goal').value = "explicar un concepto abstracto de manera sencilla";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un tutor pedagógico especializado en educación inclusiva";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación primaria (primer ciclo - 1° a 3° grado)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: Hay niños con diferentes ritmos de aprendizaje. Se necesitan analogías sencillas de la vida cotidiana.";
+                document.getElementById('prompt-length-select').value = "corta (máximo 1 página o 300 palabras)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "una actividad corta de 15 a 20 minutos";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "una narrativa didáctica explicativa con ejemplos prácticos";
+                document.getElementById('prompt-format-other').classList.add('hidden');
+                document.getElementById('prompt-tone-select').value = "cercano, motivador y lúdico para fomentar la participación";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+ 
+            } else if (presetName === 'proyectos') {
+                document.getElementById('prompt-topic').placeholder = "Ej: El cuidado y potabilización del agua, reciclaje escolar";
+                document.getElementById('initial-prompt').placeholder = "Ej: Crea un proyecto interdisciplinario sobre el tema elegido.";
+                document.getElementById('prompt-goal').value = "diseñar un proyecto interdisciplinario";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un especialista en diseño de currículos escolares";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación secundaria (ciclo básico - 1° a 3° año)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: Queremos integrar diferentes materias. El proyecto debe tener un impacto real en la comunidad escolar.";
+                document.getElementById('prompt-length-select').value = "detallada (más de 4 páginas o desarrollo extenso)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "un proyecto didáctico mensual";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "un plan de clase con objetivos, inicio, desarrollo y cierre";
+                document.getElementById('prompt-format-other').classList.add('hidden');
+                document.getElementById('prompt-tone-select').value = "reflexivo, impulsando el análisis crítico de los estudiantes";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+                
+                addFileReference("Lineamientos institucionales para proyectos interdisciplinares escolares.");
+                
+            } else if (presetName === 'flipped') {
+                document.getElementById('prompt-topic').placeholder = "Ej: El sistema respiratorio humano, la revolución industrial";
+                document.getElementById('initial-prompt').placeholder = "Ej: Diseña una sesión de aula invertida sobre el tema de tu clase.";
+                document.getElementById('prompt-goal').value = "diseñar una secuencia didáctica";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un docente experto en la asignatura";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación primaria (segundo ciclo - 4° a 6°/7° grado)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: Los estudiantes verán un material explicativo previo en sus hogares. En clase realizaremos una actividad práctica.";
+                document.getElementById('prompt-length-select').value = "mediana (aproximadamente 2 a 3 páginas)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "una clase estándar (de 40 a 80 minutos)";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "un plan de clase con objetivos, inicio, desarrollo y cierre";
+                document.getElementById('prompt-format-other').classList.add('hidden');
+                document.getElementById('prompt-tone-select').value = "pedagógico, estructurado y claro";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+                
+                addFileReference("Lista de preguntas breves de autoevaluación que los estudiantes respondieron tras ver el video.");
+ 
+            } else if (presetName === 'inclusion') {
+                document.getElementById('prompt-topic').placeholder = "Ej: La fotosíntesis, el ciclo del agua, historia de la escritura";
+                document.getElementById('initial-prompt').placeholder = "Ej: Adapta este texto de lectura para alumnos con necesidades de apoyo.";
+                document.getElementById('prompt-goal').value = "desarrollar material de lectura adaptado";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un tutor pedagógico especializado en educación inclusiva";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación secundaria (ciclo básico - 1° a 3° año)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: El grupo incluye estudiantes con necesidades específicas de apoyo. Necesitamos adaptar el material de lectura escolar.";
+                document.getElementById('prompt-length-select').value = "corta (máximo 1 página o 300 palabras)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "una actividad corta de 15 a 20 minutos";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "una narrativa didáctica explicativa con ejemplos prácticos";
+                document.getElementById('prompt-format-other').classList.add('hidden');
+                document.getElementById('prompt-tone-select').value = "cercano, motivador y lúdico para fomentar la participación";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+                
+                addFileReference("Texto original sin adaptar que se va a trabajar en clase.");
+ 
+            } else if (presetName === 'gamificada') {
+                document.getElementById('prompt-topic').placeholder = "Ej: La geografía de relieve de la República Argentina, mitología griega";
+                document.getElementById('initial-prompt').placeholder = "Ej: Crea un juego de preguntas interactivo sobre el tema de tu clase.";
+                document.getElementById('prompt-goal').value = "diseñar ejercicios prácticos y de fijación";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un diseñador de materiales didácticos innovadores";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación primaria (segundo ciclo - 4° a 6°/7° grado)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: Se jugará al final de la clase en grupos de 4 integrantes para fijar saberes antes de la evaluación.";
+                document.getElementById('prompt-length-select').value = "mediana (aproximadamente 2 a 3 páginas)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "una clase estándar (de 40 a 80 minutos)";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "un cuestionario de preguntas abiertas y de opción múltiple con solucionario";
+                document.getElementById('prompt-format-other').classList.add('hidden');
+                document.getElementById('prompt-tone-select').value = "cercano, motivador y lúdico para fomentar la participación";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+                
+                addFileReference("Listado de temas o saberes mínimos que serán evaluados.");
+
+            } else if (presetName === 'estudio_caso') {
+                document.getElementById('prompt-topic').placeholder = "Ej: Contaminación de un río local, dilemas éticos históricos, economía circular";
+                document.getElementById('initial-prompt').placeholder = "Ej: Diseña un estudio de caso educativo y reflexivo con preguntas orientadoras.";
+                document.getElementById('prompt-goal').value = "desarrollar material de lectura adaptado";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un tutor pedagógico especializado en educación inclusiva";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación secundaria (ciclo orientado - 4° a 5°/6° año)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: Los estudiantes debatirán en base a dilemas de toma de decisiones. Se requiere conectar la teoría con una situación social o ambiental.";
+                document.getElementById('prompt-length-select').value = "mediana (aproximadamente 2 a 3 páginas)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "una clase estándar (de 40 a 80 minutos)";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "otro";
+                document.getElementById('prompt-format-other').value = "un estudio de caso práctico con consignas de análisis";
+                document.getElementById('prompt-format-other').classList.remove('hidden');
+                document.getElementById('prompt-tone-select').value = "reflexivo, impulsando el análisis crítico de los estudiantes";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+                
+                addFileReference("Pautas institucionales de evaluación formativa.");
+
+            } else if (presetName === 'guia_practica') {
+                document.getElementById('prompt-topic').placeholder = "Ej: Ecuaciones de primer grado, análisis sintáctico de oraciones, circuitos eléctricos";
+                document.getElementById('initial-prompt').placeholder = "Ej: Crea una guía de actividades prácticas y ejercicios de fijación.";
+                document.getElementById('prompt-goal').value = "diseñar ejercicios prácticos y de fijación";
+                document.getElementById('prompt-goal-other').classList.add('hidden');
+                document.getElementById('prompt-role-select').value = "un diseñador de materiales didácticos innovadores";
+                document.getElementById('prompt-role-other').classList.add('hidden');
+                document.getElementById('prompt-audience-select').value = "educación secundaria (ciclo básico - 1° a 3° año)";
+                document.getElementById('prompt-audience-other').classList.add('hidden');
+                document.getElementById('prompt-context').placeholder = "Ej: Se utilizará como guía de ejercitación individual. Debe contener 5 consignas de dificultad progresiva.";
+                document.getElementById('prompt-length-select').value = "mediana (aproximadamente 2 a 3 páginas)";
+                document.getElementById('prompt-length-other').classList.add('hidden');
+                document.getElementById('prompt-pedagogical-time').value = "una clase estándar (de 40 a 80 minutos)";
+                document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+                document.getElementById('prompt-format-select').value = "un listado numerado de consignas de trabajo";
+                document.getElementById('prompt-format-other').classList.add('hidden');
+                document.getElementById('prompt-tone-select').value = "pedagógico, estructurado y claro";
+                document.getElementById('prompt-tone-other').classList.add('hidden');
+                
+                addFileReference("Listado de temas o saberes mínimos que serán evaluados.");
+            }
+
+            switchTab('tab-preview');
+            updatePrompt();
+        }
+
+        // Copiar el contenido del prompt generado al portapapeles
         function copyToClipboard() {
-            const promptText = document.getElementById('optimized-prompt-display').textContent;
-            navigator.clipboard.writeText(promptText).then(() => {
-                const button = document.querySelector('.copy-button');
-                const originalText = button.textContent;
-                button.textContent = '¡Copiado!';
-                button.style.backgroundColor = '#28a745';
+            const preview = document.getElementById('prompt-preview-content');
+            const rawText = preview.dataset.rawPrompt || preview.innerText;
+
+            if (!rawText || rawText.startsWith('El prompt optimizado')) {
+                alert('Escribe primero la instrucción principal antes de copiar.');
+                return;
+            }
+
+            navigator.clipboard.writeText(rawText).then(() => {
+                const btn = document.querySelector('#tab-preview .btn-primary');
+                const originalHTML = btn.innerHTML;
+                
+                btn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> ¡Copiado!`;
+                btn.style.backgroundColor = 'var(--success)';
+                
                 setTimeout(() => {
-                    button.textContent = originalText;
-                    button.style.backgroundColor = '#007bff';
+                    btn.innerHTML = originalHTML;
+                    btn.style.backgroundColor = 'var(--primary)';
                 }, 2000);
             }).catch(err => {
                 console.error('Error al copiar: ', err);
-                alert('No se pudo copiar el texto. Inténtalo manualmente.');
+                alert('No se pudo copiar de forma automática. Selecciona el texto de la vista previa y cópialo manualmente.');
             });
+        }
+
+        // Descargar el prompt como un archivo Markdown (.md)
+        function downloadPrompt() {
+            const preview = document.getElementById('prompt-preview-content');
+            const rawText = preview.dataset.rawPrompt || preview.innerText;
+
+            if (!rawText || rawText.startsWith('El prompt optimizado')) {
+                alert('Genera una instrucción de prompt válida antes de realizar la descarga.');
+                return;
+            }
+
+            const blob = new Blob([rawText], { type: 'text/markdown;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'prompt_optimizado_educacion.md';
+            link.style.display = 'none';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // --- GESTIÓN DEL HISTORIAL (LOCALSTORAGE) ---
+        function saveToHistory() {
+            const preview = document.getElementById('prompt-preview-content');
+            const rawText = preview.dataset.rawPrompt || preview.innerText;
+
+            if (!rawText || rawText.startsWith('El prompt optimizado')) {
+                alert('Crea un prompt antes de guardarlo en tu historial.');
+                return;
+            }
+
+            const history = JSON.parse(localStorage.getItem('prompt_history') || '[]');
+            
+            const historyItem = {
+                id: Date.now(),
+                text: rawText,
+                date: new Date().toLocaleString('es-AR')
+            };
+
+            history.unshift(historyItem);
+            localStorage.setItem('prompt_history', JSON.stringify(history));
+            
+            loadHistory();
+            
+            const btn = document.querySelector('#tab-preview button[onclick="saveToHistory()"]');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Guardado`;
+            btn.style.backgroundColor = 'var(--success)';
+            btn.style.color = 'white';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.backgroundColor = 'var(--bg-color)';
+                btn.style.color = 'var(--text-color)';
+            }, 1500);
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('prompt_history') || '[]');
+            const container = document.getElementById('history-items-container');
+            
+            if (history.length === 0) {
+                container.innerHTML = `<div class="empty-state">No tienes prompts guardados todavía en tu historial.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            history.forEach(item => {
+                const element = document.createElement('div');
+                element.className = 'history-item';
+                element.onclick = (e) => {
+                    if (e.target.closest('.btn-delete-history')) return;
+                    restorePromptFromHistory(item.text);
+                };
+                
+                element.innerHTML = `
+                    <div class="history-item-text">${item.text}</div>
+                    <div class="history-item-date">${item.date}</div>
+                    <button class="btn-delete-history" onclick="deleteHistoryItem(${item.id})" title="Eliminar del historial">
+                        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
+                `;
+                container.appendChild(element);
+            });
+        }
+
+        function deleteHistoryItem(id) {
+            let history = JSON.parse(localStorage.getItem('prompt_history') || '[]');
+            history = history.filter(item => item.id !== id);
+            localStorage.setItem('prompt_history', JSON.stringify(history));
+            loadHistory();
+        }
+
+        // Restaurar prompt cargado del historial
+        function restorePromptFromHistory(text) {
+            document.getElementById('initial-prompt').value = text;
+            document.getElementById('prompt-topic').value = '';
+            
+            document.getElementById('prompt-goal').value = '';
+            document.getElementById('prompt-goal-other').classList.add('hidden');
+            document.getElementById('prompt-role-select').value = '';
+            document.getElementById('prompt-role-other').classList.add('hidden');
+            document.getElementById('prompt-audience-select').value = '';
+            document.getElementById('prompt-audience-other').classList.add('hidden');
+            document.getElementById('prompt-context').value = '';
+            document.getElementById('prompt-length-select').value = '';
+            document.getElementById('prompt-length-other').classList.add('hidden');
+            document.getElementById('prompt-pedagogical-time').value = '';
+            document.getElementById('prompt-pedagogical-time-other').classList.add('hidden');
+            document.getElementById('prompt-format-select').value = '';
+            document.getElementById('prompt-format-other').classList.add('hidden');
+            document.getElementById('prompt-tone-select').value = '';
+            document.getElementById('prompt-tone-other').classList.add('hidden');
+            
+            document.getElementById('prompt-include-keywords').value = '';
+            document.getElementById('prompt-exclude-keywords').value = '';
+            document.getElementById('prompt-examples').value = '';
+            
+            const container = document.getElementById('file-list-container');
+            container.innerHTML = '';
+            fileReferences.length = 0;
+            
+            switchTab('tab-preview');
+            updatePrompt();
+            
+            const preview = document.getElementById('prompt-preview-content');
+            preview.classList.add('highlight-glow');
+            setTimeout(() => {
+                preview.classList.remove('highlight-glow');
+            }, 1500);
         }
     </script>
 </body>

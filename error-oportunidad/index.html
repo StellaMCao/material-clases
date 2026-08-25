@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoevaluación metacognitiva sobre el error</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Librerías para PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #4a5568; /* Gris oscuro azulado */
+            --secondary-color: #718096; /* Gris medio */
+            --background-start: #e6f3ff; /* Azul más suave y luminoso */
+            --background-end: #f8fafc;   /* Gris muy claro con toque azul */
+            --surface-color: #ffffff;
+            --accent-color: #3b82f6; /* Azul más vibrante y moderno */
+            --border-color: #e2e8f0;
+            --text-color: #1e293b;
+            --subtle-text-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --pdf-text-color: #000000; /* Nuevo: color negro para PDF */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-color);
+            background-image: linear-gradient(135deg, var(--background-start), var(--background-end));
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background-color: var(--surface-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1), 0 10px 20px -8px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            color: var(--primary-color);
+            line-height: 1.3;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--accent-color), #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 0.75rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+        
+        #results-title {
+            text-align: center;
+            border-bottom: none;
+            margin-bottom: 0;
+            font-size: 1.8rem;
+        }
+
+        #results-title::after {
+            display: none;
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h3::before {
+            content: '📝';
+            font-size: 1.2rem;
+        }
+        
+        .input-group {
+            margin: 2.5rem 0;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+        
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            background-color: #fafbff;
+        }
+        
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+            background-color: white;
+            transform: translateY(-1px);
+        }
+        
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .intro, .scenario-description {
+            color: var(--subtle-text-color);
+            margin-bottom: 1.75rem;
+            font-weight: 300;
+        }
+
+        .intro {
+            text-align: center;
+            font-style: italic;
+            max-width: 85%;
+            margin: 0 auto 2.5rem auto;
+            font-size: 1.1rem;
+            padding: 1rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .scenario {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 5px solid var(--accent-color);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .scenario:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .option {
+            padding: 1.2rem 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            background: white;
+        }
+        
+        .option:hover {
+            border-color: var(--accent-color);
+            background-color: #eff6ff;
+            transform: translateX(4px);
+        }
+        
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        input[type="radio"]:checked + .option-content {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        input[type="radio"]:checked + .option-content > b {
+             color: var(--accent-color);
+        }
+        
+        .option input[type="radio"]:checked ~ .checkmark {
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+            background-color: var(--accent-color);
+        }
+        
+        .checkmark {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%) scale(0.8);
+            opacity: 0;
+            width: 24px;
+            height: 24px;
+            background-color: #e5e7eb;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 2.5rem 0;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--accent-color), #60a5fa);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover:not(:disabled)::before {
+            left: 100%;
+        }
+        
+        button:disabled {
+            background: var(--secondary-color);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.4);
+        }
+        
+        button.pdf-button {
+             background: linear-gradient(135deg, var(--primary-color), #64748b);
+        }
+        
+        button.pdf-button:hover:not(:disabled) {
+            box-shadow: 0 8px 16px rgba(74, 85, 104, 0.4);
+        }
+
+        #results-container {
+            display: none;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .timestamp {
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--subtle-text-color);
+            margin-top: -0.5rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .summary-stats {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 2px solid var(--border-color);
+        }
+
+        .summary-stats h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--subtle-text-color);
+            margin-top: 0.25rem;
+        }
+
+        .answers-summary {
+            margin-bottom: 2rem;
+        }
+
+        .answers-summary h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .answer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .answer-item.A { border-left-color: var(--error-color); }
+        .answer-item.B { border-left-color: var(--warning-color); }
+        .answer-item.C { border-left-color: var(--success-color); }
+
+        .answer-text {
+            flex: 1;
+        }
+
+        .answer-type {
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .answer-type.A { background: rgba(239, 68, 68, 0.1); color: var(--error-color); }
+        .answer-type.B { background: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
+        .answer-type.C { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+
+        .result-block {
+            display: none;
+            padding: 2rem;
+            border: 2px solid var(--border-color);
+            border-left: 6px solid var(--accent-color);
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        
+        #resultB.result-block { 
+            border-left-color: var(--warning-color); 
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        }
+        #resultB h3 { 
+            color: var(--warning-color); 
+        }
+        #resultA.result-block { 
+            border-left-color: var(--error-color); 
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+        }
+        #resultA h3 { 
+            color: var(--error-color); 
+        }
+        #resultC.result-block { 
+            border-left-color: var(--success-color); 
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        }
+        #resultC h3 { 
+            color: var(--success-color); 
+        }
+
+        .reflection-questions ol {
+            padding-left: 25px;
+            counter-reset: li-counter;
+            list-style: none; /* FIX: Elimina numeración por defecto del navegador */
+        }
+        
+        .reflection-questions li {
+            margin-bottom: 1.5rem;
+            counter-increment: li-counter;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .reflection-questions li::before {
+            content: counter(li-counter) ".";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        
+        .final-reflection {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.05));
+            border-radius: 12px;
+            color: var(--primary-color);
+            font-style: italic;
+            border-left: 5px solid var(--accent-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            font-size: 0.9rem;
+            color: var(--subtle-text-color);
+            padding: 1rem;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        /* Mejoras para responsividad */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 1.5rem;
+                margin: 1rem auto;
+                border-radius: 12px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            .scenario {
+                padding: 1.5rem;
+            }
+
+            .option {
+                padding: 1rem;
+            }
+
+            button {
+                padding: 14px 24px;
+                font-size: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .answer-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Estilos para PDF: texto más oscuro */
+        .pdf-dark-text * {
+            color: var(--pdf-text-color) !important;
+            background: white !important;
+            font-weight: 500 !important;
+            opacity: 1 !important;
+        }
+
+        .pdf-dark-text h1, .pdf-dark-text h2, .pdf-dark-text h3 {
+            background: none !important;
+            -webkit-background-clip: initial !important;
+            -webkit-text-fill-color: var(--pdf-text-color) !important;
+            background-clip: initial !important;
+            color: var(--pdf-text-color) !important;
+            font-weight: 700 !important;
+        }
+
+        .pdf-dark-text .result-block,
+        .pdf-dark-text .summary-stats,
+        .pdf-dark-text .final-reflection {
+            background: white !important;
+            border-color: #000000 !important;
+        }
+
+        /* Nuevo: Estilos para eliminar colores en PDF */
+        .pdf-dark-text .answer-item,
+        .pdf-dark-text .answer-type,
+        .pdf-dark-text .stat-item,
+        .pdf-dark-text .stats-grid,
+        .pdf-dark-text .answer-item.A, .pdf-dark-text .answer-item.B, .pdf-dark-text .answer-item.C,
+        .pdf-dark-text .answer-type.A, .pdf-dark-text .answer-type.B, .pdf-dark-text .answer-type.C {
+            border-color: #000000 !important;
+            background: white !important;
+            color: #000000 !important;
+        }
+
+        .pdf-dark-text .stat-number {
+            color: #000000 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+        <h1>El error en la construcción del conocimiento</h1>
+        <p class="intro">Una autoevaluación metacognitiva para futuros profesionales</p>
+        
+        <div id="quiz-content">
+            <p>Este no es un test con respuestas correctas o incorrectas. Es una herramienta de reflexión diseñada para invitarte a explorar las concepciones que subyacen a tu forma de interpretar y reaccionar ante los errores. Te proponemos una serie de escenarios habituales en la formación superior.</p>
+
+            <div class="input-group">
+                <label for="userName">Nombre y apellido (para tu informe en PDF)</label>
+                <input type="text" id="userName" placeholder="Escribe tu nombre aquí...">
+            </div>
+
+            <form id="quiz-form">
+                <h2>Parte 1: los escenarios</h2>
+
+                <!-- Escenario 1 -->
+                <div class="scenario">
+                    <h3>Escenario 1: la teoría revisitada</h3>
+                    <p class="scenario-description">En un examen, un estudiante debe explicar la "acomodación" de Piaget, pero su respuesta describe perfectamente la asimilación. <i>"La acomodación es cuando un niño ve una cebra y la llama 'caballo con rayas', asimilándola a sus esquemas"</i>.</p>
+                    <div class="options-container">
+                        <label class="option"><input type="radio" name="q1" value="A"><span class="option-content"><b>Opción A:</b> señalar "incorrecto, describe la asimilación". Descontar el puntaje.</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q1" value="B"><span class="option-content"><b>Opción B:</b> pensar que la explicación fue confusa. Preparar una guía de lectura más detallada para el futuro.</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q1" value="C"><span class="option-content"><b>Opción C:</b> anotar "¿qué tendría que pasar en la mente del niño para que sí ocurra la acomodación?".</span><div class="checkmark">✔</div></label>
+                    </div>
+                </div>
+
+                <!-- Escenario 2 -->
+                <div class="scenario">
+                    <h3>Escenario 2: el análisis de caso</h3>
+                    <p class="scenario-description">En una clase, un estudiante afirma con seguridad: <i>"Para mí, es claramente dislexia. Hay que empezar con reeducación fonológica"</i>. Su respuesta es apresurada y omite el diagnóstico diferencial.</p>
+                    <div class="options-container">
+                        <label class="option"><input type="radio" name="q2" value="A"><span class="option-content"><b>Opción A:</b> agradecer y aclarar al grupo: "recordemos que no podemos concluir tan rápido, el procedimiento correcto es multifactorial".</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q2" value="B"><span class="option-content"><b>Opción B:</b> pensar: "la próxima vez, la consigna debe pedir explícitamente que listen todos los factores a considerar".</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q2" value="C"><span class="option-content"><b>Opción C:</b> devolverle la pregunta al grupo: "interesante. ¿Qué más necesitaríamos evaluar para confirmar que es dislexia y no otra cosa?".</span><div class="checkmark">✔</div></label>
+                    </div>
+                </div>
+
+                <!-- Escenario 3 -->
+                <div class="scenario">
+                    <h3>Escenario 3: la metodología de la investigación</h3>
+                    <p class="scenario-description">Un grupo propone investigar la "ansiedad ante los exámenes" con una encuesta de solo dos preguntas de Sí/No. El error es una simplificación extrema del constructo.</p>
+                    <div class="options-container">
+                        <label class="option"><input type="radio" name="q3" value="A"><span class="option-content"><b>Opción A:</b> indicar: "el instrumento no es válido. Deben usar una escala estandarizada, como el Inventario de Ansiedad de Beck".</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q3" value="B"><span class="option-content"><b>Opción B:</b> reflexionar que no dedicaste suficiente tiempo a modelar cómo se operacionaliza una variable. Decides incluir un taller práctico en la próxima cursada.</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q3" value="C"><span class="option-content"><b>Opción C:</b> reunirte y preguntar: "imaginemos que el 90% responde 'Sí'. ¿Qué nos diría eso realmente sobre los diferentes niveles de ansiedad?".</span><div class="checkmark">✔</div></label>
+                    </div>
+                </div>
+                
+                <!-- Escenario 4 -->
+                <div class="scenario">
+                    <h3>Escenario 4: la aplicación de conceptos</h3>
+                    <p class="scenario-description">Un estudiante comenta: <i>"Mi amiga seguro usa la 'negación' porque rompió con su novio y actúa como si nada"</i>. La aplicación es correcta en la superficie, pero carece de profundidad.</p>
+                    <div class="options-container">
+                        <label class="option"><input type="radio" name="q4" value="A"><span class="option-content"><b>Opción A:</b> aclarar: "gracias, pero recordemos que no podemos diagnosticar a nuestros amigos. Hay que ser rigurosos con los conceptos".</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q4" value="B"><span class="option-content"><b>Opción B:</b> darte cuenta de que faltaron ejemplos de cómo aplicar los conceptos de forma analítica y no coloquial. Anotas mejorarlo.</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q4" value="C"><span class="option-content"><b>Opción C:</b> preguntar: "interesante. Y si quisiéramos ir más allá de la etiqueta, ¿qué función podría estar cumpliendo esa 'negación' para tu amiga?".</span><div class="checkmark">✔</div></label>
+                    </div>
+                </div>
+
+                <!-- Escenario 5 -->
+                <div class="scenario">
+                    <h3>Escenario 5: la ética profesional</h3>
+                    <p class="scenario-description">Al analizar un caso, un estudiante opina: <i>"El problema es que los padres son muy permisivos, se nota que no le ponen límites"</i>. La afirmación es determinista y culpabilizadora.</p>
+                    <div class="options-container">
+                        <label class="option"><input type="radio" name="q5" value="A"><span class="option-content"><b>Opción A:</b> corregir: "nuestro rol no es juzgar a los padres, sino comprender la dinámica. Debemos evitar las afirmaciones culpabilizadoras".</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q5" value="B"><span class="option-content"><b>Opción B:</b> asumir que no has hecho hincapié en el posicionamiento ético. Planeas dedicar una clase entera a 'la entrevista con padres'.</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q5" value="C"><span class="option-content"><b>Opción C:</b> indagar en esa idea: "¿qué podría llevarnos a pensar que esa es la causa principal, y qué otras hipótesis sobre la dinámica familiar podríamos formular?".</span><div class="checkmark">✔</div></label>
+                    </div>
+                </div>
+
+                <!-- Escenario 6 -->
+                <div class="scenario">
+                    <h3>Escenario 6: el sesgo de confirmación</h3>
+                    <p class="scenario-description">Un estudiante te entrega un análisis de caso. Su argumentación es coherente y defiende muy bien su hipótesis inicial. Sin embargo, te das cuenta de que ha ignorado por completo dos datos importantes presentados en el mismo caso que contradicen o debilitan su conclusión.</p>
+                    <div class="options-container">
+                        <label class="option"><input type="radio" name="q6" value="A"><span class="option-content"><b>Opción A:</b> en la devolución, marcas: "tu análisis es sesgado. Omitiste evidencia contradictoria clave, lo cual es un error metodológico grave que invalida parcialmente tu conclusión".</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q6" value="B"><span class="option-content"><b>Opción B:</b> reflexionas que no fuiste lo suficientemente explícito en la consigna. Para futuros trabajos, decide añadir un apartado obligatorio titulado "análisis de evidencia en contra".</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q6" value="C"><span class="option-content"><b>Opción C:</b> le comentas: "has construido un argumento muy sólido. Ahora, te propongo hacer el ejercicio de 'abogado del diablo'. ¿Cuáles son los dos datos del caso que más desafían tu postura y cómo podrías reformular tu conclusión para integrarlos?".</span><div class="checkmark">✔</div></label>
+                    </div>
+                </div>
+
+                <!-- Escenario 7 -->
+                <div class="scenario">
+                    <h3>Escenario 7: la Zona de Desarrollo Próximo</h3>
+                    <p class="scenario-description">Un estudiante diseña una intervención para un niño proponiendo una actividad que es demasiado avanzada, incluso con ayuda. Confunde la ZPD con una meta a largo plazo.</p>
+                    <div class="options-container">
+                        <label class="option"><input type="radio" name="q7" value="A"><span class="option-content"><b>Opción A:</b> indicarle: "esta actividad no es apropiada. Está muy por encima de la ZPD del niño y le causará frustración. Debes proponer otra".</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q7" value="B"><span class="option-content"><b>Opción B:</b> asumir que tus ejemplos sobre la ZPD fueron muy teóricos. Decides buscar videos prácticos de andamiaje para la próxima clase.</span><div class="checkmark">✔</div></label>
+                        <label class="option"><input type="radio" name="q7" value="C"><span class="option-content"><b>Opción C:</b> preguntarle: "describamos los pasos de esa tarea. ¿Cuál sería el primerísimo paso que el niño podría dar con tu ayuda? Empecemos por ahí".</span><div class="checkmark">✔</div></label>
+                    </div>
+                </div>
+
+                <div class="button-container" id="button-div">
+                    <button type="button" onclick="calculateResults()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                        Analizar mis respuestas
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="results-container">
+            <!-- El contenido se generará con JS -->
+        </div>
+    </div>
+
+    <footer>
+        <p>S. M. Cao - 2025</p>
+    </footer>
+
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+
+        function getFormattedDateTime() {
+            const now = new Date();
+            const day = now.getDate();
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+            const month = monthNames[now.getMonth()];
+            
+            return `Fecha del análisis: ${day} de ${month} de ${year}, ${hours}:${minutes} hs.`;
+        }
+
+        // Mapeo de opciones a concepciones
+        const conceptionMap = {
+            'A': { type: 'error como falta', color: 'error', description: 'el error es visto como una desviación de una norma, una violación a una regla o a un saber correcto.' },
+            'B': { type: 'error como falla en el programa', color: 'warning', description: 'el error es un síntoma de que algo en el proceso de enseñanza no funcionó como se esperaba.' },
+            'C': { type: 'error como obstáculo y oportunidad', color: 'success', description: 'el error es una pista invaluable, una ventana a la lógica del estudiante. Es un "error inteligente".' }
+        };
+
+        // Escenarios breves para referencia
+        const scenarios = {
+            q1: 'Escenario 1: la teoría revisitada',
+            q2: 'Escenario 2: el análisis de caso',
+            q3: 'Escenario 3: la metodología de la investigación',
+            q4: 'Escenario 4: la aplicación de conceptos',
+            q5: 'Escenario 5: la ética profesional',
+            q6: 'Escenario 6: el sesgo de confirmación',
+            q7: 'Escenario 7: la Zona de Desarrollo Próximo'
+        };
+
+        function calculateResults() {
+            const userName = document.getElementById('userName').value.trim();
+            if (!userName) {
+                alert("Por favor, introduce tu nombre y apellido para continuar.");
+                document.getElementById('userName').focus();
+                return;
+            }
+
+            const totalQuestions = 7;
+            let answeredQuestions = 0;
+            const answers = {};
+            for(let i = 1; i <= totalQuestions; i++) {
+                const checked = document.querySelector(`input[name="q${i}"]:checked`);
+                if(checked) {
+                    answers[`q${i}`] = checked.value;
+                    answeredQuestions++;
+                }
+            }
+
+            if (answeredQuestions < totalQuestions) {
+                alert("Por favor, responde a todos los escenarios antes de analizar los resultados.");
+                return;
+            }
+
+            let countA = 0, countB = 0, countC = 0;
+            Object.values(answers).forEach(choice => {
+                if (choice === 'A') countA++;
+                else if (choice === 'B') countB++;
+                else if (choice === 'C') countC++;
+            });
+            
+            document.getElementById('quiz-content').style.display = 'none';
+            const resultsContainer = document.getElementById('results-container');
+            const timestamp = getFormattedDateTime();
+            
+            let predominantProfile = 'A';
+            if (countC >= countA && countC >= countB) {
+                predominantProfile = 'C';
+            } else if (countB > countA && countB >= countC) {
+                predominantProfile = 'B';
+            }
+            
+            // Resumen de respuestas individuales
+            let answersSummaryHTML = '<div class="answers-summary"><h3>Tus respuestas por escenario</h3>';
+            for (let i = 1; i <= 7; i++) {
+                const choice = answers[`q${i}`];
+                const scenario = scenarios[`q${i}`];
+                const conception = conceptionMap[choice];
+                answersSummaryHTML += `
+                    <div class="answer-item answer-item-${choice}">
+                        <div class="answer-text"><strong>${scenario}</strong><br><em>${choice}</em>: tu elección refleja la concepción del ${conception.type}: ${conception.description}</div>
+                        <span class="answer-type answer-type-${choice}">${conception.type}</span>
+                    </div>
+                `;
+            }
+            answersSummaryHTML += '</div>';
+
+            // Estadísticas
+            let statsHTML = `
+                <div class="summary-stats">
+                    <h3>Resumen de tus respuestas</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" style="color: var(--error-color);">${countA}</div>
+                            <div class="stat-label">Respuestas A (error como falta)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" style="color: var(--warning-color);">${countB}</div>
+                            <div class="stat-label">Respuestas B (error como falla en el programa)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" style="color: var(--success-color);">${countC}</div>
+                            <div class="stat-label">Respuestas C (error como obstáculo y oportunidad)</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let resultHTML = `
+                <h2 id="results-title">Análisis de resultados para: <strong>${userName}</strong></h2>
+                <p class="timestamp">${timestamp}</p>
+                <p>A continuación se muestra el análisis correspondiente a tu tendencia predominante de respuestas. Recuerda que esto no es una etiqueta, sino una invitación a la reflexión sobre tus propios procesos.</p>
+                ${statsHTML}
+                ${answersSummaryHTML}
+            `;
+
+            if (predominantProfile === 'A') {
+                resultHTML += `
+                <div id="resultA" class="result-block" style="display: block;">
+                    <h3>Tu tendencia predominante es: el error como falta</h3>
+                    <p><b>Tu concepción subyacente:</b> el error es visto como una desviación de una norma, una violación a una regla o a un saber correcto. Es algo que no debería estar ahí.</p>
+                    <p><b>Tu rol como docente:</b> actúas como un juez o un evaluador que contrasta la producción del alumno con una respuesta correcta preestablecida. Tu objetivo principal es sancionar el error y mostrar la solución correcta.</p>
+                    <p><b>La implicancia:</b> este enfoque, aunque a veces necesario, no indaga en el proceso de pensamiento del estudiante. Se centra en el producto final y puede generar temor a participar.</p>
+                </div>`;
+            } else if (predominantProfile === 'B') {
+                 resultHTML += `
+                <div id="resultB" class="result-block" style="display: block;">
+                    <h3>Tu tendencia predominante es: el error como falla en el programa</h3>
+                    <p><b>Tu concepción subyacente:</b> el error es un síntoma de que algo en el proceso de enseñanza no funcionó como se esperaba. La causa no está principalmente en el alumno, sino en la planificación didáctica.</p>
+                    <p><b>Tu rol como docente:</b> eres un técnico, un diseñador de experiencias de aprendizaje. Tu reacción es preventiva, buscando optimizar tu método para que el error no vuelva a producirse en el futuro.</p>
+                    <p><b>La implicancia:</b> esta perspectiva implica una autocrítica valiosa sobre la propia práctica. Sin embargo, todavía corre el riesgo de no aprovechar el error presente como una oportunidad de aprendizaje <i>in situ</i>.</p>
+                </div>`;
+            } else { // Profile C
+                 resultHTML += `
+                <div id="resultC" class="result-block" style="display: block;">
+                    <h3>Tu tendencia predominante es: el error como obstáculo y oportunidad</h3>
+                    <p><b>Tu concepción subyacente:</b> el error es una pista invaluable, una ventana a la lógica del estudiante. No es un disparate, sino una "verdad provisoria" construida desde sus esquemas actuales. Es un "error inteligente".</p>
+                    <p><b>Tu rol como docente:</b> te posicionas como un investigador o un mediador socrático. Tu objetivo no es corregir de inmediato, sino comprender la lógica detrás del error y generar un conflicto cognitivo.</p>
+                    <p><b>La implicancia:</b> este es el enfoque constructivista por excelencia. Considera al error como parte inherente y necesaria del proceso de aprender, promoviendo la metacognición y la autonomía intelectual.</p>
+                </div>`;
+            }
+            
+            resultHTML += `
+            <div class="reflection-questions">
+                <h2>Parte 3: profundizando la reflexión</h2>
+                <ol>
+                    <li><b>Impacto en el aprendiz:</b> piensa en cómo se sentiría un estudiante con cada tipo de devolución (A, B y C). ¿cuál de ellas promueve una visión de la inteligencia como algo fijo y cuál como algo que se desarrolla?</li>
+                    <li><b>El contexto importa:</b> ¿tu enfoque cambiaría si el error se presenta en un borrador, en una intervención oral o en un examen final? ¿cómo distinguir los "errores inteligentes" de los que son por simple distracción?</li>
+                    <li><b>De la teoría a tu futura práctica profesional:</b> traslada esta reflexión fuera del aula. Piensa en un paciente que interpreta una situación de su vida de una manera que consideras "disfuncional". ¿cómo se asemejarían tus posibles intervenciones a los modelos A, B y C?</li>
+                    <li><b>Mi próximo paso:</b> teniendo en cuenta esta reflexión, ¿cuál es un pequeño paso, una acción concreta, que podrías incorporar en tu práctica para empezar a tratar los errores más como "obstáculos a comprender" y menos como "faltas a sancionar"?</li>
+                </ol>
+                <div class="input-group">
+                    <label for="userReflection">Mi reflexión personal (se incluirá en el PDF)</label>
+                    <textarea id="userReflection" placeholder="Escribe aquí tus pensamientos, ideas o conclusiones a partir de este ejercicio..."></textarea>
+                </div>
+            </div>
+            
+            <div class="final-reflection">
+                <p><b>Reflexión final:</b> la forma en que nos relacionamos con el error de los demás a menudo refleja cómo nos relacionamos con el nuestro. Ver el error como una oportunidad no es una simple técnica pedagógica, sino un posicionamiento que fomenta la curiosidad, la resiliencia y un aprendizaje más humano y profundo, tanto para el que aprende como para el que enseña o acompaña.</p>
+            </div>
+
+            <div class="button-container" id="pdf-button-container">
+                <button type="button" id="pdf-button" class="pdf-button" onclick="generatePDF()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Guardar mi informe en PDF
+                </button>
+            </div>
+            `;
+
+            resultsContainer.innerHTML = resultHTML;
+            resultsContainer.style.display = 'block';
+        }
+
+        async function generatePDF() {
+            const pdfButton = document.getElementById('pdf-button');
+            const originalButtonText = pdfButton.innerHTML;
+            pdfButton.disabled = true;
+            pdfButton.innerHTML = 'Generando PDF...';
+
+            const userName = document.getElementById('userName').value.trim();
+            const pdfFileName = `Reflexion-sobre-el-error-${userName.replace(/ /g, '_')}.pdf`;
+
+            // Crear un contenedor temporal solo con los resultados por pregunta y la reflexión personal
+            const pdfContent = document.createElement('div');
+            pdfContent.classList.add('pdf-dark-text'); // Aplicar clase para texto negro
+
+            // Añadir el resumen de respuestas por escenario
+            const answersSummary = document.querySelector('.answers-summary').cloneNode(true);
+            pdfContent.appendChild(answersSummary);
+
+            // Añadir la reflexión personal
+            const reflectionGroup = document.createElement('div');
+            reflectionGroup.classList.add('input-group');
+            const reflectionLabel = document.createElement('label');
+            reflectionLabel.textContent = 'Mi reflexión personal';
+            reflectionGroup.appendChild(reflectionLabel);
+
+            const userReflectionText = document.getElementById('userReflection').value;
+            const tempDiv = document.createElement('div');
+            const styles = window.getComputedStyle(document.getElementById('userReflection'));
+            tempDiv.style.cssText = `
+                width: 100%;
+                min-height: 140px;
+                padding: 14px 16px;
+                border: 2px solid #000000;
+                border-radius: 10px;
+                font-family: 'Poppins', sans-serif;
+                font-size: ${styles.fontSize};
+                line-height: ${styles.lineHeight};
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                color: #000000;
+                background-color: white;
+                margin-top: 0.75rem;
+            `;
+            tempDiv.textContent = userReflectionText;
+            reflectionGroup.appendChild(tempDiv);
+
+            pdfContent.appendChild(reflectionGroup);
+
+            // Insertar el contenedor temporal en el body para renderizado
+            const tempWrapper = document.createElement('div');
+            tempWrapper.style.cssText = 'position: absolute; top: -9999px; left: -9999px; width: 900px; background: white; padding: 2.5rem;';
+            tempWrapper.appendChild(pdfContent);
+            document.body.appendChild(tempWrapper);
+
+            // Pausa para renderizado completo
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            try {
+                const canvas = await html2canvas(tempWrapper.firstChild, {
+                    scale: 3,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    width: 900,
+                    height: pdfContent.scrollHeight + 100
+                });
+
+                const imgData = canvas.toDataURL('image/png', 1.0);
+                const pdf = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+                
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const margin = 10;
+                const imgWidth = pdfWidth - (margin * 2);
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = margin;
+
+                pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                heightLeft -= (pageHeight - (margin * 2));
+
+                let isCut = heightLeft > 0;
+                while (isCut) {
+                    position = position - pageHeight + (margin * 2);
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+                    heightLeft -= (pageHeight - (margin * 2));
+                    isCut = heightLeft > 0;
+                }
+
+                pdf.save(pdfFileName);
+
+            } catch (error) {
+                console.error("Error al generar el PDF:", error);
+                alert("Hubo un error al generar el PDF. Por favor, inténtalo de nuevo.");
+            } finally {
+                document.body.removeChild(tempWrapper);
+                pdfButton.disabled = false;
+                pdfButton.innerHTML = originalButtonText;
+            }
+        }
+    </script>
+
+</body>
+</html>
