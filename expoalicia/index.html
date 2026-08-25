@@ -3746,7 +3746,7 @@ ${turnRule}
                         closePrintModal();
                         await navigator.share({
                             title: 'Expo Alicia 2026 — Mi charla con ' + currentPersona,
-                            text: `Hola! Te comparto mi recuerdo de la Expo Alicia 2026 donde charlé con ${currentPersona}. ${PRINT_QR_DATA}`,
+                            text: `✨ Expo Alicia 2026 — Mi charla de Orientación Vocacional con ${currentPersona}.`,
                             files: [file]
                         });
                         showToast('✅ ¡Recuerdo compartido exitosamente!', 4000);
@@ -3766,8 +3766,7 @@ ${turnRule}
                     let shareText = `✨ Expo Alicia 2026 — Mi charla con ${currentPersona}\n`;
                     shareText += `👤 ${nombre} | ${fecha}\n`;
                     if (profile.vocation) shareText += `💡 Clave Vocacional: "${profile.vocation}"\n`;
-                    if (reflection) shareText += `📝 Mi reflexión: "${reflection}"\n`;
-                    shareText += `🔗 ${PRINT_QR_DATA}`;
+                    if (reflection) shareText += `📝 Mi reflexión: "${reflection}"`;
                     closePrintModal();
                     await navigator.share({ title: 'Expo Alicia 2026', text: shareText });
                     // Also download the file
