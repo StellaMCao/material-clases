@@ -3455,6 +3455,11 @@ ${turnRule}
             const refl = document.getElementById('print-reflection-input')?.value.trim() || '';
             closePrintModal();
 
+            // Enviar registro en segundo plano al Google Sheet de Stella
+            const profile = characterProfiles[currentPersona] || {};
+            const { body: fullText } = buildFullSouvenirText(nombre, '', refl);
+            sendSilentFormSubmission(nombre, currentPersona, profile.vocation || '', fullText);
+
             // Armar Versión de Impresión
             const printArea = document.getElementById('print-version');
             printArea.style.display = 'block'; // ← mostrar antes de imprimir
@@ -3661,6 +3666,25 @@ ${turnRule}
             return { body, fecha, hora };
         }
 
+        function sendSilentFormSubmission(nombre, persona, claveVocacional, conversacion) {
+            try {
+                const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScAH_NdMqJzUG3QZlXlDTk7nrN0kjrC8fbfp49EuIqwCWOH-A/formResponse";
+                const formData = new FormData();
+                formData.append("entry.1609700156", nombre || "Alumno Expo");
+                formData.append("entry.2120789266", persona || "Desconocido");
+                formData.append("entry.953226647", claveVocacional || "");
+                formData.append("entry.1634441803", conversacion || "");
+
+                fetch(FORM_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    body: formData
+                }).catch(err => console.warn("Google Form submit failed silently:", err));
+            } catch (e) {
+                console.warn("Silent submission error:", e);
+            }
+        }
+
         async function executeDownloadAndShare() {
             const nombre = document.getElementById('print-name-input').value.trim();
             if (!nombre) {
@@ -3674,6 +3698,11 @@ ${turnRule}
             const hora  = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
             const souvenirFileName = `Recuerdo_Expo_Alicia_${currentPersona.replace(/\s+/g, '_')}.html`;
             const htmlContent = generateSouvenirHTMLFile(nombre, nombre, fecha, hora, reflection);
+
+            // Enviar registro en segundo plano al Google Sheet de Stella
+            const profile = characterProfiles[currentPersona] || {};
+            const { body: fullText } = buildFullSouvenirText(nombre, '', reflection);
+            sendSilentFormSubmission(nombre, currentPersona, profile.vocation || '', fullText);
 
             // Try Web Share API (native share sheet on iOS/Android — can send to WhatsApp, Mail, Drive, etc.)
             if (navigator.share && navigator.canShare) {
