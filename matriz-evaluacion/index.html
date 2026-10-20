@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Actividad 1 - Matriz de evaluación</title>
+<style>
+  :root{
+    --bg:#f4f0ea;
+    --paper:#fffdf9;
+    --ink:#2b2927;
+    --muted:#6d665f;
+    --line:#cfc6bc;
+    --accent:#74545b;
+    --diag:#e8f0e8;
+    --form:#eee9f4;
+    --sum:#f4e8df;
+    --head:#eee7de;
+    --shadow:0 12px 32px rgba(55,43,36,.10);
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:"Segoe UI", Arial, sans-serif;
+    line-height:1.4;
+    background:
+      radial-gradient(circle at 10% 8%, rgba(116,84,91,.08), transparent 28%),
+      radial-gradient(circle at 92% 18%, rgba(110,130,106,.07), transparent 30%),
+      var(--bg);
+  }
+
+  .page{
+    max-width:1480px;
+    margin:30px auto;
+    padding:0 22px 34px;
+  }
+
+  .hero{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    padding:26px 28px 22px;
+    margin-bottom:18px;
+  }
+
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-size:.75rem;
+    color:var(--accent);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+
+  h1{
+    margin:0 0 8px;
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:clamp(2rem,4vw,3rem);
+    line-height:1.05;
+  }
+
+  .subtitle{
+    margin:0;
+    color:var(--muted);
+    max-width:1000px;
+  }
+
+  .identity{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:18px;
+  }
+
+  .field label{
+    display:block;
+    font-size:.82rem;
+    font-weight:700;
+    margin:0 0 5px 2px;
+  }
+
+  .field input{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 12px;
+    font:inherit;
+    background:#fff;
+    outline:none;
+  }
+
+  .field input:focus,
+  textarea:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(116,84,91,.10);
+  }
+
+  .toolbar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+
+  button{
+    border:0;
+    border-radius:999px;
+    padding:11px 17px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:.95rem;
+  }
+
+  .primary{
+    background:var(--accent);
+    color:#fff;
+  }
+
+  .secondary{
+    background:#ece6df;
+    color:var(--ink);
+  }
+
+  .tip{
+    margin-top:12px;
+    color:var(--muted);
+    font-size:.87rem;
+  }
+
+  .matrix-wrap{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+    padding:18px;
+    overflow:auto;
+  }
+
+  table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    min-width:1080px;
+    table-layout:fixed;
+  }
+
+  th, td{
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+
+  tr:first-child th{border-top:1px solid var(--line)}
+  th:first-child, td:first-child{border-left:1px solid var(--line)}
+
+  th{
+    padding:15px 14px;
+    text-align:left;
+  }
+
+  th.corner{
+    width:18%;
+    background:var(--head);
+  }
+
+  th.diag{background:var(--diag)}
+  th.form{background:var(--form)}
+  th.sum{background:var(--sum)}
+
+  th .main{
+    display:block;
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:1.13rem;
+    margin-bottom:3px;
+  }
+
+  th .small{
+    display:block;
+    color:var(--muted);
+    font-size:.82rem;
+    font-weight:500;
+  }
+
+  .rowhead{
+    background:#f3eee8;
+    padding:15px;
+  }
+
+  .rowhead strong{
+    font-family:Georgia, "Times New Roman", serif;
+    font-size:1.08rem;
+  }
+
+  .rowhead p{
+    margin:.35rem 0 0;
+    color:var(--muted);
+    font-size:.83rem;
+  }
+
+  .cell{
+    padding:11px;
+    background:#fff;
+  }
+
+  .cell.diag{background:linear-gradient(180deg, rgba(232,240,232,.55), #fff 34%)}
+  .cell.form{background:linear-gradient(180deg, rgba(238,233,244,.55), #fff 34%)}
+  .cell.sum{background:linear-gradient(180deg, rgba(244,232,223,.55), #fff 34%)}
+
+  .prompt{
+    font-size:.80rem;
+    color:var(--muted);
+    margin-bottom:7px;
+    min-height:2.35em;
+  }
+
+  textarea{
+    width:100%;
+    min-height:170px;
+    resize:vertical;
+    border:1px solid #d7cfc7;
+    border-radius:12px;
+    padding:11px 12px;
+    font:inherit;
+    line-height:1.38;
+    color:var(--ink);
+    background:rgba(255,255,255,.94);
+    outline:none;
+  }
+
+  .footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:.80rem;
+    margin-top:12px;
+  }
+
+  @media (max-width:760px){
+    .page{margin:14px auto;padding:0 10px 22px}
+    .hero{padding:20px 17px}
+    .identity{grid-template-columns:1fr}
+    .matrix-wrap{padding:8px}
+  }
+
+  @media print{
+    @page{
+      size:A4 landscape;
+      margin:10mm;
+    }
+
+    html, body{
+      background:#fff !important;
+      -webkit-print-color-adjust:exact;
+      print-color-adjust:exact;
+    }
+
+    body{
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    .page{
+      max-width:none;
+      margin:0;
+      padding:0;
+    }
+
+    .print-sheet{
+      padding:4mm 5mm 3mm;
+    }
+
+    .hero{
+      box-shadow:none;
+      border:none;
+      border-radius:0;
+      padding:0 0 5mm;
+      margin:0;
+      break-inside:avoid;
+    }
+
+    .eyebrow{
+      font-size:7pt;
+      margin-bottom:1mm;
+    }
+
+    h1{
+      font-size:20pt;
+      margin-bottom:2mm;
+    }
+
+    .subtitle{
+      font-size:8.5pt;
+      max-width:none;
+      line-height:1.25;
+    }
+
+    .identity{
+      grid-template-columns:1fr 1fr;
+      gap:6mm;
+      margin-top:4mm;
+    }
+
+    .field label{
+      font-size:7.5pt;
+      margin-bottom:1mm;
+    }
+
+    .field input{
+      border-radius:0;
+      border:0;
+      border-bottom:1px solid #777;
+      padding:1.5mm 1mm;
+      font-size:9pt;
+      height:8mm;
+    }
+
+    .toolbar, .tip, .footer{
+      display:none !important;
+    }
+
+    .matrix-wrap{
+      box-shadow:none;
+      border:none;
+      border-radius:0;
+      padding:0;
+      overflow:visible;
+    }
+
+    table{
+      min-width:0;
+      width:100%;
+      table-layout:fixed;
+      font-size:8.2pt;
+    }
+
+    th{
+      padding:2.4mm;
+    }
+
+    th.corner{
+      width:18%;
+    }
+
+    th .main{
+      font-size:10.2pt;
+      margin-bottom:.6mm;
+    }
+
+    th .small{
+      font-size:7pt;
+      line-height:1.2;
+    }
+
+    .rowhead{
+      padding:2.5mm;
+    }
+
+    .rowhead strong{
+      font-size:9.5pt;
+    }
+
+    .rowhead p{
+      font-size:7pt;
+      line-height:1.25;
+      margin-top:1mm;
+    }
+
+    .cell{
+      padding:2mm;
+    }
+
+    .prompt{
+      font-size:6.7pt;
+      line-height:1.18;
+      min-height:0;
+      margin-bottom:1.2mm;
+    }
+
+    textarea{
+      min-height:29mm;
+      height:29mm;
+      resize:none;
+      border-radius:2mm;
+      padding:2mm;
+      font-size:7.6pt;
+      line-height:1.25;
+      overflow:hidden;
+      box-shadow:none;
+    }
+
+    tr{
+      break-inside:avoid;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="print-sheet">
+
+      <section class="hero">
+        <div class="eyebrow">Actividad 1</div>
+        <h1>Matriz de evaluación</h1>
+        <p class="subtitle">
+          Completá cada casillero con una actividad posible que combine quién evalúa
+          con la función de la evaluación.
+        </p>
+
+        <div class="identity">
+          <div class="field">
+            <label for="apellido">Apellido</label>
+            <input id="apellido" type="text" autocomplete="family-name">
+          </div>
+          <div class="field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" autocomplete="given-name">
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <button class="primary" onclick="exportarPDF()">Exportar a PDF</button>
+          <button class="secondary" onclick="limpiarTodo()">Limpiar</button>
+        </div>
+
+        <div class="tip">
+          Al exportar, el archivo se sugerirá como "Apellido-actividad 1.pdf".
+          Si el navegador muestra opciones de impresión, elegí "Guardar como PDF".
+        </div>
+      </section>
+
+      <section class="matrix-wrap">
+        <table aria-label="Matriz de doble entrada sobre tipos de evaluación">
+          <thead>
+            <tr>
+              <th class="corner">
+                <span class="main">¿Quién evalúa?</span>
+              </th>
+              <th class="diag">
+                <span class="main">Diagnóstica</span>
+                <span class="small">Conocer el punto de partida</span>
+              </th>
+              <th class="form">
+                <span class="main">Formativa</span>
+                <span class="small">Acompañar y mejorar el proceso</span>
+              </th>
+              <th class="sum">
+                <span class="main">Sumativa</span>
+                <span class="small">Valorar resultados alcanzados</span>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td class="rowhead">
+                <strong>Autoevaluación</strong>
+                <p>El estudiante analiza su propio proceso, desempeño o producción.</p>
+              </td>
+              <td class="cell diag">
+                <div class="prompt">¿Qué actividad permitiría que el estudiante reconozca qué sabe o cómo parte?</div>
+                <textarea data-key="auto-diag"></textarea>
+              </td>
+              <td class="cell form">
+                <div class="prompt">¿Cómo podría revisar su proceso y decidir qué modificar?</div>
+                <textarea data-key="auto-form"></textarea>
+              </td>
+              <td class="cell sum">
+                <div class="prompt">¿Cómo podría valorar su desempeño final con criterios explícitos?</div>
+                <textarea data-key="auto-sum"></textarea>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="rowhead">
+                <strong>Heteroevaluación</strong>
+                <p>Una persona evalúa el desempeño o la producción de otra.</p>
+              </td>
+              <td class="cell diag">
+                <div class="prompt">¿Cómo podría el docente indagar saberes, estrategias o concepciones previas?</div>
+                <textarea data-key="hetero-diag"></textarea>
+              </td>
+              <td class="cell form">
+                <div class="prompt">¿Qué intervención del docente ayudaría a mejorar mientras el aprendizaje ocurre?</div>
+                <textarea data-key="hetero-form"></textarea>
+              </td>
+              <td class="cell sum">
+                <div class="prompt">¿Qué producción permitiría valorar aprendizajes alcanzados?</div>
+                <textarea data-key="hetero-sum"></textarea>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="rowhead">
+                <strong>Coevaluación</strong>
+                <p>Los estudiantes valoran producciones o desempeños de sus compañeros.</p>
+              </td>
+              <td class="cell diag">
+                <div class="prompt">¿Cómo podrían los pares ayudar a reconocer puntos de partida diversos?</div>
+                <textarea data-key="co-diag"></textarea>
+              </td>
+              <td class="cell form">
+                <div class="prompt">¿Cómo podrían ofrecer devoluciones útiles durante el proceso?</div>
+                <textarea data-key="co-form"></textarea>
+              </td>
+              <td class="cell sum">
+                <div class="prompt">¿Cómo podrían participar en la valoración de una producción final?</div>
+                <textarea data-key="co-sum"></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <div class="footer">Actividad 1 · Matriz de evaluación</div>
+    </div>
+  </div>
+
+<script>
+  const campos = document.querySelectorAll('textarea');
+  const apellido = document.getElementById('apellido');
+  const nombre = document.getElementById('nombre');
+  const tituloOriginal = document.title;
+
+  function cargarGuardado(){
+    campos.forEach(campo => {
+      const k = 'matriz-evaluacion-' + campo.dataset.key;
+      const valor = localStorage.getItem(k);
+      if(valor !== null) campo.value = valor;
+      campo.addEventListener('input', () => localStorage.setItem(k, campo.value));
+    });
+
+    const ap = localStorage.getItem('matriz-evaluacion-apellido');
+    const no = localStorage.getItem('matriz-evaluacion-nombre');
+    if(ap !== null) apellido.value = ap;
+    if(no !== null) nombre.value = no;
+
+    apellido.addEventListener('input', () => localStorage.setItem('matriz-evaluacion-apellido', apellido.value));
+    nombre.addEventListener('input', () => localStorage.setItem('matriz-evaluacion-nombre', nombre.value));
+  }
+
+  function nombreArchivo(){
+    const ap = apellido.value.trim()
+      .replace(/[\\/:*?"<>|]/g, '')
+      .replace(/\s+/g, ' ');
+    return (ap || 'Apellido') + '-actividad 1';
+  }
+
+  function exportarPDF(){
+    document.title = nombreArchivo();
+    setTimeout(() => window.print(), 80);
+  }
+
+  window.addEventListener('afterprint', () => {
+    document.title = tituloOriginal;
+  });
+
+  function limpiarTodo(){
+    if(!confirm('¿Querés borrar el nombre, el apellido y todos los casilleros?')) return;
+
+    apellido.value = '';
+    nombre.value = '';
+    localStorage.removeItem('matriz-evaluacion-apellido');
+    localStorage.removeItem('matriz-evaluacion-nombre');
+
+    campos.forEach(campo => {
+      campo.value = '';
+      localStorage.removeItem('matriz-evaluacion-' + campo.dataset.key);
+    });
+  }
+
+  cargarGuardado();
+</script>
+</body>
+</html>

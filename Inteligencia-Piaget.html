@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+.markmap-dark {
+  background: #27272a;
+  color: white;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css"><style>.markmap-node text {
+  font-size: 18px;
+}
+
+.markmap-node.depth-0 text {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.markmap-node.depth-1 text {
+  font-size: 22px;
+  font-weight: bold;
+}</style>
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script><script>(r => {
+              setTimeout(r);
+            })(function renderToolbar() {
+  const {
+    markmap,
+    mm
+  } = window;
+  const {
+    el
+  } = markmap.Toolbar.create(mm);
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root2, jsonOptions) => {
+              const markmap = getMarkmap();
+              window.mm = markmap.Markmap.create(
+                "svg#mindmap",
+                (getOptions || markmap.deriveOptions)(jsonOptions),
+                root2
+              );
+              if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.documentElement.classList.add("markmap-dark");
+              }
+            })(() => window.markmap,null,{"content":"Inteligencia y desarrollo cognitivo","children":[{"content":"Definiciones de inteligencia","children":[{"content":"Capacidad sensorial (Galton)","children":[{"content":"Conocimiento por los sentidos","children":[],"payload":{"tag":"h4","lines":"13,14"}},{"content":"Falacia por baja correlaci&#xf3;n sensorial","children":[],"payload":{"tag":"h4","lines":"14,15"}}],"payload":{"tag":"h3","lines":"11,12"}},{"content":"Pensamiento abstracto (Binet y Simon)","children":[{"content":"Primera prueba de diagn&#xf3;stico","children":[],"payload":{"tag":"h4","lines":"18,19"}},{"content":"Evaluaci&#xf3;n de procesos mentales superiores","children":[],"payload":{"tag":"h4","lines":"19,20"}}],"payload":{"tag":"h3","lines":"16,17"}},{"content":"Factor g e inteligencia general (Spearman)","children":[{"content":"Factor g: inteligencia general com&#xfa;n","children":[],"payload":{"tag":"h4","lines":"23,24"}},{"content":"Factor s: habilidades espec&#xed;ficas","children":[],"payload":{"tag":"h4","lines":"24,25"}}],"payload":{"tag":"h3","lines":"21,22"}},{"content":"Inteligencia fluida y cristalizada (Cattell y Horn)","children":[{"content":"Fluida: aprender nuevas formas de resolver problemas","children":[],"payload":{"tag":"h4","lines":"28,29"}},{"content":"Cristalizada: conocimiento acumulado","children":[],"payload":{"tag":"h4","lines":"29,30"}}],"payload":{"tag":"h3","lines":"26,27"}},{"content":"Inteligencias m&#xfa;ltiples (Gardner)","children":[{"content":"Ocho marcos mentales relativamente independientes","children":[],"payload":{"tag":"h4","lines":"33,34"}},{"content":"Tipos: ling&#xfc;&#xed;stica, espacial, musical, corporal, interpersonal, intrapersonal, etc.","children":[],"payload":{"tag":"h4","lines":"34,35"}}],"payload":{"tag":"h3","lines":"31,32"}},{"content":"Modelo tri&#xe1;rquico (Sternberg)","children":[{"content":"Anal&#xed;tica: para los libros","children":[],"payload":{"tag":"h4","lines":"38,39"}},{"content":"Pr&#xe1;ctica: de la calle","children":[],"payload":{"tag":"h4","lines":"39,40"}},{"content":"Creativa: soluciones novedosas","children":[],"payload":{"tag":"h4","lines":"40,41"}}],"payload":{"tag":"h3","lines":"36,37"}}],"payload":{"tag":"h2","lines":"9,10"}},{"content":"Evaluaci&#xf3;n de la inteligencia (CI)","children":[{"content":"C&#xe1;lculo del CI","children":[{"content":"F&#xf3;rmula original: edad mental / edad cronol&#xf3;gica &#xd7; 100","children":[],"payload":{"tag":"h4","lines":"46,47"}},{"content":"CI de desviaci&#xf3;n: relaci&#xf3;n con el grupo de edad","children":[],"payload":{"tag":"h4","lines":"47,48"}}],"payload":{"tag":"h3","lines":"44,45"}},{"content":"Pruebas comunes","children":[{"content":"WAIS (adultos)","children":[],"payload":{"tag":"h4","lines":"51,52"}},{"content":"WISC / WPPSI (ni&#xf1;os)","children":[],"payload":{"tag":"h4","lines":"52,53"}},{"content":"Matrices progresivas de Raven","children":[],"payload":{"tag":"h4","lines":"53,54"}}],"payload":{"tag":"h3","lines":"49,50"}},{"content":"Cuestionamientos","children":[{"content":"Reducci&#xf3;n cognitiva: CI menor a la complejidad humana","children":[],"payload":{"tag":"h4","lines":"57,58"}},{"content":"Influencia cultural y educativa","children":[],"payload":{"tag":"h4","lines":"58,59"}},{"content":"Genialidad: CI elevado y pr&#xe1;ctica deliberada","children":[],"payload":{"tag":"h4","lines":"59,60"}}],"payload":{"tag":"h3","lines":"55,56"}}],"payload":{"tag":"h2","lines":"42,43"}},{"content":"Teor&#xed;a del desarrollo (Piaget)","children":[{"content":"Mecanismos del desarrollo","children":[{"content":"Asimilaci&#xf3;n: incorporar informaci&#xf3;n a esquemas existentes","children":[],"payload":{"tag":"h4","lines":"65,66"}},{"content":"Acomodaci&#xf3;n: modificar esquemas","children":[],"payload":{"tag":"h4","lines":"66,67"}},{"content":"Equilibraci&#xf3;n: b&#xfa;squeda activa de coherencia entre esquemas y realidad","children":[],"payload":{"tag":"h4","lines":"67,68"}}],"payload":{"tag":"h3","lines":"63,64"}},{"content":"Estadios del desarrollo","children":[{"content":"Sensoriomotor (0-2 a&#xf1;os): permanencia del objeto","children":[],"payload":{"tag":"h4","lines":"71,72"}},{"content":"Preoperatorio (2-7 a&#xf1;os): funci&#xf3;n simb&#xf3;lica y egocentrismo","children":[],"payload":{"tag":"h4","lines":"72,73"}},{"content":"Operaciones concretas (7-12 a&#xf1;os): reversibilidad y conservaci&#xf3;n","children":[],"payload":{"tag":"h4","lines":"73,74"}},{"content":"Operaciones formales (12+ a&#xf1;os): pensamiento hipot&#xe9;tico-deductivo","children":[],"payload":{"tag":"h4","lines":"74,75"}}],"payload":{"tag":"h3","lines":"69,70"}},{"content":"Factores del desarrollo","children":[{"content":"Maduraci&#xf3;n biol&#xf3;gica","children":[],"payload":{"tag":"h4","lines":"78,79"}},{"content":"Experiencia f&#xed;sica","children":[],"payload":{"tag":"h4","lines":"79,80"}},{"content":"Transmisi&#xf3;n social","children":[],"payload":{"tag":"h4","lines":"80,81"}},{"content":"Equilibraci&#xf3;n (autorregulaci&#xf3;n cognitiva)","children":[],"payload":{"tag":"h4","lines":"81,82"}}],"payload":{"tag":"h3","lines":"76,77"}}],"payload":{"tag":"h2","lines":"61,62"}},{"content":"Pensamiento posformal","children":[{"content":"Caracter&#xed;sticas","children":[{"content":"Aceptaci&#xf3;n de la contradicci&#xf3;n","children":[],"payload":{"tag":"h4","lines":"87,88"}},{"content":"Conocimiento relativo y contextual","children":[],"payload":{"tag":"h4","lines":"88,89"}},{"content":"Integraci&#xf3;n de emoci&#xf3;n y l&#xf3;gica","children":[],"payload":{"tag":"h4","lines":"89,90"}}],"payload":{"tag":"h3","lines":"85,86"}},{"content":"Pensamiento dial&#xe9;ctico","children":[{"content":"Proceso: realidad din&#xe1;mica","children":[],"payload":{"tag":"h4","lines":"93,94"}},{"content":"Contexto: marcos de significado","children":[],"payload":{"tag":"h4","lines":"94,95"}},{"content":"Relaci&#xf3;n: v&#xed;nculos entre fen&#xf3;menos","children":[],"payload":{"tag":"h4","lines":"95,96"}},{"content":"Transformaci&#xf3;n: evoluci&#xf3;n por crisis","children":[],"payload":{"tag":"h4","lines":"96,97"}}],"payload":{"tag":"h3","lines":"91,92"}}],"payload":{"tag":"h2","lines":"83,84"}}],"payload":{"tag":"h1","lines":"7,8"}},{"colorFreezeLevel":2,"initialExpandLevel":2,"maxWidth":200})</script>
+</body>
+</html>

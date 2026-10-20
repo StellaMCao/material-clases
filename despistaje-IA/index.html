@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de verificación de producción académica</title>
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 850px; 
+            margin: 20px auto; 
+            padding: 20px; 
+            background-color: #f9f9f9; 
+        }
+        h1, h2, h3 { 
+            color: #2c3e50; 
+            border-bottom: 2px solid #3498db; 
+            padding-bottom: 10px; 
+        }
+        .print-only { display: none; }
+        .container { 
+            background-color: white; 
+            border: 1px solid #ddd; 
+            padding: 25px; 
+            border-radius: 8px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+        }
+        fieldset { 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+        }
+        legend { 
+            font-weight: bold; 
+            font-size: 1.1em; 
+            color: #3498db; 
+            padding: 0 10px; 
+        }
+        label { 
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }
+        label input[type="checkbox"] {
+            margin-right: 10px;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+        .explanation { 
+            font-size: 0.9em; 
+            color: #555; 
+            margin-left: 25px; 
+            margin-top: -8px; 
+            margin-bottom: 15px; 
+            font-weight: normal; 
+        }
+        input[type="text"], input[type="date"], textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border-radius: 4px; 
+            border: 1px solid #ccc; 
+            margin-top: 5px; 
+            font-family: inherit; 
+            font-size: 1em; 
+            box-sizing: border-box;
+        }
+        textarea { resize: vertical; }
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+        }
+        .results { 
+            background-color: #eaf5ff; 
+            border-left: 5px solid #3498db; 
+            padding: 20px; 
+            border-radius: 8px; 
+        }
+        .results h3 { border: none; margin-top: 0; }
+        #interpretation { font-weight: bold; font-size: 1.1em; color: #1a5276; }
+        .warning { background-color: #fff3cd; border-left: 5px solid #ffeeba; color: #856404; padding: 15px; border-radius: 5px; margin-top: 20px; }
+        .protocol-item { border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px; }
+        .protocol-item .radio-group { display: flex; gap: 20px; margin-top: 8px; font-weight: normal; }
+        .protocol-item .radio-group label { font-weight: normal; }
+        .protocol-section { display: none; }
+        .protocol-section.active { display: block; }
+        .button-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px;}
+        button { width: 100%; padding: 15px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s; }
+        .btn-custom { background-color: #27ae60; color: white; }
+        .btn-full { background-color: #3498db; color: white; }
+        .btn-clear { background-color: #e74c3c; color: white; }
+        .footer-contact { text-align: right; font-size: 0.8em; color: #777; font-style: italic; margin-top: 30px; padding-bottom: 10px;}
+        .footer-contact a { color: #3498db; text-decoration: none; }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .grid-container { grid-template-columns: 1fr; }
+        }
+
+        /* --- ESTILOS PARA LA IMPRESIÓN / PDF --- */
+        @media print {
+            body { margin: 25mm 20mm; padding: 0; font-size: 10pt; line-height: 1.4; color: #000; }
+            .no-print, button, .screen-only, #aclaracion-container, .footer-contact { display: none !important; }
+            .print-only { display: block; }
+            .container { 
+                box-shadow: none; 
+                border: 1px solid #ccc; 
+                padding: 12px; 
+                margin-bottom: 12px; 
+                /* Se eliminó 'page-break-inside: avoid;' para permitir que los bloques se corten entre páginas */
+            }
+            h1.print-only { font-size: 1.4em; border-bottom: 1px solid #000; padding-bottom: 5px; text-align: center; margin-bottom: 15px; }
+            h2 { font-size: 1.2em; border-bottom: 1px solid #000; padding-bottom: 5px; margin-top: 15px; margin-bottom: 10px; page-break-after: avoid; }
+            .explanation { display: none !important; }
+            input[type="text"], input[type="date"], textarea { border: none; border-bottom: 1px dotted #000; padding: 2px 0; }
+            .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 15px; }
+            .protocol-section { display: block !important; }
+            .protocol-item .radio-group { display: none; } 
+            .protocol-item .explanation { display: block !important; margin-left: 0; font-size: 0.9em; font-style: italic; }
+
+            /* Lógica para PDF Personalizado */
+            body.custom-pdf-mode #ia-checklist label:not(:has(input[type="checkbox"]:checked)) { display: none !important; }
+            body.custom-pdf-mode #ia-checklist label input[type="checkbox"] { display: none; }
+
+            /* Lógica para PDF Completo */
+            body.full-pdf-mode #ia-checklist label input[type="checkbox"] { margin-right: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="screen-only">Ficha de verificación de producción académica</h1>
+    <h1 class="print-only" id="print-title">Ficha de verificación de producción académica</h1>
+
+    <p class="no-print"><i>Esta ficha interactiva es un recurso pedagógico. No busca sancionar, sino guiar la conversación con el/la estudiante sobre la autoría y el uso ético de las herramientas de IA, promoviendo la honestidad académica y el aprendizaje.</i></p>
+
+    <div class="container" id="aclaracion-container">
+        <h2>Aclaración importante sobre el uso de la IA</h2>
+        <p>Las Inteligencias Artificiales Generativas (IAG) son herramientas poderosas que vinieron para quedarse. Su uso en la academia es una realidad que debemos abordar desde una perspectiva formativa.</p>
+        <p class="warning">
+            <strong>Precaución con los "detectores de IA":</strong> las herramientas automáticas de detección de IA suelen ser poco fiables. Generan numerosos falsos positivos (marcan como IA textos humanos) y falsos negativos (no detectan textos generados por IA). <b>Esta ficha prioriza la observación pedagógica y el diálogo con el/la estudiante</b> como el método más efectivo y ético para comprender el proceso de producción y la apropiación del conocimiento. Los indicios aquí presentados son <b>señales para la reflexión y la conversación</b>, no pruebas irrefutables.
+        </p>
+    </div>
+
+    <div class="container">
+        <h2>1. Datos generales</h2>
+        <div class="grid-container">
+            <div><label for="estudiante">Estudiante:</label><input type="text" id="estudiante"></div>
+            <div><label for="asignatura">Asignatura:</label><input type="text" id="asignatura"></div>
+            <div><label for="profesor">Profesor/a:</label><input type="text" id="profesor"></div>
+            <div><label for="comision">Comisión:</label><input type="text" id="comision"></div>
+            <div><label for="fecha">Fecha:</label><input type="date" id="fecha"></div>
+            <div><label for="trabajo">Trabajo:</label><input type="text" id="trabajo"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>2. Checklist de indicios (cada marca suma 1 punto)</h2>
+        <form id="ia-checklist">
+            <fieldset>
+                <legend>A. Forma y ortotipografía</legend>
+                <label><input type="checkbox" class="indicator"><span>Título con mayúsculas de estilo inglés (Title Case).</span></label>
+                <div class="explanation"><b>Qué observar:</b> títulos como "La Importancia de la Educación en el Aula". En español, lo correcto es el "tipo frase": "La importancia de la educación en el aula". Las IAs entrenadas con textos en inglés a menudo replican este formato.</div>
+                <label><input type="checkbox" class="indicator"><span>Mayúscula después de dos puntos en una oración corrida.</span></label>
+                <div class="explanation"><b>Qué observar:</b> frases como "El problema es simple: la solución no lo es". En español, después de dos puntos se usa minúscula, salvo que se inicie una cita. Es un calco directo de la norma inglesa.</div>
+                <label><input type="checkbox" class="indicator"><span>Listas con viñetas excesivamente simétricas o parejas o uso de íconos.</span></label>
+                <div class="explanation"><b>Qué observar:</b> cada ítem de una lista tiene casi la misma longitud y sigue la misma estructura gramatical (por ejemplo: todos empiezan con un verbo en infinitivo). La escritura humana tiende a ser más variable. También el uso de íconos o formatos de viñetas muy específicos de IAs.</div>
+                <label><input type="checkbox" class="indicator"><span>Emojis o tono “excesivamente amable/conversacional” en un contexto formal.</span></label>
+                <div class="explanation"><b>Qué observar:</b> el uso de emojis (👍, ✨) o un tono conversacional ("¡Claro!", "Espero que esto te sea de ayuda") en un trabajo académico que no lo pide. Las IAs generativas están programadas para ser serviciales y a veces ese tono se filtra.</div>
+                <label><input type="checkbox" class="indicator"><span>Uso de comillas rectas (" ") en lugar de tipográficas (“ ”).</span></label>
+                <div class="explanation"><b>Qué observar:</b> el uso sistemático de comillas rectas (" ") en lugar de las curvas o tipográficas (“ ”), que son el estándar en publicaciones y trabajos académicos. Las comillas rectas son una señal de texto 'en crudo', común en las salidas de IA que no han sido editadas en un procesador de texto.</div>
+                <label><input type="checkbox" class="indicator"><span>Uso de Ampersand (&) en lugar de "y".</span></label>
+                <div class="explanation"><b>Qué observar:</b> en la bibliografía o en el cuerpo del texto, ver "Smith & Jones" en lugar de "Smith y Jones". Es una convención casi exclusiva del inglés.</div>
+                <label><input type="checkbox" class="indicator"><span>Coma antes de la conjunción en enumeraciones (coma de Oxford).</span></label>
+                <div class="explanation"><b>Qué observar:</b> una enumeración como "elegí la opción A, la B, o la C". Su presencia sistemática (no ocasional) es más indicio de calco inglés o traducción automática que de un error aislado.</div>
+                <label><input type="checkbox" class="indicator"><span>Inconsistencia en el estilo de tipografía, formato o interlineado.</span></label>
+                <div class="explanation"><b>Qué observar:</b> partes del texto con un tipo de letra, tamaño o formato que difiere abruptamente del resto. También puede notarse en cambios súbitos de interlineado, márgenes o espaciado, típicos de textos exportados desde interfaces de IA sin edición.</div>
+            </fieldset>
+
+            <fieldset>
+                <legend>B. Marcas discursivas y léxico comodín</legend>
+                <label><input type="checkbox" class="indicator"><span>Abundancia de comodines y léxico vago.</span></label>
+                <div class="explanation"><b>Qué observar:</b> uso repetitivo de palabras que suenan sofisticadas pero son vagas: <i>impacto, desafío, complejidad, perspectiva innovadora, contexto actual</i>. La IA las usa para dar un aire de profundidad sin aportar un análisis concreto.</div>
+                <label><input type="checkbox" class="indicator"><span>Muletillas de ensamblado y conectores genéricos.</span></label>
+                <div class="explanation"><b>Qué observar:</b> conectores que la IA usa para unir ideas sin una transición lógica real: <i>por un lado/por otro, en este sentido, cabe destacar</i>. El texto parece un "Frankenstein" de párrafos.</div>
+                <label><input type="checkbox" class="indicator"><span>Cierres estandarizados (“en conclusión”) sin argumento previo sólido.</span></label>
+                <div class="explanation"><b>Qué observar:</b> un párrafo final que empieza con "En conclusión" pero no sintetiza un argumento desarrollado, sino que repite ideas.</div>
+                <label><input type="checkbox" class="indicator"><span>Argumentaciones separadas o conclusiones repetitivas.</span></label>
+                <div class="explanation"><b>Qué observar:</b> el texto presenta argumentos de forma aislada sin una conexión fluida, o repite la misma conclusión en diferentes secciones.</div>
+                <label><input type="checkbox" class="indicator"><span>Exceso de frases de relleno o introductorias.</span></label>
+                <div class="explanation"><b>Qué observar:</b> párrafos que inician sistemáticamente con "Es importante señalar que...", "Cabe destacar que...". Su uso excesivo delata un patrón generativo.</div>
+                <label><input type="checkbox" class="indicator"><span>Excesiva seguridad o dogmatismo en las afirmaciones.</span></label>
+                <div class="explanation"><b>Qué observar:</b> aseveraciones rotundas ("claramente vemos...") o, por el contrario, un uso reiterado de fórmulas de falsa modestia (“podría decirse que...”) que diluyen el posicionamiento.</div>
+            </fieldset>
+
+            <fieldset>
+                <legend>C. Contenido verificable</legend>
+                <label><input type="checkbox" class="indicator"><span>Bibliografía perfecta pero dudosa o inexistente.</span></label>
+                <div class="explanation"><b>Qué observar:</b> referencias con DOI/ISBN que no existen, o que existen pero no corresponden al título o autor citados.</div>
+                <label><input type="checkbox" class="indicator"><span>Datos verificables sin fuente o descontextualizados.</span></label>
+                <div class="explanation"><b>Qué observar:</b> se mencionan estadísticas o fechas sin citar la fuente, o extraídas de un contexto que no corresponde al trabajo.</div>
+                <label><input type="checkbox" class="indicator"><span>Alucinaciones (afirmaciones, citas, eventos falsos).</span></label>
+                <div class="explanation"><b>Qué observar:</b> afirmaciones o citas de autores que, tras una breve búsqueda, resultan ser completamente falsos.</div>
+                <label><input type="checkbox" class="indicator"><span>Contenido o vocabulario fuera del programa o no explicado en clase.</span></label>
+                <div class="explanation"><b>Qué observar:</b> el trabajo introduce conceptos no abordados en la asignatura o usa ejemplos internacionales ajenos al contexto local sin justificación.</div>
+                <label><input type="checkbox" class="indicator"><span>Respuestas genéricas, descontextualizadas o que no se ajustan a la consigna.</span></label>
+                <div class="explanation"><b>Qué observar:</b> el texto describe un tema general pero no logra aplicarlo correctamente al recurso específico que se pedía analizar.</div>
+            </fieldset>
+
+            <fieldset>
+                <legend>D. Consistencia autoral</legend>
+                <label><input type="checkbox" class="indicator"><span>Salto abrupto respecto a trabajos previos.</span></label>
+                <div class="explanation"><b>Qué observar:</b> una mejora drástica e inexplicable en la sintaxis y cohesión en comparación con trabajos anteriores del estudiante.</div>
+                <label><input type="checkbox" class="indicator"><span>Uniformidad estilística anómala o "demasiado perfecta".</span></label>
+                <div class="explanation"><b>Qué observar:</b> la ausencia total de reformulaciones, adjetivos afectivos o marcas de subjetividad (como "me frustra" o "me apasiona") señala una autoría automatizada.</div>
+                <label><input type="checkbox" class="indicator"><span>Traduccionalidad encubierta (calcos del inglés) o lenguaje técnico prematuro.</span></label>
+                <div class="explanation"><b>Qué observar:</b> el uso de estructuras traducidas literalmente del inglés (ej: "aplicar para un trabajo").</div>
+                <label><input type="checkbox" class="indicator"><span>Discrepancia entre producción sincrónica y asincrónica.</span></label>
+                <div class="explanation"><b>Qué observar:</b> en clase presenta dificultades, pero en trabajos asincrónicos el texto es impecable.</div>
+                <label><input type="checkbox" class="indicator"><span>Ausencia de voz personal o posicionamiento.</span></label>
+                <div class="explanation"><b>Qué observar:</b> el texto es extremadamente neutral. El autor nunca se "la juega": no hay frases que expresen duda, opinión, ni "marcas de compromiso" (ej: “considero”, “me interesa”).</div>
+            </fieldset>
+            
+            <fieldset>
+                <legend>E. Aleatoriedad y sorpresa estilística</legend>
+                <label><input type="checkbox" class="indicator"><span>Falta de perplejidad o impredecibilidad.</span></label>
+                <div class="explanation"><b>Qué observar:</b> el texto es demasiado predecible, sin giros inesperados o "sorpresas" estilísticas (como una anécdota). La escritura humana tiene "perplejidad" —elecciones caprichosas de palabras— que la IA imita mal.</div>
+            </fieldset>
+            
+            <fieldset>
+                <legend>F. Procesos de producción</legend>
+                <label><input type="checkbox" class="indicator"><span>Desfase en la trazabilidad del proceso.</span></label>
+                <div class="explanation"><b>Qué observar:</b> al revisar borradores, hay "saltos" inexplicables de calidad entre versiones. O si se pregunta al estudiante por qué eligió un ejemplo, responde con vaguedad, sin poder trazar su razonamiento.</div>
+            </fieldset>
+        </form>
+    </div>
+
+    <div class="container results">
+        <h2>3. Rúbrica orientativa de puntuación</h2>
+        <h3>Puntaje total: <span id="score">0</span> / <span id="max-score-display">27</span></h3>
+        <div id="interpretation"><b>No se observan indicios significativos.</b> Probable autoría genuina.</div>
+        <div class="warning">
+            <strong>¡Atención a los falsos positivos!</strong> Recordá que algunos indicios pueden deberse a estudiantes prolijos, bilingües o que usan gestores bibliográficos.
+        </div>
+    </div>
+
+    <div class="container protocol-section" id="protocol-section">
+        <h2>4. Protocolo de verificación aplicado (solo con 6+ puntos)</h2>
+        <div class="protocol-item">
+            <label for="res1">1. Minidefensa oral (3-4 min)</label>
+            <div class="explanation"><b>Acción:</b> pedirle al estudiante: “Explicame con tus palabras qué sostienen el 2.º y 3.º párrafo, y dame un ejemplo concreto de nuestra cursada. ¿Por qué elegiste estas palabras o estructuras?”.<br><b>Qué buscar:</b> fluidez, vocabulario propio, capacidad para conectar el texto con ejemplos de clase, y para justificar sus elecciones léxicas y estructurales.<br><b>Falla típica:</b> vacilación, repetición casi literal del texto, incapacidad para ejemplificar o explicar decisiones de escritura.</div>
+            <div class="radio-group">
+                <label><input type="radio" name="res1" value="Suficiente"> Suficiente</label>
+                <label><input type="radio" name="res1" value="Insuficiente"> Insuficiente</label>
+            </div>
+        </div>
+        <div class="protocol-item">
+            <label for="res2">2. Reformulación situada (2-3 min)</label>
+            <div class="explanation"><b>Acción:</b> decir: "Reescribí este párrafo aplicándolo a [tema local del curso], usá tus propias palabras, y citá un autor del programa".<br><b>Qué buscar:</b> integración genuina de conceptos locales, cita correcta de la bibliografía, capacidad de adaptar el lenguaje a su propia "voz".<br><b>Falla típica:</b> la reformulación sigue sonando genérica, la cita es incorrecta o no hay anclaje local ni personal.</div>
+            <div class="radio-group">
+                <label><input type="radio" name="res2" value="Suficiente"> Suficiente</label>
+                <label><input type="radio" name="res2" value="Insuficiente"> Insuficiente</label>
+            </div>
+        </div>
+        <div class="protocol-item">
+            <label for="res3">3. Chequeo de referencias (2-3 min)</label>
+            <div class="explanation"><b>Acción:</b> elegir dos citas al azar y pedir: "Decime dos ideas clave del texto citado". Verificar un DOI/ISBN en vivo.<br><b>Qué buscar:</b> el estudiante demuestra haber leído y comprendido las fuentes que cita. Conoce las ideas principales más allá del título.<br><b>Falla típica:</b> no recuerda el contenido del texto, solo el autor/título. El DOI/ISBN resulta ser inexistente.</div>
+            <div class="radio-group">
+                <label><input type="radio" name="res3" value="Suficiente"> Suficiente</label>
+                <label><input type="radio" name="res3" value="Insuficiente"> Insuficiente</label>
+            </div>
+        </div>
+        <div class="protocol-item">
+            <label for="res4">4. Microtarea en vivo (2-3 min)</label>
+            <div class="explanation"><b>Acción:</b> pedir: “A partir de este párrafo, derivá una implicancia práctica para [actividad de la cátedra] y justificala con un concepto visto en clase".<br><b>Qué buscar:</b> se observa el idiolecto del estudiante y su capacidad para hacer conexiones lógicas con los materiales de la cursada.<br><b>Falla típica:</b> la respuesta es vaga, superficial o repite los comodines del texto original sin aportar un análisis nuevo.</div>
+            <div class="radio-group">
+                <label><input type="radio" name="res4" value="Suficiente"> Suficiente</label>
+                <label><input type="radio" name="res4" value="Insuficiente"> Insuficiente</label>
+            </div>
+        </div>
+        <div class="protocol-item">
+            <label for="res5">5. Exploración de la herramienta (5-7 min)</label>
+            <div class="explanation"><b>Acción:</b> pedir: “Mostrame cómo usarías una IA para generar ideas para un tema similar y cómo lo adaptarías con tu criterio”.<br><b>Qué buscar:</b> capacidad para manejar la herramienta, comprender sus limitaciones y aplicar pensamiento crítico para editar las salidas. Que entienda la IA como copiloto, no como chofer.<br><b>Falla típica:</b> no saber cómo interactuar con la IA de manera efectiva, aceptar la salida sin revisión o no poder justificar sus ediciones.</div>
+            <div class="radio-group">
+                <label><input type="radio" name="res5" value="Suficiente"> Suficiente</label>
+                <label><input type="radio" name="res5" value="Insuficiente"> Insuficiente</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2>5. Conclusión y decisiones pedagógicas</h2>
+        <label for="descripcion">Descripción breve de los criterios observados y el resultado del protocolo:</label>
+        <textarea id="descripcion" rows="4"></textarea>
+        <label for="decisiones">Decisiones pedagógicas (ej: reelaboración con guía, entrevista, solicitud de declaración de uso de IA):</label>
+        <textarea id="decisiones" rows="4"></textarea>
+    </div>
+    
+    <div class="button-group no-print">
+        <button class="btn-custom" onclick="printPDF('custom')">Generar PDF Personalizado (solo indicios marcados)</button>
+        <button class="btn-full" onclick="printPDF('full')">Generar PDF Completo (todos los indicios)</button>
+        <button class="btn-clear" onclick="clearAll()">Limpiar Ficha</button>
+    </div>
+
+    <div class="footer-contact no-print">
+        <p>¿Sugerencias? ¿Dudas? <a href="mailto:stellamariscao@gmail.com">stellamariscao@gmail.com</a></p>
+    </div>
+
+    <script>
+        const checkboxes = document.querySelectorAll('.indicator');
+        const scoreElement = document.getElementById('score');
+        const maxScoreDisplay = document.getElementById('max-score-display');
+        const interpretationElement = document.getElementById('interpretation');
+        const studentInput = document.getElementById('estudiante');
+        const printTitle = document.getElementById('print-title');
+        const dateInput = document.getElementById('fecha');
+        const protocolSection = document.getElementById('protocol-section');
+        const protocolTitle = protocolSection.querySelector('h2');
+        const originalPageTitle = document.title; // Guardar el título original de la página
+        const maxScore = checkboxes.length;
+
+        maxScoreDisplay.textContent = maxScore;
+
+        function updateScore() {
+            let score = 0;
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    score++;
+                }
+            });
+            scoreElement.textContent = score;
+
+            let interpretation = '';
+            const threshold = 6; // Umbral corregido a 6
+            protocolTitle.textContent = `4. Protocolo de verificación aplicado (solo con ${threshold}+ puntos)`;
+            
+            if (score < threshold) {
+                interpretation = '<b>No se observan indicios significativos.</b> Probable autoría genuina.';
+                protocolSection.classList.remove('active');
+            } else if (score >= threshold && score <= 13) {
+                interpretation = '<b>Se observan indicios moderados.</b> Conviene iniciar un diálogo para explorar el proceso de producción.';
+                protocolSection.classList.add('active');
+            } else if (score >= 14 && score <= 20) {
+                interpretation = '<b>Se observan indicios altos.</b> Se recomienda aplicar el protocolo de verificación para guiar el aprendizaje.';
+                protocolSection.classList.add('active');
+            } else {
+                interpretation = '<b>Se observan indicios muy altos.</b> Es fundamental aplicar el protocolo y abordar la situación pedagógicamente.';
+                protocolSection.classList.add('active');
+            }
+            interpretationElement.innerHTML = interpretation;
+        }
+
+        function updatePrintTitle() {
+            const studentName = studentInput.value.trim();
+            printTitle.textContent = studentName ? `${studentName} - Ficha de verificación` : 'Ficha de verificación de producción académica';
+        }
+
+        function printPDF(mode) {
+            const studentName = studentInput.value.trim();
+            const baseName = "Ficha de verificación";
+            
+            // Cambiar el título del documento para que se use como nombre de archivo en el PDF
+            document.title = studentName ? `${studentName} - ${baseName}` : baseName;
+
+            document.body.classList.remove('custom-pdf-mode', 'full-pdf-mode');
+            if (mode === 'custom') {
+                document.body.classList.add('custom-pdf-mode');
+            } else {
+                document.body.classList.add('full-pdf-mode');
+            }
+            window.print();
+        }
+
+        function clearAll() {
+            if (confirm('¿Estás seguro de que querés limpiar toda la ficha?')) {
+                document.getElementById('ia-checklist').reset();
+                ['estudiante', 'asignatura', 'profesor', 'comision', 'trabajo', 'descripcion', 'decisiones'].forEach(id => document.getElementById(id).value = '');
+                document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+                dateInput.value = new Date().toISOString().split('T')[0];
+                updateScore();
+                updatePrintTitle();
+            }
+        }
+
+        // Evento para restaurar el título original después de imprimir o cancelar
+        window.addEventListener('afterprint', () => {
+            document.title = originalPageTitle;
+        });
+
+        checkboxes.forEach(checkbox => checkbox.addEventListener('change', updateScore));
+        studentInput.addEventListener('input', updatePrintTitle);
+        
+        dateInput.value = new Date().toISOString().split('T')[0];
+        updateScore();
+        updatePrintTitle();
+    </script>
+
+</body>
+</html>
