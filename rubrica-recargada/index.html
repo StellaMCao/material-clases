@@ -449,27 +449,60 @@
         function generateExportHTML(isForPDF = false) {
             const totalMaxPoints = isQualifiable ? criteria.reduce((sum, c) => sum + c.maxPoints, 0) : 0;
             const maxLevelValue = isQualifiable ? Math.max(0, ...levels.map(l => l.value)) : 0;
+            const todayStr = new Date().toLocaleDateString('es-AR');
 
             let html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Rúbrica: ${workInput.value}</title><style>
                 body { font-family: Arial, sans-serif; margin: 20px; } .container { max-width: 1000px; margin: auto; }
                 .header { background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-                .info { display: flex; justify-content: space-around; }
+                .info { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+                .student-info { padding: 15px; background: #f2f2f2; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+                .field-item { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 260px; }
+                .field-item input { flex: 1; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; background: #fff; }
                 .rubric-table { width: 100%; border-collapse: collapse; margin-top: 0; }
                 .rubric-table th, .rubric-table td { border: 1px solid #ddd; padding: 8px; text-align: left; vertical-align: top; }
                 .rubric-table th { background-color: #3498db; color: white; text-align: center; }
-                .criterion-cell { font-weight: bold; background-color: #f2f2f2; }
-                .descriptor-cell label { display: block; cursor: pointer; } .descriptor-cell input { margin-right: 5px; }
+                .criterion-cell { font-weight: bold; background-color: #f2f2f2; width: 22%; }
+                .descriptor-cell label { display: block; cursor: pointer; height: 100%; } 
+                .descriptor-cell input { margin-right: 5px; }
+                .descriptor-cell.selected { background-color: #e8f4fc; outline: 2px solid #3498db; }
                 .score-value { color: #27ae60; font-weight: bold; font-size: 0.9em; margin-top: 5px; }
                 .summary, .observations-box { margin-top: 20px; padding: 15px; background: #f8f9fa; border: 1px solid #eee; border-radius: 8px; }
-                .print-btn { display: block; margin: 20px auto; padding: 10px 20px; cursor: pointer; }
-                @media print { .print-btn, input[type=radio] { display: none; } .descriptor-cell label { cursor: default; } }
+                .instructions-section { margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #e0e0e0; }
+                .instructions-section p { margin-top: 4px; color: #444; }
+                .comments-section textarea { width: 100%; min-height: 90px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 0.95rem; box-sizing: border-box; resize: vertical; margin-top: 8px; }
+                .print-btn { display: block; margin: 20px auto; padding: 12px 24px; background-color: #27ae60; color: white; border: none; border-radius: 5px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+                .print-btn:hover { background-color: #219653; }
+                @media print { 
+                    .print-btn { display: none; } 
+                    body { margin: 0; padding: 10px; }
+                    .container { max-width: 100%; box-shadow: none; }
+                    .student-info { background: transparent; padding: 10px 0; }
+                    .field-item input { border: none; border-bottom: 1px solid #333; border-radius: 0; background: transparent; padding: 2px 4px; }
+                    .comments-section textarea { border: 1px solid #999; background: transparent; resize: none; }
+                    .descriptor-cell label { cursor: default; }
+                    .descriptor-cell.selected { background-color: #e8f4fc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                }
             </style></head><body><div class="container">
                 <div class="header"><h1>Rúbrica de evaluación</h1><div class="info">
-                    <div><strong>Docente:</strong> ${teacherNameInput.value}</div><div><strong>Materia:</strong> ${subjectInput.value}</div><div><strong>Trabajo:</strong> ${workInput.value}</div>
+                    <div><strong>Docente:</strong> <span ${!isForPDF ? 'contenteditable="true"' : ''}>${teacherNameInput.value || '-'}</span></div>
+                    <div><strong>Materia:</strong> <span ${!isForPDF ? 'contenteditable="true"' : ''}>${subjectInput.value || '-'}</span></div>
+                    <div><strong>Trabajo:</strong> <span ${!isForPDF ? 'contenteditable="true"' : ''}>${workInput.value || '-'}</span></div>
                 </div></div>
-                <div class="student-info" style="padding: 15px; background: #f2f2f2;">
-                    <strong>Estudiante:</strong> _________________________ &nbsp;&nbsp;&nbsp; <strong>Fecha:</strong> _________________________
-                </div>
+                ${isForPDF ? `
+                <div class="student-info" style="display: flex; justify-content: space-between;">
+                    <div><strong>Estudiante:</strong> ____________________________________</div>
+                    <div><strong>Fecha:</strong> ____________________</div>
+                </div>` : `
+                <div class="student-info">
+                    <div class="field-item">
+                        <label for="student-name"><strong>Estudiante:</strong></label>
+                        <input type="text" id="student-name" placeholder="Nombre y apellido del estudiante">
+                    </div>
+                    <div class="field-item">
+                        <label for="eval-date"><strong>Fecha:</strong></label>
+                        <input type="text" id="eval-date" placeholder="DD/MM/AAAA" value="${todayStr}">
+                    </div>
+                </div>`}
                 <table class="rubric-table"><thead><tr><th>Criterios</th>${levels.map(l => `<th>${l.name}${isQualifiable ? ` (${l.value} pts)`:''}</th>`).join('')}</tr></thead><tbody>`;
             
             criteria.forEach(c => {
@@ -493,10 +526,31 @@
             if (isQualifiable) {
                 html += `<div class="summary"><strong>Puntaje total:</strong> <span id="total-score">0</span> / ${totalMaxPoints}</div>`;
             }
-            html += `<div class="observations-box"><h3>Observaciones:</h3><p>${observationsInput.value.replace(/\n/g, '<br>')}</p></div>`;
+            html += `<div class="observations-box">
+                ${observationsInput.value.trim() ? `<div class="instructions-section"><strong>Indicaciones generales:</strong><p>${observationsInput.value.replace(/\n/g, '<br>')}</p></div>` : ''}
+                <div class="comments-section">
+                    <h3>Comentarios y observaciones:</h3>
+                    ${isForPDF 
+                        ? `<div style="min-height: 80px; border-bottom: 1px dashed #ccc; margin-top: 10px;"></div>`
+                        : `<textarea id="student-comments" placeholder="Escriba aquí los comentarios, fortalezas y sugerencias para el estudiante..."></textarea>`
+                    }
+                </div>
+            </div>`;
             if (!isForPDF) {
                 html += `<button class="print-btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
-                    <script> function calculateScore() { let total = 0; document.querySelectorAll('input[type=radio]:checked').forEach(r => total += parseFloat(r.dataset.score)); document.getElementById('total-score').innerText = total.toFixed(1); } </scr` + `ipt>`;
+                    <script> 
+                        function calculateScore() { 
+                            let total = 0; 
+                            document.querySelectorAll('.descriptor-cell').forEach(td => td.classList.remove('selected'));
+                            document.querySelectorAll('input[type=radio]:checked').forEach(r => {
+                                total += parseFloat(r.dataset.score);
+                                const cell = r.closest('.descriptor-cell');
+                                if (cell) cell.classList.add('selected');
+                            }); 
+                            const totalEl = document.getElementById('total-score');
+                            if (totalEl) totalEl.innerText = total.toFixed(1); 
+                        } 
+                    </scr` + `ipt>`;
             }
             html += `</div></body></html>`;
             return html;
