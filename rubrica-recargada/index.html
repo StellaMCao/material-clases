@@ -308,9 +308,20 @@
         // --- Lógica Principal ---
         const getUniqueId = (() => { let count = 0; return () => `id-${Date.now()}-${count++}`; })();
         
+        function saveToLocalStorage() {
+            try {
+                const data = {
+                    teacher: teacherNameInput.value, subject: subjectInput.value, work: workInput.value,
+                    observations: observationsInput.value, isQualifiable, levels, criteria, descriptors
+                };
+                localStorage.setItem('rubrica_recargada_autosave', JSON.stringify(data));
+            } catch(e) {}
+        }
+
         function renderAll() {
             renderLists();
             generatePreview();
+            saveToLocalStorage();
         }
 
         function toggleScoreVisibility() {
@@ -426,6 +437,19 @@
             alert("¡Plantilla guardada! La descarga debería comenzar.");
         }
 
+        function applyRubricData(data) {
+            teacherNameInput.value = data.teacher || '';
+            subjectInput.value = data.subject || '';
+            workInput.value = data.work || '';
+            observationsInput.value = data.observations || '';
+            document.getElementById(data.isQualifiable ? 'qualify-yes' : 'qualify-no').checked = true;
+            levels = data.levels || [];
+            criteria = data.criteria || [];
+            descriptors = data.descriptors || {};
+            toggleScoreVisibility();
+            saveToLocalStorage();
+        }
+
         function loadRubric(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -433,13 +457,7 @@
             reader.onload = e => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    teacherNameInput.value = data.teacher || '';
-                    subjectInput.value = data.subject || '';
-                    workInput.value = data.work || '';
-                    observationsInput.value = data.observations || '';
-                    document.getElementById(data.isQualifiable ? 'qualify-yes' : 'qualify-no').checked = true;
-                    levels = data.levels || []; criteria = data.criteria || []; descriptors = data.descriptors || {};
-                    toggleScoreVisibility();
+                    applyRubricData(data);
                 } catch (error) { alert("Error al leer el archivo. Asegúrate de que es un archivo de plantilla válido."); }
             };
             reader.readAsText(file);
@@ -575,52 +593,72 @@
 
         // --- Carga Inicial y Eventos ---
         function loadExampleData() {
-            teacherNameInput.value = "Ana Martínez";
-            subjectInput.value = "Lengua y literatura";
-            workInput.value = "Análisis de cuento corto";
-            observationsInput.value = "Evaluar la capacidad de análisis, la claridad expositiva y el uso de vocabulario técnico.";
+            teacherNameInput.value = "Prof. Stella Maris Cao";
+            subjectInput.value = "Taller de Evaluación (Profesorado en Psicología)";
+            workInput.value = "Propuesta de evaluación para el Nivel Medio";
+            observationsInput.value = "Se evalúa la articulación pedagógica entre contenidos de psicología y nivel secundario, la precisión conceptual en la tríada medio-técnica-instrumento (Hamodi et al., 2015), la presencia de un enfoque formativo de retroalimentación y la calidad técnica del instrumento diseñado.";
             
             levels = []; criteria = []; descriptors = {};
             
-            [{name: "Excelente", value: 4}, {name: "Bueno", value: 3}, {name: "Aceptable", value: 2}, {name: "Insuficiente", value: 1}]
+            [{name: "Excelente", value: 4}, {name: "Bueno", value: 3}, {name: "Aceptable", value: 2}, {name: "A desarrollar", value: 0}]
                 .forEach(l => levels.push({ ...l, id: getUniqueId() }));
 
-            [{name: "Comprensión del tema", maxPoints: 30}, {name: "Desarrollo de personajes", maxPoints: 25}, {name: "Uso del lenguaje y estilo", maxPoints: 25}, {name: "Estructura y coherencia", maxPoints: 20}]
-                .forEach(c => criteria.push({ ...c, id: getUniqueId() }));
+            [
+                {name: "Coherencia didáctica y contextualización en Nivel Medio", maxPoints: 25},
+                {name: "Articulación de la tríada: Medio, Técnica e Instrumento", maxPoints: 30},
+                {name: "Enfoque de evaluación formativa y retroalimentación", maxPoints: 25},
+                {name: "Diseño, claridad y comunicabilidad del instrumento", maxPoints: 20}
+            ].forEach(c => criteria.push({ ...c, id: getUniqueId() }));
             
             const [c0, c1, c2, c3] = criteria; const [l0, l1, l2, l3] = levels;
-            descriptors[`${c0.id}-${l0.id}`] = "Identifica el tema central y secundarios, analizando cómo se desarrollan con múltiples ejemplos precisos del texto.";
-            descriptors[`${c0.id}-${l1.id}`] = "Identifica correctamente el tema central y lo explica con ejemplos relevantes.";
-            descriptors[`${c0.id}-${l2.id}`] = "Identifica el tema de forma superficial, con apoyo textual limitado.";
-            descriptors[`${c0.id}-${l3.id}`] = "No logra identificar el tema central o lo malinterpreta.";
+            descriptors[`${c0.id}-${l0.id}`] = "Articula de manera sólida y creativa los contenidos de psicología con propósitos de aprendizaje significativos, situados en las características cognitivas, afectivas y socioculturales de los estudiantes del nivel medio.";
+            descriptors[`${c0.id}-${l1.id}`] = "Plantea contenidos de psicología pertinentes para el nivel secundario y define propósitos claros, con una contextualización adecuada al grupo destinatario.";
+            descriptors[`${c0.id}-${l2.id}`] = "Los contenidos o propósitos son adecuados pero presentan un tratamiento descontextualizado o con escasa adecuación a las particularidades del nivel secundario.";
+            descriptors[`${c0.id}-${l3.id}`] = "Incoherencia entre contenidos y objetivos; la propuesta resulta inapropiada para el nivel medio (excesivamente academicista, infantilizada o desajustada).";
 
-            descriptors[`${c1.id}-${l0.id}`] = "Analiza la complejidad y evolución de los personajes principales, usando evidencia textual para sostener sus afirmaciones.";
-            descriptors[`${c1.id}-${l1.id}`] = "Describe a los personajes principales y sus roles en la historia de manera correcta.";
-            descriptors[`${c1.id}-${l2.id}`] = "Describe a los personajes de forma básica, sin profundizar en sus motivaciones.";
-            descriptors[`${c1.id}-${l3.id}`] = "Confunde los personajes o no logra describir sus características básicas.";
+            descriptors[`${c1.id}-${l0.id}`] = "Distingue con impecable precisión conceptual y operativa el medio (evidencia), la técnica (procedimiento) y el instrumento (registro) según Hamodi et al. (2015), logrando una alineación metodológica ejemplar con el aprendizaje evaluado.";
+            descriptors[`${c1.id}-${l1.id}`] = "Diferencia y articula correctamente los tres componentes de la tríada, guardando coherencia con los saberes y desempeños que se busca evaluar.";
+            descriptors[`${c1.id}-${l2.id}`] = "Confunde parcialmente medio, técnica o instrumento, o la relación entre la evidencia solicitada y la técnica de análisis elegida presenta debilidades metodológicas.";
+            descriptors[`${c1.id}-${l3.id}`] = "Inconsistencia grave en la tríada conceptual; confunde medios con instrumentos o plantea técnicas inconexas que no permiten relevar los aprendizajes pretendidos.";
 
-            descriptors[`${c2.id}-${l0.id}`] = "Analiza cómo el autor utiliza figuras retóricas y un estilo particular para crear un efecto específico en el lector.";
-            descriptors[`${c2.id}-${l1.id}`] = "Identifica el tono general del texto y algunas características del estilo del autor.";
-            descriptors[`${c2.id}-${l2.id}`] = "Comenta sobre el lenguaje de forma muy general, sin un análisis detallado.";
-            descriptors[`${c2.id}-${l3.id}`] = "No realiza comentarios sobre el uso del lenguaje o el estilo del autor.";
+            descriptors[`${c2.id}-${l0.id}`] = "Diseña dispositivos potentes de evaluación formativa (retroalimentación dialógica, autoevaluación y/o coevaluación) que promueven activamente la metacognición y el aprendizaje autorregulado en los alumnos.";
+            descriptors[`${c2.id}-${l1.id}`] = "Integra momentos claros de retroalimentación formativa durante el proceso, favoreciendo la toma de conciencia del propio aprendizaje más allá de la mera calificación.";
+            descriptors[`${c2.id}-${l2.id}`] = "El dispositivo incluye instancias formativas de modo superficial o accesorio, manteniendo un marcado predominio de la función sumativa/calificatoria.";
+            descriptors[`${c2.id}-${l3.id}`] = "El enfoque es exclusivamente sumativo y calificatorio; no contempla retroalimentación ni instancias de participación de los estudiantes en su propio proceso evaluativo.";
             
-            descriptors[`${c3.id}-${l0.id}`] = "El análisis presenta una introducción, desarrollo y conclusión claros y bien conectados. Las ideas fluyen lógicamente.";
-            descriptors[`${c3.id}-${l1.id}`] = "El texto está bien organizado en su mayor parte, con una estructura lógica evidente.";
-            descriptors[`${c3.id}-${l2.id}`] = "La estructura es algo confusa y la conexión entre las ideas no siempre es clara.";
-            descriptors[`${c3.id}-${l3.id}`] = "El texto carece de una estructura clara, resultando desorganizado y difícil de seguir.";
+            descriptors[`${c3.id}-${l0.id}`] = "El instrumento (rúbrica/matriz) presenta criterios transparentes, cualitativamente diferenciados, libres de ambigüedades y redactados en un lenguaje accesible y pedagógicamente orientador para los estudiantes secundarios.";
+            descriptors[`${c3.id}-${l1.id}`] = "El instrumento define criterios observables y descriptores claros y bien graduados, comprensibles para los alumnos de nivel secundario.";
+            descriptors[`${c3.id}-${l2.id}`] = "Los criterios o niveles son algo ambiguos, se apoyan en adverbios poco operativos (mucho/poco) o la escala resulta confusa para los estudiantes.";
+            descriptors[`${c3.id}-${l3.id}`] = "Instrumento defectuoso, con criterios vagos, superpuestos o subjetivos que no permiten una evaluación transparente ni orientadora.";
             
             renderAll();
         }
 
-        document.addEventListener('DOMContentLoaded', loadExampleData);
-        document.querySelectorAll('input[name="qualify"]').forEach(r => r.addEventListener('change', toggleScoreVisibility));
-        [teacherNameInput, subjectInput, workInput].forEach(el => el.addEventListener('input', generatePreview));
+        function initApp() {
+            const saved = localStorage.getItem('rubrica_recargada_autosave');
+            if (saved) {
+                try {
+                    applyRubricData(JSON.parse(saved));
+                    return;
+                } catch (e) {}
+            }
+            loadExampleData();
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+        document.querySelectorAll('input[name="qualify"]').forEach(r => r.addEventListener('change', () => { toggleScoreVisibility(); saveToLocalStorage(); }));
+        [teacherNameInput, subjectInput, workInput, observationsInput].forEach(el => el.addEventListener('input', () => { generatePreview(); saveToLocalStorage(); }));
         document.getElementById('add-level').addEventListener('click', handleAddLevel);
         document.getElementById('add-criterion').addEventListener('click', handleAddCriterion);
         document.getElementById('save-btn').addEventListener('click', saveRubric);
         document.getElementById('load-btn').addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', loadRubric);
-        document.getElementById('reset-btn').addEventListener('click', () => { if (confirm("¿Seguro? Se reiniciará al ejemplo inicial.")) loadExampleData(); });
+        document.getElementById('reset-btn').addEventListener('click', () => { 
+            if (confirm("¿Seguro? Se reiniciará a la plantilla predeterminada del Taller de Evaluación.")) {
+                localStorage.removeItem('rubrica_recargada_autosave');
+                loadExampleData(); 
+            }
+        });
         document.getElementById('export-html').addEventListener('click', () => exportToFile(generateExportHTML(false), 'rubrica-interactiva.html'));
         document.getElementById('export-pdf').addEventListener('click', () => exportForPrint(generateExportHTML(true)));
 
