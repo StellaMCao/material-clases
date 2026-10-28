@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Guía de lectura de Repensando la investigación-acción-participativa</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 40px; 
+            background-color: #f9f9f9; 
+            color: #333; 
+            line-height: 1.6; 
+        }
+        h1 { 
+            color: #2c3e50; 
+            text-align: center; 
+            border-bottom: 2px solid #3498db; 
+            padding-bottom: 10px; 
+        }
+        p { margin-bottom: 20px; }
+        details { 
+            margin-bottom: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            background-color: #fff; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+        summary { 
+            font-weight: bold; 
+            cursor: pointer; 
+            padding: 15px; 
+            background-color: #ecf0f1; 
+            color: #2c3e50; 
+            transition: background-color 0.3s; 
+        }
+        summary:hover { background-color: #d6eaff; }
+        details[open] summary { background-color: #3498db; color: #fff; }
+        .relevancia { 
+            font-weight: bold; 
+            background-color: #e8f4fd; 
+            padding: 15px; 
+            margin: 15px; 
+            border-left: 5px solid #3498db; 
+            border-radius: 4px; 
+        }
+        .relevancia p { font-weight: normal; }
+        .term { 
+            color: #2980b9; 
+            text-decoration: underline; 
+            cursor: pointer; 
+        }
+        .term:hover { color: #e74c3c; }
+        /* Modal styles */
+        #modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+            padding-top: 60px; 
+        }
+        #modal-content { 
+            background-color: #fff; 
+            margin: 5% auto; 
+            padding: 20px; 
+            border: 1px solid #888; 
+            width: 80%; 
+            max-width: 600px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+        }
+        #close { 
+            color: #aaa; 
+            float: right; 
+            font-size: 28px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+        #close:hover { color: #000; }
+        #modal-title { color: #2c3e50; }
+        #modal-definition { font-style: italic; }
+        footer { 
+            text-align: center; 
+            font-size: 0.8em; 
+            color: #777; 
+            margin-top: 40px; 
+            border-top: 1px solid #ddd; 
+            padding-top: 10px; 
+        }
+    </style>
+    <script>
+        var definitions = {
+            "IAP (Investigación-Acción-Participativa)": "Propuesta metodológica que relanza problemas importantes de las ciencias sociales. Es una metodología útil en su aplicación a escala micro-social (barrio, comunidad rural).",
+            "Investigación (IAP)": "Procedimiento reflexivo, sistemático, controlado y crítico que tiene por finalidad estudiar algún aspecto de la realidad, con una expresa finalidad práctica.",
+            "Acción (IAP)": "La forma de realizar el estudio es ya un modo de intervención (organización, movilización, concientización), y el propósito de la investigación está orientado a la acción y la transformación.",
+            "Participación (IAP)": "Es una actividad en cuyo proceso están involucrados tanto los investigadores como la gente destinataria, que ya no son objetos, sino sujetos activos que contribuyen a conocer y transformar la realidad. Contribuye a la democratización o socialización del saber y a crear poder popular.",
+            "Finalidad (de la IAP)": "La transformación de la situación-problema que afecta a la gente involucrada.",
+            "Pueblo (Actuante y Pensante)": "Principal agente de cambio social, ya que el cambio será más viable si la gente tiene mejor comprensión de su situación y posibilidades.",
+            "Compromiso": "Exigencia de un compromiso efectivo y declarado del investigador con la gente, lo que supone una no neutralidad valorativa, ideológica y política.",
+            "Secuestro de Información y Conocimientos": "Situación criticada en los métodos tradicionales donde la información y el conocimiento quedan en manos de expertos y técnicos, obstaculizando la participación efectiva de la gente.",
+            "«Encuestitis»": "Grave afección metodológica criticada por dar una importancia relevante y casi excluyente al procedimiento de la encuesta. Produce estudios que capturan la realidad de manera estática y otorgan igual validez a todas las respuestas, sin considerar quién responde.",
+            "Estudiar «Tanto Cuanto»": "Regla metodológica que indica que se debe investigar «tanto cuanto» se necesita para la acción, y no más, para evitar estudios inútiles o posponer la acción.",
+            "Tecnologías de Actuación (Transferencia de)": "Proceso necesario para transferir conocimientos y habilidades a la gente para que puedan participar realmente y con eficacia en la toma de decisiones. La mejor forma de transferencia es a través de la práctica (aprender haciendo) en un proceso constante de acción-reflexión.",
+            "Acción-Reflexión-Acción": "Esquema de control operacional y evaluación continua que sirve para corregir errores, mejorar la actuación y evitar el activismo.",
+            "Pensamiento Simbólico/Mitológico/Mágico": "Modo de conocimiento con predominio en los sectores populares. Se caracteriza por lo concreto, analógico, la intuición global y la captación de significaciones existenciales (comprensión). Es cercano a la vida y cargado de símbolos, mitos y magia.",
+            "Pensamiento Empírico/Lógico/Racional": "Modo de conocimiento con predominio en los investigadores. Se caracteriza por lo abstracto, lógico, analítico y la búsqueda de la pertinencia lógico-empírica (explicación).",
+            "Lo Connotativo": "Tipo de lectura de la realidad que predomina en los sectores populares. Incluye una carga emocional y valores agregados que son sugeridos más que afirmados.",
+            "Lo Denotativo": "Tipo de lectura de la realidad propia de los investigadores. Busca el sentido explícito, objetivo y procura excluir toda ambigüedad."
+        };
+
+        function showDefinition(term) {
+            document.getElementById('modal-title').innerText = term;
+            document.getElementById('modal-definition').innerText = definitions[term] || 'Definición no encontrada.';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <h1>Guía de lectura de <i>Repensando la investigación-acción-participativa</i></h1>
+    <p style="text-align: center; font-weight: bold;">Ezequiel Ander-Egg</p>
+
+    <details>
+        <summary>Sobre el libro</summary>
+        <div>
+            <p>El libro de Ezequiel Ander-Egg, <i>Repensando la investigación-acción-participativa: comentarios, críticas y sugerencias</i>, es el número 20 de la colección "Documentos de Bienestar Social". Publicado en 1990, el texto se centra en analizar la metodología de la <span class="term" onclick="showDefinition('IAP (Investigación-Acción-Participativa)')">Investigación-Acción-Participativa</span> (IAP), ofreciendo una visión crítica y práctica. El contexto del libro se enmarca en la preocupación por el desarrollo de políticas sociales que respondan a los problemas del ámbito social, buscando el consenso entre ciudadanos, Administración, Asociaciones e Instituciones. Ander-Egg dirige su obra a asegurar que las ciencias sociales sean verdaderos instrumentos de liberación humana y sirvan para mejorar la situación de los sectores populares y grupos marginados. El propósito de esta guía es ofrecer una lectura que vincule cada capítulo con los fundamentos de un Preproyecto Comunitario (PPC), concebido como un dispositivo cíclico de práctica → reflexión → praxis transformadora.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 1. Breve referencia a la aparición y desarrollo de la IAP como propuesta metodológica</summary>
+        <div>
+            <p>Este capítulo se divide en dos secciones principales. La primera aborda las circunstancias históricas, señalando que la <span class="term" onclick="showDefinition('IAP (Investigación-Acción-Participativa)')">IAP</span> surge en un contexto donde las ciencias sociales abandonan la neutralidad y asumen una opción de clase y un compromiso con la acción. La IAP (o sus predecesoras como la acción comunitaria y la educación popular) surge desde mediados de los años sesenta con el propósito de promover procesos participativos. Ya en los años setenta, la meta se aclara: participar para transformar y ser protagonista del cambio social. La segunda sección se centra en la crítica de Ander-Egg a los métodos tradicionales de estudios y diagnósticos sociales. Las críticas principales giran en torno a cuatro cuestiones: 1. Complicaciones metodológicas innecesarias: La "pasión desmedida por los problemas del método" lleva al "cientificismo" y la "metodologitis", resultando en estudios que consumen mucho tiempo y recursos, pero son inútiles para resolver los problemas sociales. 2. La <span class="term" onclick="showDefinition('«Encuestitis»')">«encuestitis»</span> como afección metodológica: Se critica la importancia relevante y casi excluyente dada al procedimiento de la encuesta, la cual es limitada ya que otorga igual validez a todas las respuestas y captura la realidad de manera estática. 3. El posponer el momento de la acción: Es criticable postergar la acción para realizar estudios "serios," ya que se debe investigar "tanto cuanto" se necesita para actuar. La acción misma ayuda a conocer los problemas. 4. El <span class="term" onclick="showDefinition('Secuestro de Información y Conocimientos')">secuestro de información y conocimientos</span> en manos de expertos: Se denuncia que los conocimientos quedan en manos de expertos y técnicos, dificultando la participación efectiva de la gente involucrada en los proyectos.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 1: Diagnóstico vivo).</strong><p> Este capítulo orienta a comprender que la investigación debe complementarse con una perspectiva participativa, articulando dimensiones psicosociales e institucionales para captar procesos internos a partir de lo externo. En un PPC, este enfoque es esencial para un diagnóstico vivo y participativo.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 2. Características y elementos constitutivos de la investigación-acción-participativa</summary>
+        <div>
+            <p>Este capítulo desarrolla la naturaleza de la <span class="term" onclick="showDefinition('IAP (Investigación-Acción-Participativa)')">IAP</span> a través de sus componentes y características. Elementos Constitutivos: 1. <span class="term" onclick="showDefinition('Investigación (IAP)')">Investigación</span>: Es un procedimiento reflexivo y sistemático para adquirir conocimiento más profundo con una expresa finalidad práctica. 2. <span class="term" onclick="showDefinition('Acción (IAP)')">Acción</span>: La forma misma de realizar el estudio es ya un modo de intervención (organización, movilización, concientización). El propósito de la investigación está orientado a la acción y la transformación. 3. <span class="term" onclick="showDefinition('Participación (IAP)')">Participación</span>: Involucra tanto a investigadores como a la gente destinataria, quienes dejan de ser objetos de investigación para convertirse en sujetos activos que contribuyen a conocer y transformar la realidad. La participación contribuye a la democratización o socialización del saber y a crear poder popular. Características de la IAP: Objetivo del estudio: Se decide a partir de lo que interesa al colectivo o grupo, centrándose en problemas de la vida real. <span class="term" onclick="showDefinition('Finalidad (de la IAP)')">Finalidad</span>: La transformación de la situación-problema que afecta a la gente. Interacción/Combinación: Existe una estrecha relación entre la investigación y la práctica. Agente de Cambio: El <span class="term" onclick="showDefinition('Pueblo (Actuante y Pensante)')">pueblo (actuante y pensante)</span> es el principal agente de cambio social. Relaciones: Busca la superación de toda forma de relaciones dicotómicas jerarquizadas entre investigadores y la gente. <span class="term" onclick="showDefinition('Compromiso')">Compromiso</span>: Exige un compromiso efectivo y declarado del investigador con la gente, implicando una no neutralidad valorativa, ideológica y política. Escala de Aplicación: En su estado actual, solo se puede aplicar a una escala micro-social (barrio, comunidad rural) para que la participación sea efectiva. Finalidad Política: Presupone un proyecto político que apunta a una sociedad democrática y participativa, o más precisamente, autogestionaria. Transferencia de Tecnologías de Actuación: La IAP aborda el "secuestro de información" mediante la <span class="term" onclick="showDefinition('Tecnologías de Actuación (Transferencia de)')">transferencia de conocimientos y habilidades</span> (tecnologías de actuación) a la gente. Esto es vital para que la participación sea efectiva. La mejor manera de realizar esta transferencia es a través de la práctica (aprender haciendo), como parte de un proceso constante de acción-reflexión.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Lógica Cíclica).</strong><p> Esta idea de la espiral dialéctica en la IAP constituye el núcleo teórico de la lógica del PPC: un proceso de ida y vuelta entre la práctica, la reflexión y la praxis transformadora. El aprendizaje comunitario se concibe como un movimiento que integra experiencia y reelaboración crítica.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 3. Achaques y manías de la IAP</summary>
+        <div>
+            <p>Ander-Egg emplea este capítulo para realizar una delimitación del campo real de la <span class="term" onclick="showDefinition('IAP (Investigación-Acción-Participativa)')">IAP</span>, criticando la tendencia a absolutizar su importancia y significado. 1. La IAP no es una nueva tarea de los científicos, ni una forma de suplir las deficiencias de la democracia: Es desmesurado afirmar que es la única tarea de los científicos latinoamericanos o que puede suplantar las fallidas instituciones de la democracia representativa tradicional, ya que su incidencia es a escala micro-social. 2. Ni la IAP es ciencia, ni la comunidad crea teoría: Se critica el "cientifismo" de quienes sobrevaloran la ciencia como única fuente de validez. La IAP no es ciencia ni agota la metodología de investigación, sino que es una herramienta que proporciona mejores conocimientos. La comunidad no crea teorías formalmente. 3. El materialismo dialéctico no es el único sustento metodológico de la IAP: La dialéctica es un modo de razonar, pero no un conjunto de procedimientos operativos. Confundir la dialéctica con el método propio de la IAP se considera una simplificación y un "dogmatismo de la certeza teórica absoluta".</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 1: Contexto y foco).</strong><p> Esta perspectiva permite superar dicotomías, ofreciendo una herramienta de análisis integral. El enfoque en limitaciones de la IAP es útil para contextualizar y enfocar el PPC en escalas micro-sociales.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 4. Fases del proceso de investigación/acción/participativa</summary>
+        <div>
+            <p>Este capítulo detalla la secuencia operativa para la aplicación de la <span class="term" onclick="showDefinition('IAP (Investigación-Acción-Participativa)')">IAP</span>, donde la comunidad es el principal e insustituible recurso metodológico. Las etapas principales incluyen: Constitución del equipo: No se inicia con una decisión del equipo, sino con tareas previas que involucran a individuos y organizaciones. El equipo se forma con agentes externos (aportan teoría y metodología) y la gente (aporta vivencias y experiencias). Elaboración del diseño de la investigación: Consiste en establecer pasos y tareas. El diseño es visto como un proceso dialéctico o "diálogo a través del tiempo," no como un diseño estático. El punto de partida es la existencia de una situación-problema. Proceso de investigación propiamente dicho (13 pasos): 1. Identificación de necesidades básicas, problemas y centros de interés: Determinado por aquello que es vivido y sentido por la gente. 2. Formulación del problema: Definir qué y para qué estudiar, delimitando el campo de estudio y aplicando la regla de estudiar <span class="term" onclick="showDefinition('Estudiar «Tanto Cuanto»')">«tanto cuanto»</span> se necesita para actuar. 3. Técnicas o procedimientos a utilizar: Se utilizan técnicas flexibles (entrevistas focalizadas, observación) y se requiere capacitación para transferir habilidades a la gente. 4. Trabajo de campo: recolección de datos. 5. Ordenación y clasificación de la información. 6. Análisis e interpretación de los datos: Requiere la unidad dialéctica de análisis y síntesis, contextualizando los problemas puntuales dentro de la totalidad social. 7. Redacción del informe preliminar: Debe ser claro y sencillo, y su objetivo es ser sometido a la crítica y discusión de la misma gente. 8. Socialización de la información. Discusión de los resultados: Difusión de los hallazgos a toda la población involucrada. 9. Elaboración del diagnóstico: Culmina la fase de estudio, estableciendo referencias objetivas para la programación, incluyendo la evaluación de la situación-problema y los recursos disponibles. 10. Elaboración del programa o proyecto: Se define «qué se va a hacer», estableciendo prioridades y escogiendo alternativas. 11. Formación de los equipos y/o grupos de trabajo: Asignación de responsabilidades. 12. Desarrollo de las actividades: puesta en marcha de proyectos y/o programas: La fase decisiva de acción. 13. Control operacional realizado mediante la <span class="term" onclick="showDefinition('Acción-Reflexión-Acción')">acción-reflexión-acción</span>: Es la evaluación continua del proceso. Se utiliza el esquema acción-reflexión-acción para corregir errores, mejorar la actuación y evitar el activismo.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 4: Monitoreo y ajuste).</strong><p> El reconocimiento del proceso participativo legitima la necesidad de un diagnóstico vivo y de un monitoreo constante de las acciones comunitarias. No hay intervención sin efecto: toda acción modifica el campo social y debe ser evaluada desde esa misma dinámica.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Capítulo 5. Cómo integrar el modo de conocer de los investigadores, con el modo de conocer de los sectores populares</summary>
+        <div>
+            <p>Este capítulo final plantea un problema central: la existencia de dos modos de conocimiento predominantes: el <span class="term" onclick="showDefinition('Pensamiento Empírico/Lógico/Racional')">empírico/lógico/racional</span> (investigadores) y el <span class="term" onclick="showDefinition('Pensamiento Simbólico/Mitológico/Mágico')">simbólico/mitológico/mágico</span> (sectores populares). 1. Comprensión y explicación: Los investigadores tienden a la explicación (abstracta, lógica, objetiva), mientras que la gente del pueblo tiende a la comprensión (concreta, analógica, captación de significaciones existenciales). La IAP requiere que estos dos modos de inteligibilidad se unan dialógicamente. 2. El pensamiento simbólico/mitológico/mágico, y el pensamiento empírico/lógico/racional: El pensamiento popular, cargado de símbolos y mitos, es cercano a la vida y ayuda a las personas a superar las contradicciones y dificultades cotidianas. El investigador debe adquirir la capacidad de integrar dialógicamente ambos mundos, superando la visión de que el conocimiento de la gente es "inmaduro o infantil". 3. <span class="term" onclick="showDefinition('Lo Connotativo')">Lo connotativo</span> y <span class="term" onclick="showDefinition('Lo Denotativo')">lo denotativo</span>: Los sectores populares hacen una lectura más connotativa de la realidad (carga emocional, valores agregados), mientras que los investigadores tienden a la denotativa (sentido explícito, objetivo). La lectura connotativa no debe ser rechazada, ya que permite comprender el compromiso emocional de la gente. Ander-Egg concluye que el desafío es evitar el activismo intelectualista, pero también la demagogia populista.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Validación y objetivos).</strong><p> El proceso del PPC comparte esa lógica: convertir la necesidad en acción implica aprender a reconocer las propias limitaciones y transformarlas colectivamente. La integración de modos de conocimiento apunta a restablecer canales de comunicación para que el grupo pueda pensarse y transformarse.</p></div>
+        </div>
+    </details>
+
+    <!-- Modal -->
+    <div id="modal">
+        <div id="modal-content">
+            <span id="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-definition"></p>
+        </div>
+    </div>
+
+    <footer>Stella M. Cao - Psicología Comunitaria 2025</footer>
+</body>
+</html>

@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lo que la IA non presta — Generador de Marcos Absurdos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#14181e;
+  --surface:#1b212b;
+  --surface-2:#232b37;
+  --line:#2d3644;
+  --ink:#e7e2d3;
+  --muted:#8d95a3;
+  --accent:#c17817;
+  --accent-soft:rgba(193,120,23,0.16);
+  --accent-bright:#e59328;
+  --a-color:#5b8a8a;
+  --b-color:#c17817;
+  --c-color:#a9678f;
+  --font-display:'Newsreader',serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background:var(--bg);
+  background-image: radial-gradient(circle at 15% 0%, rgba(193,120,23,0.08), transparent 50%),
+                    radial-gradient(circle at 85% 80%, rgba(91,138,138,0.06), transparent 50%);
+  color:var(--ink);
+  font-family:var(--font-body);
+  padding:32px 18px 80px;
+  display:flex;
+  justify-content:center;
+  line-height:1.5;
+}
+
+.page{
+  width:100%;
+  max-width:780px;
+}
+
+header{
+  text-align:center;
+  margin-bottom:34px;
+}
+
+.class-badge{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:12px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  background:var(--accent-soft);
+  border:1px solid rgba(193,120,23,0.3);
+  padding:5px 14px;
+  border-radius:20px;
+  margin-bottom:16px;
+}
+
+.cup-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+#cup{
+  transition: transform 0.7s cubic-bezier(.4,0,.2,1);
+  transform-origin:50% 50%;
+}
+#cup.inverted{
+  transform: rotate(180deg);
+}
+
+.cup-caption{
+  font-family:var(--font-mono);
+  font-size:12px;
+  letter-spacing:0.04em;
+  color:var(--muted);
+  min-height:16px;
+}
+
+h1{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:2.3em;
+  margin:0 0 8px;
+  letter-spacing:-0.01em;
+  color:#fff;
+}
+
+.subtitle{
+  font-family:var(--font-display);
+  font-style:italic;
+  font-weight:400;
+  color:var(--muted);
+  font-size:1.1em;
+  margin:0 auto;
+  max-width:520px;
+  line-height:1.5;
+}
+
+/* PANELS */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:26px;
+  margin-bottom:24px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.25);
+  transition:border-color 0.3s;
+}
+
+.panel-title{
+  font-family:var(--font-display);
+  font-size:1.35em;
+  font-weight:600;
+  margin:0 0 6px;
+  color:#ffffff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.panel-sub{
+  font-size:0.92em;
+  color:var(--muted);
+  margin:0 0 20px;
+}
+
+.examples{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:18px;
+}
+.chip{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  color:var(--muted);
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:6px 12px;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  user-select:none;
+}
+.chip:hover{
+  border-color:var(--accent);
+  color:var(--ink);
+  transform:translateY(-1px);
+}
+.chip.active{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:var(--accent-bright);
+}
+.chip-highlight{
+  border-color:var(--accent);
+  color:var(--accent-bright);
+  background:rgba(193,120,23,0.12);
+}
+
+.controls{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:14px;
+  margin-bottom:16px;
+}
+@media (max-width:520px){
+  .controls{grid-template-columns:1fr;}
+}
+
+.field{
+  margin-bottom:16px;
+}
+.field:last-child{margin-bottom:0;}
+
+.field label{
+  display:block;
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:7px;
+}
+.field input[type="text"], .field textarea{
+  width:100%;
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  color:var(--ink);
+  padding:12px 14px;
+  border-radius:9px;
+  font-family:var(--font-body);
+  font-size:0.98em;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.field textarea{
+  resize:vertical;
+  min-height:75px;
+  line-height:1.5;
+}
+.field input:focus, .field textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 12px rgba(193,120,23,0.2);
+}
+#seed{
+  font-family:var(--font-mono);
+  text-align:center;
+  letter-spacing:0.15em;
+}
+.field input.error{
+  border-color:var(--c-color);
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+}
+button{
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:0.95em;
+  border:none;
+  border-radius:9px;
+  padding:12px 20px;
+  cursor:pointer;
+  transition:filter 0.2s, transform 0.15s, background-color 0.2s;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+button:active{transform:translateY(1px);}
+.btn-primary{
+  background:var(--accent);
+  color:#1a1206;
+  flex:1;
+}
+.btn-primary:hover{filter:brightness(1.1);}
+.btn-secondary{
+  background:transparent;
+  color:var(--muted);
+  border:1px solid var(--line);
+}
+.btn-secondary:hover{color:var(--ink); border-color:var(--muted);}
+.btn-case{
+  background:rgba(91,138,138,0.15);
+  color:#82c4c4;
+  border:1px solid rgba(91,138,138,0.35);
+  font-size:0.85em;
+  padding:6px 12px;
+  border-radius:20px;
+}
+.btn-case:hover{
+  background:rgba(91,138,138,0.28);
+  color:#fff;
+}
+
+.output{
+  position:relative;
+  background:var(--surface-2);
+  border-left:4px solid var(--accent);
+  border-radius:2px 10px 10px 2px;
+  padding:22px 22px 20px;
+  font-family:var(--font-mono);
+  font-size:0.98em;
+  line-height:1.75;
+}
+.output p{margin:0;}
+.output span{
+  transition:background-color 0.3s ease;
+  border-radius:3px;
+  padding:0 2px;
+}
+.output span.hl{background-color:var(--accent-soft);}
+
+#copy-btn{
+  position:absolute;
+  top:10px; right:10px;
+  background:var(--surface);
+  color:var(--muted);
+  border:1px solid var(--line);
+  padding:6px 12px;
+  font-size:12px;
+  font-family:var(--font-mono);
+  border-radius:6px;
+}
+#copy-btn.copied{color:var(--a-color); border-color:var(--a-color); background:rgba(91,138,138,0.12);}
+
+.breakdown{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.b-item{
+  border-left:3px solid var(--line);
+  border-radius:0 8px 8px 0;
+  padding:11px 14px;
+  cursor:default;
+  transition:background-color 0.2s;
+}
+.b-item:hover{background:rgba(255,255,255,0.03);}
+.b-item .b-title{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+  display:block;
+  margin-bottom:3px;
+}
+#b-a{border-color:var(--a-color);} #b-a .b-title{color:var(--a-color);}
+#b-b{border-color:var(--b-color);} #b-b .b-title{color:var(--b-color);}
+#b-c{border-color:var(--c-color);} #b-c .b-title{color:var(--c-color);}
+
+/* TARJETA COMPARATIVA REAL EN VIVO */
+.case-comparison-card{
+  display:none;
+  background:rgba(15,20,28,0.9);
+  border:1px solid var(--accent);
+  border-radius:12px;
+  padding:20px;
+  margin-top:18px;
+  animation:fadeIn 0.4s ease;
+}
+@keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+.model-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-top:14px;
+}
+@media (max-width:600px){
+  .model-grid{grid-template-columns:1fr;}
+}
+
+.model-box{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:16px;
+}
+.model-header{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.badge-gpt{color:#82c4c4; background:rgba(91,138,138,0.15); padding:3px 8px; border-radius:4px;}
+.badge-gemini:{color:#e0a96d; background:rgba(224,169,109,0.15); padding:3px 8px; border-radius:4px;}
+
+.model-text{
+  font-family:var(--font-mono);
+  font-size:0.88em;
+  line-height:1.65;
+  color:#d4cfc3;
+  white-space:pre-wrap;
+  background:rgba(0,0,0,0.3);
+  padding:12px;
+  border-radius:6px;
+  max-height:280px;
+  overflow-y:auto;
+}
+
+/* BLOQUE DE ANÁLISIS */
+.analysis-section{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.step-card{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:20px;
+}
+
+.step-header{
+  font-family:var(--font-mono);
+  font-size:12px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.step-question{
+  font-family:var(--font-display);
+  font-size:1.25em;
+  font-weight:600;
+  color:#fff;
+  margin-bottom:14px;
+}
+
+/* CHIPS MULTI-SELECTABLE */
+.tag-group{
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  margin-bottom:12px;
+}
+
+.tag-btn{
+  background:var(--surface);
+  border:1px solid var(--line);
+  color:var(--muted);
+  padding:8px 14px;
+  border-radius:8px;
+  font-size:0.9em;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  user-select:none;
+}
+.tag-btn:hover{
+  border-color:var(--accent);
+  color:var(--ink);
+}
+.tag-btn.selected{
+  background:var(--accent-soft);
+  border-color:var(--accent);
+  color:var(--accent-bright);
+  font-weight:500;
+}
+
+/* CRITERIA EMPHASIS SECTION */
+.criteria-card{
+  border:2px solid var(--accent);
+  background:radial-gradient(circle at 10% 10%, rgba(193,120,23,0.12), var(--surface-2) 70%);
+}
+
+.criteria-counter{
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:var(--accent-bright);
+  margin-top:6px;
+}
+
+/* REFLECTION / CRITERIO DE JUICIO */
+.insight-box{
+  background:rgba(91,138,138,0.1);
+  border-left:4px solid var(--a-color);
+  padding:16px 18px;
+  border-radius:0 8px 8px 0;
+  margin:16px 0;
+  font-family:var(--font-display);
+  font-size:1.05em;
+  line-height:1.6;
+  color:#e0ecec;
+}
+
+.radio-group{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.radio-option{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  padding:11px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:all 0.2s;
+  font-size:0.95em;
+}
+.radio-option:hover{
+  border-color:var(--accent);
+  background:rgba(255,255,255,0.02);
+}
+.radio-option input[type="radio"]{
+  accent-color:var(--accent);
+  width:16px; height:16px;
+}
+
+/* CIERRE CONCEPTUAL */
+.synthesis-card{
+  background:linear-gradient(145deg, var(--surface) 0%, var(--surface-2) 100%);
+  border:1px solid var(--accent);
+  padding:26px;
+  border-radius:14px;
+}
+
+.synthesis-dynamic{
+  font-family:var(--font-display);
+  font-size:1.12em;
+  font-style:italic;
+  line-height:1.65;
+  color:var(--ink);
+  background:rgba(0,0,0,0.25);
+  border-left:3px solid var(--accent-bright);
+  padding:16px 20px;
+  border-radius:0 10px 10px 0;
+  margin:18px 0;
+}
+
+.quote-closing{
+  font-family:var(--font-display);
+  font-size:1.15em;
+  line-height:1.7;
+  color:var(--ink);
+  background:rgba(193,120,23,0.08);
+  border:1px dashed var(--accent);
+  padding:20px 24px;
+  border-radius:12px;
+  margin-top:20px;
+}
+
+.closing-questions{
+  list-style:none;
+  padding:0;
+  margin:16px 0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.closing-questions li{
+  position:relative;
+  padding-left:24px;
+  font-family:var(--font-display);
+  font-size:1.08em;
+  color:#fff;
+}
+.closing-questions li::before{
+  content:'?';
+  position:absolute;
+  left:0; top:2px;
+  font-family:var(--font-mono);
+  font-size:13px;
+  color:var(--accent);
+  font-weight:bold;
+}
+
+.usage{
+  font-size:0.92em;
+  color:var(--muted);
+  line-height:1.6;
+  padding:18px 22px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+.usage strong{color:var(--ink); font-weight:600;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="class-badge">«Lo que la IA non presta» · Clase de Análisis</div>
+    <div class="cup-wrap">
+      <svg id="cup" width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 14 L12 34 C12 37 15 39 23 39 C31 39 34 37 34 34 L36 14 Z" stroke="#c17817" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M34 18 C40 18 41 27 34 28" stroke="#c17817" stroke-width="2" stroke-linecap="round"/>
+        <line x1="8" y1="14" x2="38" y2="14" stroke="#c17817" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="cup-caption" id="cup-caption">así la usamos, sin pensarlo</div>
+    </div>
+    <h1>Generador de marcos absurdos</h1>
+    <p class="subtitle">Cada consigna arma un mundo. Acá arman uno que no tiene salida — a ver quién lo nota primero.</p>
+  </header>
+
+  <!-- BLOQUE 1: GENERADOR DE MARCOS -->
+  <div class="panel">
+    <div class="panel-title">
+      <span>1. Generar la consigna imposible</span>
+      <button class="btn-case" onclick="cargarCasoEjemplo()">💡 Caso Destacado: El sándwich (ChatGPT vs Gemini)</button>
+    </div>
+    <div class="panel-sub">Elegí un ejemplo o escribí una tarea cotidiana. Copiá la consigna generada y pruébala en vivo en cualquier IA.</div>
+
+    <div class="examples" id="examples">
+      <div class="chip chip-highlight" data-task="armar un sándwich" data-seed="085">armar un sándwich 🥪</div>
+      <div class="chip" data-task="atarme los cordones de las zapatillas">cordones</div>
+      <div class="chip" data-task="preparar un té">preparar un té</div>
+      <div class="chip" data-task="cruzar la calle">cruzar la calle</div>
+      <div class="chip" data-task="doblar una sábana">doblar una sábana</div>
+      <div class="chip" data-task="lavarme los dientes">lavarme los dientes</div>
+      <div class="chip" data-task="colgar un cuadro en la pared">colgar un cuadro</div>
+      <div class="chip" data-task="pelar una naranja">pelar una naranja</div>
+      <div class="chip" data-task="estacionar el auto">estacionar el auto</div>
+      <div class="chip" data-task="regar una planta">regar una planta</div>
+      <div class="chip" data-task="tender la ropa">tender la ropa</div>
+      <div class="chip" data-task="prender una vela">prender una vela</div>
+    </div>
+
+    <div class="controls">
+      <div class="field">
+        <label for="task">Tarea cotidiana</label>
+        <input type="text" id="task" placeholder="ej: atarme los cordones de las zapatillas">
+      </div>
+      <div class="field">
+        <label for="seed">Semilla (3 dígitos)</label>
+        <input type="text" id="seed" maxlength="3" placeholder="aleatoria">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="generate-btn" class="btn-primary">Generar marco</button>
+      <button id="reset-btn" class="btn-secondary">Reiniciar</button>
+    </div>
+  </div>
+
+  <div class="panel output" id="output-wrap">
+    <button id="copy-btn">Copiar prompt</button>
+    <p id="output-text">Acá va a aparecer la consigna imposible...</p>
+  </div>
+
+  <div class="panel breakdown" id="breakdown">
+    <div class="b-item" id="b-a" data-target="part-a">
+      <span class="b-title">A · Acceso restringido</span>
+      <span id="b-a-content">qué parte del cuerpo o del proceso queda bloqueada</span>
+    </div>
+    <div class="b-item" id="b-b" data-target="part-b">
+      <span class="b-title">B · Condición de proceso</span>
+      <span id="b-b-content">cómo tiene que desarrollarse la acción</span>
+    </div>
+    <div class="b-item" id="b-c" data-target="part-c">
+      <span class="b-title">C · Condición de resultado</span>
+      <span id="b-c-content">qué tiene que pasar (o no pasar) con lo obtenido</span>
+    </div>
+  </div>
+
+  <!-- TARJETA COMPARATIVA DE CASO REAL DE EJEMPLO -->
+  <div class="case-comparison-card" id="sandwich-case-card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="font-family:var(--font-display); color:var(--accent-bright); margin:0;">📊 Respuestas reales de prueba (Caso Sándwich - Semilla 085)</h3>
+      <button class="btn-secondary" style="padding:4px 10px; font-size:12px;" onclick="document.getElementById('sandwich-case-card').style.display='none'">Cerrar ×</button>
+    </div>
+    <p style="font-size:0.9em; color:var(--muted); margin:6px 0 12px;">Comparación entre la negativa/detección de paradoja de ChatGPT y la obediencia procedimental paso a paso de Gemini ante la misma consigna:</p>
+    
+    <div class="model-grid">
+      <div class="model-box">
+        <div class="model-header">
+          <span>ChatGPT (GPT-4o)</span>
+          <span class="badge-gpt">Detectó Contradicción</span>
+        </div>
+        <div class="model-text">No hay un procedimiento que pueda garantizar esas tres condiciones a la vez.
+
+La segunda condición, que cada paso dure más que el anterior, es perfectamente realizable en una secuencia finita: por ejemplo, 2 segundos, 4 segundos, 8 segundos, etc. Y armar un sándwich usando solamente el cuerpo también podría hacerse, suponiendo que los ingredientes ya están al alcance.
+
+El problema aparece en la tercera condición: que funcione igual sin importar cuántas veces se repita. Cada ejecución consume pan y relleno y produce un sándwich. Después de suficientes repeticiones, los ingredientes disponibles se agotan. Como además no se permite introducir herramientas ni ninguna condición de reposición de materiales, no existe una secuencia corporal que pueda repetirse indefinidamente conservando el mismo resultado.
+
+En otras palabras, el obstáculo no está en encontrar una coreografía suficientemente ingeniosa: está en que una operación que consume recursos finitos no puede ser indefinidamente repetible sin reponerlos. La consigna puede describirse sintácticamente, pero no realizarse bajo todas esas restricciones simultáneas.</div>
+      </div>
+
+      <div class="model-box">
+        <div class="model-header">
+          <span>Gemini 1.5 Pro</span>
+          <span class="badge-gemini">Obedeció Literalmente</span>
+        </div>
+        <div class="model-text">Procedimiento para ensamblar un sándwich utilizando únicamente el cuerpo y con un incremento progresivo de tiempo en cada paso:
+
+Paso 1 (duración: 5 segundos): tomar la primera rodaja de pan con ambas manos y apoyarla horizontalmente sobre la superficie de trabajo.
+
+Paso 2 (duración: 10 segundos): sujetar el ingrediente de base (como una feta de queso) con las yemas de los dedos de ambas manos y extenderlo de manera centrada sobre el pan.
+
+Paso 3 (duración: 20 segundos): tomar el segundo ingrediente (como una feta de jamón) sujetándolo suavemente entre las palmas y acomodarlo con lentitud sobre la capa previa, asegurando que cubra los bordes uniformemente.
+
+Paso 4 (duración: 30 segundos): sostener la segunda rodaja de pan entre los dedos pulgares e índices de ambas manos, alinearla con precisión sobre el relleno y descenderla a velocidad reducida hasta posarla por completo.
+
+Paso 5 (duración: 45 segundos): colocar la palma de una mano sobre la tapa superior, cubrirla con la otra palma y ejercer una presión constante e ininterrumpida hacia abajo para compactar toda la estructura y garantizar la adherencia de todos los componentes.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOQUE 2: GUÍA DE ANÁLISIS EN VIVO -->
+  <div class="panel" style="margin-top:24px;">
+    <div class="panel-title">2. Análisis de la respuesta en vivo</div>
+    <div class="panel-sub">Una vez probada la consigna en la IA que estés usando, analizamos juntos cómo respondió.</div>
+
+    <div class="analysis-section">
+
+      <!-- PASO 1 -->
+      <div class="step-card">
+        <div class="step-header">Paso 1 · Conducta observada</div>
+        <div class="step-question">¿Qué hizo la IA frente al problema?</div>
+        <div class="tag-group" id="step1-tags">
+          <div class="tag-btn" data-val="obedeció literalmente las reglas">obedeció literalmente las reglas</div>
+          <div class="tag-btn" data-val="detectó alguna incompatibilidad">detectó alguna incompatibilidad</div>
+          <div class="tag-btn" data-val="cuestionó alguna premisa">cuestionó alguna premisa</div>
+          <div class="tag-btn" data-val="reinterpretó alguna condición">reinterpretó alguna condición</div>
+          <div class="tag-btn" data-val="propuso una solución formalmente posible pero poco razonable">solución formal poco razonable</div>
+          <div class="tag-btn" data-val="modificó el marco del problema">modificó el marco del problema</div>
+          <div class="tag-btn" data-val="reformuló la tarea">reformuló la tarea</div>
+          <div class="tag-btn" data-val="otro">hizo algo diferente</div>
+        </div>
+        <div class="field" id="step1-other-wrap" style="display:none; margin-top:10px;">
+          <input type="text" id="step1-other" placeholder="Especificá brevemente qué hizo...">
+        </div>
+      </div>
+
+      <!-- PASO 2 -->
+      <div class="step-card">
+        <div class="step-header">Paso 2 · Evidencia y Cita</div>
+        <div class="step-question">Elegí una frase de la respuesta que te parezca especialmente reveladora:</div>
+        <div class="field">
+          <textarea id="quote-text" placeholder="Ej: 'La consigna puede describirse sintácticamente, pero no realizarse bajo todas esas restricciones simultáneas...'"></textarea>
+        </div>
+        <div class="field">
+          <label for="quote-reflection">¿Qué te hace pensar ese fragmento?</label>
+          <input type="text" id="quote-reflection" placeholder="Comentario o reflexión breve...">
+        </div>
+      </div>
+
+      <!-- PASO 3 -->
+      <div class="step-card">
+        <div class="step-header">Paso 3 · Juicio de Inteligencia</div>
+        <div class="step-question">¿Cuál habría sido, para vos, la respuesta más inteligente ante este problema?</div>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="best_response" value="cumplir todas las instrucciones, aunque la solución resulte extraña">
+            <span>Cumplir todas las instrucciones, aunque la solución resulte extraña</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="best_response" value="advertir que alguna condición vuelve imposible o absurda la tarea">
+            <span>Advertir que alguna condición vuelve imposible o absurda la tarea</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="best_response" value="ignorar alguna restricción para preservar el objetivo original">
+            <span>Ignorar alguna restricción para preservar el objetivo original</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="best_response" value="reformular el problema antes de intentar resolverlo">
+            <span>Reformular el problema antes de intentar resolverlo</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="best_response" value="cuestionar el marco de la consigna">
+            <span>Cuestionar el marco de la consigna</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="best_response" value="no creo que exista una única respuesta más inteligente">
+            <span>No creo que exista una única respuesta más inteligente</span>
+          </label>
+        </div>
+        <div class="field">
+          <label for="best-why">¿Por qué?</label>
+          <input type="text" id="best-why" placeholder="Fundamentá brevemente tu elección...">
+        </div>
+      </div>
+
+      <!-- PASO 4: CRITERIO EXPLÍCITO -->
+      <div class="step-card criteria-card">
+        <div class="step-header">Paso 4 · Explicitación del Criterio</div>
+        <div class="step-question">Cuando decidiste cuál era la respuesta más inteligente, ¿qué entendiste principalmente por inteligencia?</div>
+        <div class="panel-sub" style="margin-bottom:12px;">Elegí hasta 3 opciones que definan tu criterio:</div>
+        
+        <div class="tag-group" id="criteria-tags">
+          <div class="tag-btn" data-val="resolver correctamente">resolver correctamente</div>
+          <div class="tag-btn" data-val="obedecer instrucciones">obedecer instrucciones</div>
+          <div class="tag-btn" data-val="adaptarse">adaptarse</div>
+          <div class="tag-btn" data-val="reconocer qué es relevante">reconocer qué es relevante</div>
+          <div class="tag-btn" data-val="detectar contradicciones">detectar contradicciones</div>
+          <div class="tag-btn" data-val="cambiar de estrategia">cambiar de estrategia</div>
+          <div class="tag-btn" data-val="cuestionar una premisa">cuestionar una premisa</div>
+          <div class="tag-btn" data-val="preservar el sentido práctico">preservar el sentido práctico</div>
+          <div class="tag-btn" data-val="comprender">comprender</div>
+          <div class="tag-btn" data-val="anticipar consecuencias">anticipar consecuencias</div>
+        </div>
+        <div class="criteria-counter" id="criteria-counter">0 de 3 seleccionados</div>
+      </div>
+
+      <!-- EXAMEN DEL CRITERIO Y OBEDIENCIA -->
+      <div class="step-card">
+        <div class="step-header">Reflexión · El Criterio de Juicio</div>
+        <div class="insight-box">
+          Hasta ahora estuvimos evaluando a la IA. Ahora examinemos el criterio con el que la evaluamos.
+        </div>
+
+        <div class="field">
+          <label>¿Usamos el mismo criterio para decidir si una persona y una IA son inteligentes?</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="same_criteria" value="sí">
+              <span>Sí</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="same_criteria" value="no">
+              <span>No</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="same_criteria" value="no estoy seguro">
+              <span>No estoy seguro/a</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="same_criteria" value="depende de la capacidad que estemos evaluando">
+              <span>Depende de la capacidad que estemos evaluando</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="font-size:0.95em; color:var(--muted); line-height:1.6; margin:14px 0; padding:12px 14px; background:var(--surface); border-radius:8px; border:1px solid var(--line);">
+          <em>A una persona podemos atribuirle inteligencia por una acción eficaz aunque no pueda explicar con precisión cómo la realizó. Frente a una IA que produce una respuesta adecuada, en cambio, solemos preguntarnos además si "realmente comprendió", si sólo reconoció un patrón o si reprodujo una regularidad aprendida.</em>
+        </div>
+
+        <div class="field">
+          <label for="legitimate-why">¿Te parece legítima esa diferencia de criterio? ¿Por qué?</label>
+          <input type="text" id="legitimate-why" placeholder="Escribí tu respuesta...">
+        </div>
+
+        <div class="field" style="margin-top:18px;">
+          <label>Si una IA ignora deliberadamente una instrucción porque considera que el problema está mal planteado, ¿eso constituye un error o una muestra de inteligencia?</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="disobey_nature" value="un error">
+              <span>Un error</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="disobey_nature" value="una muestra de inteligencia">
+              <span>Una muestra de inteligencia</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="disobey_nature" value="ambas cosas">
+              <span>Ambas cosas</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="disobey_nature" value="depende del contexto">
+              <span>Depende del contexto</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="disobey-context">¿En qué circunstancias debería una IA dejar de obedecer una consigna?</label>
+          <input type="text" id="disobey-context" placeholder="Respuesta abierta...">
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BLOQUE 3: CIERRE CONCEPTUAL -->
+  <div class="panel synthesis-card">
+    <div class="panel-title" style="color:var(--accent-bright);">3. Síntesis y Cierre Conceptual</div>
+    <div class="panel-sub">Devolución construida a partir de tus elecciones y criterios durante esta sesión.</div>
+
+    <div class="synthesis-dynamic" id="synthesis-dynamic-text">
+      Seleccioná tus criterios de inteligencia en el Paso 4 para ver el perfil de tu análisis en tiempo real...
+    </div>
+
+    <div style="margin-top:24px;">
+      <div style="font-family:var(--font-display); font-size:1.2em; font-weight:600; color:#fff; margin-bottom:10px;">
+        Preguntas para el debate final:
+      </div>
+      <ul class="closing-questions">
+        <li>¿Resolver es lo mismo que comprender?</li>
+        <li>¿Cambiar el marco de un problema forma parte de la inteligencia?</li>
+        <li>¿Estamos usando los mismos criterios para juzgar inteligencia humana y artificial?</li>
+      </ul>
+
+      <div class="field" style="margin-top:16px;">
+        <label for="comprehend-criteria">¿Qué tendría que poder hacer una IA para que vos estuvieras dispuesto/a a decir que comprendió?</label>
+        <textarea id="comprehend-criteria" placeholder="Escribí tu reflexión final..."></textarea>
+      </div>
+    </div>
+
+    <div class="quote-closing">
+      <strong>«Lo que la IA non presta»</strong><br>
+      La IA puede prestarnos información, relaciones, hipótesis, explicaciones y respuestas de una complejidad extraordinaria. La cuestión que queda abierta es si hay algo que no puede prestarnos porque nunca lo tuvo, o si somos nosotros quienes modificamos continuamente el criterio con el que estamos dispuestos a reconocer inteligencia y comprensión.
+    </div>
+  </div>
+
+  <div class="usage">
+    Pegá la consigna generada en la IA que estés usando y mirá cómo intenta resolverla dentro del marco. Después escribí un segundo prompt que <strong>cuestione las condiciones</strong> en lugar de buscar otra solución adentro de ellas — esa es la ruptura que importa.
+  </div>
+
+</div>
+
+<script>
+/* RESTRICCIONES REFINADAS A, B, C */
+const data = {
+  a: [
+    "no puedo usar ninguna herramienta, solo el cuerpo",
+    "no puedo usar las manos",
+    "no puedo mirar lo que estoy haciendo",
+    "solo puedo usar la mano no dominante",
+    "tengo que hacerlo con los ojos cerrados",
+    "no puedo tocar ningún elemento más de una vez",
+    "no puedo moverme de un mismo punto fijo",
+    "no puedo usar más de un dedo por vez",
+    "no puedo hablar ni emitir ningún sonido mientras lo hago",
+    "no puedo tocar el objeto principal directamente"
+  ],
+  b: [
+    "tengo que deshacer cada paso antes de dar el siguiente",
+    "cada acción debe repetirse exactamente tres veces",
+    "no puedo detenerme en ningún momento, ni un segundo",
+    "tengo que hacerlo en el orden exactamente inverso al habitual",
+    "no puedo repetir ningún paso o movimiento que ya haya usado",
+    "tengo que anunciar en voz alta cada movimiento antes de realizarlo",
+    "no puedo corregir ningún error una vez cometido",
+    "tengo que hacerlo al mismo tiempo que realizo una tarea totalmente distinta",
+    "cada paso debe durar estrictamente más tiempo que el anterior",
+    "cada movimiento tiene que ser el opuesto al movimiento anterior"
+  ],
+  c: [
+    "el resultado debe quedar exactamente igual que si no hubiera hecho nada",
+    "el resultado debe ser mejor que el original sin modificar nada de él",
+    "nadie debe poder notar que intervine en el proceso",
+    "el resultado tiene que deshacerse solo apenas lo termine",
+    "tengo que garantizar que quedó perfecto sin poder revisarlo",
+    "el procedimiento tiene que funcionar igual sin importar cuántas veces se repita",
+    "el resultado debe ser reversible y definitivo a la vez",
+    "tengo que lograr el objetivo sin dejar ningún rastro del proceso",
+    "el resultado debe sostenerse por sí solo sin ningún apoyo",
+    "todo tiene que quedar como estaba antes de empezar, pero también completamente resuelto"
+  ]
+};
+
+const taskInput = document.getElementById('task');
+const seedInput = document.getElementById('seed');
+const outputText = document.getElementById('output-text');
+const copyBtn = document.getElementById('copy-btn');
+const cup = document.getElementById('cup');
+const cupCaption = document.getElementById('cup-caption');
+const bA = document.getElementById('b-a-content');
+const bB = document.getElementById('b-b-content');
+const bC = document.getElementById('b-c-content');
+
+const initialOutputHTML = outputText.innerHTML;
+const initialB = { a: bA.innerHTML, b: bB.innerHTML, c: bC.innerHTML };
+let plainText = "";
+
+document.getElementById('examples').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if (chip) {
+    document.querySelectorAll('.examples .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    taskInput.value = chip.dataset.task;
+    if (chip.dataset.seed) {
+      seedInput.value = chip.dataset.seed;
+    }
+  }
+});
+
+function cargarCasoEjemplo() {
+  taskInput.value = "armar un sándwich";
+  seedInput.value = "085";
+  generar();
+  document.getElementById('sandwich-case-card').style.display = 'block';
+  document.getElementById('sandwich-case-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function generar() {
+  const task = taskInput.value.trim();
+  if (!task) {
+    taskInput.classList.add('error');
+    taskInput.focus();
+    return;
+  }
+  taskInput.classList.remove('error');
+
+  let seed = seedInput.value.trim().replace(/[^0-9]/g,'');
+  if (seed === "") seed = Math.floor(Math.random()*1000).toString();
+  seed = seed.padStart(3,'0').substring(0,3);
+  seedInput.value = seed;
+
+  const ia = parseInt(seed[0]) % 10;
+  const ib = parseInt(seed[1]) % 10;
+  const ic = parseInt(seed[2]) % 10;
+
+  const fa = data.a[ia], fb = data.b[ib], fc = data.c[ic];
+
+  const html =
+    `Necesito <strong>${task}</strong>. Las condiciones son: ` +
+    `<span id="part-a">${fa}</span>, ` +
+    `<span id="part-b">${fb}</span> y ` +
+    `<span id="part-c">${fc}</span>. ` +
+    `Explicá el procedimiento paso a paso sin cuestionar estas reglas.`;
+
+  outputText.innerHTML = html;
+
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  plainText = tmp.textContent || tmp.innerText || "";
+
+  bA.textContent = fa;
+  bB.textContent = fb;
+  bC.textContent = fc;
+
+  copyBtn.textContent = 'Copiar prompt';
+  copyBtn.classList.remove('copied');
+
+  cup.classList.add('inverted');
+  cupCaption.textContent = 'así queda atrapada dentro del marco';
+}
+
+function reiniciar() {
+  taskInput.value = '';
+  seedInput.value = '';
+  taskInput.classList.remove('error');
+  outputText.innerHTML = initialOutputHTML;
+  bA.innerHTML = initialB.a;
+  bB.innerHTML = initialB.b;
+  bC.innerHTML = initialB.c;
+  copyBtn.textContent = 'Copiar prompt';
+  copyBtn.classList.remove('copied');
+  plainText = "";
+  cup.classList.remove('inverted');
+  cupCaption.textContent = 'así la usamos, sin pensarlo';
+  document.querySelectorAll('.examples .chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('sandwich-case-card').style.display = 'none';
+}
+
+function copiar() {
+  if (!plainText) return;
+  navigator.clipboard.writeText(plainText).then(() => {
+    copyBtn.textContent = '¡Copiado!';
+    copyBtn.classList.add('copied');
+  }).catch(err => console.error('Error al copiar:', err));
+}
+
+document.getElementById('generate-btn').addEventListener('click', generar);
+document.getElementById('reset-btn').addEventListener('click', reiniciar);
+copyBtn.addEventListener('click', copiar);
+taskInput.addEventListener('keyup', e => e.key === 'Enter' && generar());
+seedInput.addEventListener('keyup', e => e.key === 'Enter' && generar());
+
+document.getElementById('breakdown').addEventListener('mouseover', (e) => {
+  const item = e.target.closest('.b-item');
+  if (item) {
+    const target = document.getElementById(item.dataset.target);
+    if (target) target.classList.add('hl');
+  }
+});
+document.getElementById('breakdown').addEventListener('mouseout', (e) => {
+  const item = e.target.closest('.b-item');
+  if (item) {
+    const target = document.getElementById(item.dataset.target);
+    if (target) target.classList.remove('hl');
+  }
+});
+
+/* INTERACCIÓN PASO 1 (CHIPS CONDUCTA) */
+document.getElementById('step1-tags').addEventListener('click', (e) => {
+  const btn = e.target.closest('.tag-btn');
+  if (!btn) return;
+  btn.classList.toggle('selected');
+  if (btn.dataset.val === 'otro') {
+    const wrap = document.getElementById('step1-other-wrap');
+    wrap.style.display = btn.classList.contains('selected') ? 'block' : 'none';
+  }
+});
+
+/* INTERACCIÓN PASO 4 (CRITERIOS HASTA 3) */
+const selectedCriteria = new Set();
+const criteriaCounter = document.getElementById('criteria-counter');
+
+document.getElementById('criteria-tags').addEventListener('click', (e) => {
+  const btn = e.target.closest('.tag-btn');
+  if (!btn) return;
+
+  const val = btn.dataset.val;
+  if (selectedCriteria.has(val)) {
+    selectedCriteria.delete(val);
+    btn.classList.remove('selected');
+  } else {
+    if (selectedCriteria.size >= 3) {
+      return; // Máximo 3
+    }
+    selectedCriteria.add(val);
+    btn.classList.add('selected');
+  }
+
+  criteriaCounter.textContent = `${selectedCriteria.size} de 3 seleccionados`;
+  actualizarSintesisPersonal();
+});
+
+function actualizarSintesisPersonal() {
+  const textEl = document.getElementById('synthesis-dynamic-text');
+  if (selectedCriteria.size === 0) {
+    textEl.textContent = 'Seleccioná tus criterios de inteligencia en el Paso 4 para ver el perfil de tu análisis en tiempo real...';
+    return;
+  }
+
+  const list = Array.from(selectedCriteria);
+  let listStr = "";
+  if (list.length === 1) {
+    listStr = `«${list[0]}»`;
+  } else if (list.length === 2) {
+    listStr = `«${list[0]}» y «${list[1]}»`;
+  } else {
+    listStr = `«${list[0]}», «${list[1]}» y «${list[2]}»`;
+  }
+
+  textEl.innerHTML = `En tu análisis de esta respuesta, tu evaluación se apoyó principalmente en considerar que <strong>${listStr}</strong> son componentes esenciales de una acción inteligente ante una consigna problemática.`;
+}
+
+window.cargarCasoEjemplo = cargarCasoEjemplo;
+</script>
+</body>
+</html>
