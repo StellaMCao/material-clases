@@ -489,58 +489,347 @@
             const todayStr = new Date().toLocaleDateString('es-AR');
 
             let html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Rúbrica: ${workInput.value}</title><style>
-                @page { size: auto; margin: 6mm 6mm; }
-                body { font-family: Arial, sans-serif; margin: ${isForPDF ? '8px' : '18px'}; font-size: ${isForPDF ? '11px' : '13px'}; color: #222; }
-                .container { max-width: 1000px; margin: auto; }
-                .header { background: #2c3e50; color: white; padding: ${isForPDF ? '8px 12px' : '14px 18px'}; text-align: center; border-radius: 6px 6px 0 0; }
-                .header h1 { margin: 0 0 4px 0; font-size: ${isForPDF ? '1.2rem' : '1.45rem'}; }
-                .info { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 8px; margin-top: 5px; font-size: 0.9em; }
-                .student-info { padding: ${isForPDF ? '6px 10px' : '10px 14px'}; background: #f2f2f2; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; font-size: 0.95em; }
-                .field-item { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 220px; }
-                .field-item input { flex: 1; padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.92rem; background: #fff; }
-                .rubric-table { width: 100%; border-collapse: collapse; margin-top: 0; font-size: ${isForPDF ? '10px' : '12px'}; }
-                .rubric-table th, .rubric-table td { border: 1px solid #ddd; padding: ${isForPDF ? '4px 6px' : '6px 8px'}; text-align: left; vertical-align: top; }
-                .rubric-table th { background-color: #3498db; color: white; text-align: center; font-size: 1.02em; }
-                .criterion-cell { font-weight: bold; background-color: #f2f2f2; width: 19%; }
-                .descriptor-cell label { display: block; cursor: pointer; height: 100%; } 
-                .descriptor-cell input { margin-right: 5px; }
-                .descriptor-cell.selected { background-color: #e8f4fc; outline: 2px solid #3498db; }
-                .score-value { color: #27ae60; font-weight: bold; font-size: 0.88em; margin-top: 2px; }
-                .summary, .observations-box { margin-top: ${isForPDF ? '8px' : '14px'}; padding: ${isForPDF ? '6px 10px' : '10px 14px'}; background: #f8f9fa; border: 1px solid #eee; border-radius: 6px; font-size: 0.92em; }
-                .instructions-section { margin-bottom: 6px; padding-bottom: 5px; border-bottom: 1px solid #e0e0e0; }
-                .instructions-section p { margin-top: 2px; color: #444; }
-                .comments-section h3 { margin: 0 0 3px 0; font-size: 0.98em; }
-                .comments-section textarea { width: 100%; min-height: 60px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; font-size: 0.88rem; box-sizing: border-box; resize: vertical; margin-top: 4px; }
-                .print-btn { display: block; margin: 18px auto; padding: 10px 22px; background-color: #27ae60; color: white; border: none; border-radius: 5px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
-                .print-btn:hover { background-color: #219653; }
+                @page {
+                    size: A4 portrait;
+                    margin: 12mm 10mm;
+                }
+                * {
+                    box-sizing: border-box;
+                }
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+                    color: #1e293b;
+                    margin: 0;
+                    padding: ${isForPDF ? '10px' : '20px'};
+                    background: #f8fafc;
+                    font-size: ${isForPDF ? '12px' : '13px'};
+                    line-height: 1.4;
+                }
+                .container {
+                    max-width: 1050px;
+                    margin: 0 auto;
+                    background: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+                    overflow: hidden;
+                }
+                .header {
+                    background: #2c3e50;
+                    color: white;
+                    padding: 14px 20px;
+                    text-align: center;
+                }
+                .header h1 {
+                    margin: 0 0 5px 0;
+                    font-size: 1.4rem;
+                }
+                .info {
+                    display: flex;
+                    justify-content: space-around;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    margin-top: 6px;
+                    font-size: 0.95rem;
+                    opacity: 0.95;
+                }
+                .student-info {
+                    padding: 10px 16px;
+                    background: #f1f5f9;
+                    border-bottom: 1px solid #e2e8f0;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 18px;
+                    align-items: center;
+                }
+                .field-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    flex: 1;
+                    min-width: 220px;
+                }
+                .field-item input {
+                    flex: 1;
+                    padding: 6px 10px;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 4px;
+                    font-size: 0.95rem;
+                    background: #fff;
+                }
+                .rubric-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 0;
+                    font-size: 12px;
+                }
+                .rubric-table th, .rubric-table td {
+                    border: 1px solid #cbd5e1;
+                    padding: 7px 9px;
+                    text-align: left;
+                    vertical-align: top;
+                }
+                .rubric-table th {
+                    background-color: #3498db;
+                    color: white;
+                    text-align: center;
+                    font-weight: 600;
+                    font-size: 12.5px;
+                }
+                .criterion-cell {
+                    font-weight: 600;
+                    background-color: #f8fafc;
+                    width: 20%;
+                    color: #0f172a;
+                }
+                .descriptor-cell label {
+                    display: block;
+                    cursor: pointer;
+                    height: 100%;
+                }
+                .descriptor-cell input {
+                    margin-right: 5px;
+                }
+                .descriptor-cell.selected {
+                    background-color: #e0f2fe;
+                    outline: 2px solid #0284c7;
+                }
+                .score-value {
+                    color: #16a34a;
+                    font-weight: bold;
+                    font-size: 0.88em;
+                    margin-top: 3px;
+                }
+                .summary {
+                    margin: 14px 18px 0;
+                    padding: 10px 14px;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 6px;
+                    font-size: 0.98rem;
+                }
+                .observations-box {
+                    margin: 12px 18px 18px;
+                    padding: 12px 16px;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 6px;
+                }
+                .instructions-section {
+                    margin-bottom: 8px;
+                    padding-bottom: 6px;
+                    border-bottom: 1px solid #e2e8f0;
+                    font-size: 0.9rem;
+                }
+                .instructions-section p {
+                    margin-top: 3px;
+                    color: #475569;
+                }
+                .comments-section h3 {
+                    margin: 0 0 5px 0;
+                    font-size: 0.98rem;
+                    color: #0f172a;
+                }
+                .comments-section textarea {
+                    width: 100%;
+                    min-height: 65px;
+                    padding: 8px 10px;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 5px;
+                    font-family: inherit;
+                    font-size: 0.92rem;
+                    box-sizing: border-box;
+                    resize: vertical;
+                    margin-top: 4px;
+                }
+                .print-btn {
+                    display: block;
+                    margin: 20px auto;
+                    padding: 12px 26px;
+                    background-color: #16a34a;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                    transition: background-color 0.2s;
+                }
+                .print-btn:hover {
+                    background-color: #15803d;
+                }
 
-                /* --- ESTILOS COMPACTOS PARA IMPRIMIR EN 1 SOLA PÁGINA --- */
-                @media print { 
-                    @page { size: A4 portrait; margin: 5mm 5mm; }
-                    html, body { margin: 0 !important; padding: 0 !important; font-size: 7.2pt !important; line-height: 1.15 !important; background: #fff !important; color: #000 !important; }
-                    .container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: none !important; }
-                    .header { padding: 4px 8px !important; border-radius: 3px !important; margin-bottom: 2px !important; background: #2c3e50 !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                    .header h1 { font-size: 10.5pt !important; margin: 0 0 2px 0 !important; }
-                    .info { font-size: 7pt !important; gap: 6px !important; margin-top: 1px !important; }
-                    .student-info { background: #f4f4f4 !important; padding: 3px 6px !important; font-size: 7.5pt !important; margin-bottom: 2px !important; gap: 10px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                    .field-item { min-width: 150px !important; gap: 4px !important; }
-                    .field-item input { border: none !important; border-bottom: 1px solid #222 !important; border-radius: 0 !important; background: transparent !important; padding: 1px 2px !important; font-size: 7.5pt !important; }
-                    .rubric-table { width: 100% !important; margin-top: 2px !important; font-size: 6.8pt !important; line-height: 1.12 !important; }
-                    .rubric-table th, .rubric-table td { border: 1px solid #bbb !important; padding: 2px 4px !important; font-size: 6.8pt !important; line-height: 1.12 !important; }
-                    .rubric-table th { background-color: #3498db !important; color: white !important; font-size: 7.2pt !important; padding: 2px 4px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                    .criterion-cell { font-weight: bold !important; width: 19% !important; background-color: #efefef !important; font-size: 7pt !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                    .descriptor-cell label { cursor: default; }
-                    .descriptor-cell.selected { background-color: #e8f4fc !important; outline: 1.5px solid #3498db !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                    .score-value { font-size: 6.5pt !important; margin-top: 1px !important; color: #1e7e34 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                    .summary { margin-top: 3px !important; padding: 2px 6px !important; font-size: 7.2pt !important; background: #f4f4f4 !important; border: 1px solid #ccc !important; border-radius: 3px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                    .observations-box { margin-top: 3px !important; padding: 3px 6px !important; font-size: 6.8pt !important; background: #f9f9f9 !important; border: 1px solid #ccc !important; border-radius: 3px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                    .instructions-section { margin-bottom: 2px !important; padding-bottom: 2px !important; border-bottom: 1px solid #ddd !important; font-size: 6.6pt !important; }
-                    .instructions-section p { margin: 1px 0 !important; }
-                    .comments-section h3 { font-size: 7pt !important; margin: 1px 0 !important; }
-                    .comments-section textarea { border: 1px solid #888 !important; background: transparent !important; resize: none !important; min-height: 32px !important; height: 35px !important; font-size: 6.8pt !important; padding: 2px 4px !important; margin-top: 1px !important; }
-                    .comments-section div { min-height: 30px !important; height: 30px !important; margin-top: 2px !important; }
-                    .print-btn, input[type=radio] { display: none !important; }
-                    tr, td, th, .container, .observations-box, .summary { page-break-inside: avoid !important; break-inside: avoid !important; }
+                /* --- ESTILOS DE IMPRESIÓN Y PDF EQUILIBRADOS EN A4 --- */
+                @media print {
+                    @page {
+                        size: A4 portrait;
+                        margin: 12mm 10mm;
+                    }
+                    html, body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        background: #fff !important;
+                        color: #0f172a !important;
+                        font-size: 8.8pt !important;
+                        line-height: 1.3 !important;
+                    }
+                    .container {
+                        max-width: 100% !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                        border-radius: 0 !important;
+                    }
+                    .header {
+                        padding: 8px 12px !important;
+                        background: #2c3e50 !important;
+                        color: white !important;
+                        border-radius: 4px !important;
+                        margin-bottom: 6px !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    .header h1 {
+                        font-size: 12pt !important;
+                        margin: 0 0 2px 0 !important;
+                    }
+                    .info {
+                        font-size: 8.5pt !important;
+                        gap: 12px !important;
+                        margin-top: 2px !important;
+                    }
+                    .student-info {
+                        background: #f1f5f9 !important;
+                        padding: 6px 10px !important;
+                        font-size: 8.5pt !important;
+                        margin-bottom: 6px !important;
+                        border: 1px solid #cbd5e1 !important;
+                        border-radius: 4px !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    .field-item {
+                        min-width: 170px !important;
+                        gap: 6px !important;
+                    }
+                    .field-item input {
+                        border: none !important;
+                        border-bottom: 1px solid #475569 !important;
+                        border-radius: 0 !important;
+                        background: transparent !important;
+                        padding: 1px 3px !important;
+                        font-size: 8.5pt !important;
+                    }
+                    .rubric-table {
+                        width: 100% !important;
+                        margin-top: 4px !important;
+                        font-size: 8.2pt !important;
+                        line-height: 1.25 !important;
+                        border-collapse: collapse !important;
+                    }
+                    thead {
+                        display: table-header-group;
+                    }
+                    .rubric-table th, .rubric-table td {
+                        border: 1px solid #94a3b8 !important;
+                        padding: 5px 6px !important;
+                        font-size: 8.2pt !important;
+                        line-height: 1.25 !important;
+                    }
+                    .rubric-table th {
+                        background-color: #3498db !important;
+                        color: white !important;
+                        font-size: 8.5pt !important;
+                        font-weight: 700 !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    .criterion-cell {
+                        font-weight: 700 !important;
+                        width: 20% !important;
+                        background-color: #f1f5f9 !important;
+                        color: #0f172a !important;
+                        font-size: 8.5pt !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    .descriptor-cell label {
+                        cursor: default !important;
+                    }
+                    .descriptor-cell.selected {
+                        background-color: #e0f2fe !important;
+                        outline: 2px solid #0284c7 !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    .score-value {
+                        font-size: 7.5pt !important;
+                        margin-top: 3px !important;
+                        color: #15803d !important;
+                        font-weight: 700 !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    .summary {
+                        margin: 6px 0 0 0 !important;
+                        padding: 6px 10px !important;
+                        font-size: 8.8pt !important;
+                        background: #f1f5f9 !important;
+                        border: 1px solid #cbd5e1 !important;
+                        border-radius: 4px !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    .observations-box {
+                        margin: 6px 0 0 0 !important;
+                        padding: 6px 10px !important;
+                        font-size: 8.2pt !important;
+                        background: #f8fafc !important;
+                        border: 1px solid #cbd5e1 !important;
+                        border-radius: 4px !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    .instructions-section {
+                        margin-bottom: 4px !important;
+                        padding-bottom: 4px !important;
+                        border-bottom: 1px solid #e2e8f0 !important;
+                        font-size: 8pt !important;
+                    }
+                    .instructions-section p {
+                        margin: 2px 0 !important;
+                    }
+                    .comments-section h3 {
+                        font-size: 8.5pt !important;
+                        margin: 2px 0 4px 0 !important;
+                    }
+                    .comments-section textarea {
+                        border: 1px solid #94a3b8 !important;
+                        background: transparent !important;
+                        resize: none !important;
+                        min-height: 48px !important;
+                        height: 52px !important;
+                        font-size: 8.2pt !important;
+                        padding: 4px 6px !important;
+                        margin-top: 2px !important;
+                    }
+                    .comments-section div {
+                        min-height: 45px !important;
+                        height: 48px !important;
+                        margin-top: 4px !important;
+                    }
+                    .print-btn, input[type=radio] {
+                        display: none !important;
+                    }
+                    tr {
+                        page-break-inside: avoid !important;
+                        break-inside: avoid !important;
+                    }
+                    .header, .student-info, .summary, .observations-box {
+                        page-break-inside: avoid !important;
+                        break-inside: avoid !important;
+                    }
                 }
             </style></head><body><div class="container">
                 <div class="header"><h1>Rúbrica de evaluación</h1><div class="info">
@@ -591,7 +880,7 @@
                 <div class="comments-section">
                     <h3>Comentarios y observaciones:</h3>
                     ${isForPDF 
-                        ? `<div style="min-height: 32px; border-bottom: 1px dashed #ccc; margin-top: 3px;"></div>`
+                        ? `<div style="min-height: 45px; border-bottom: 1px dashed #94a3b8; margin-top: 4px;"></div>`
                         : `<textarea id="student-comments" placeholder="Escriba aquí los comentarios, fortalezas y sugerencias para el estudiante..."></textarea>`
                     }
                 </div>
