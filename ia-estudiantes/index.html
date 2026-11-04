@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelos de protocolo de uso de IA en la cátedra</title>
+    <style>
+        :root {
+            /* Paleta de Colores Mejorada */
+            --color-bg: #f9fafb;
+            --color-surface: #ffffff;
+            --color-primary: #4338ca; /* Indigo */
+            --color-heading: #1f2937; /* Gris oscuro */
+            --color-text: #4b5563;    /* Gris medio */
+            --color-border: #e5e7eb;  /* Gris claro */
+            --color-success: #16a34a;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+
+            /* Tipografía (System Fonts) */
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-serif: Georgia, "Palatino Linotype", "Book Antiqua", Palatino, serif; 
+
+            /* Estilos Generales */
+            --border-radius: 0.5rem;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.7;
+            margin: 0;
+            padding: 2rem 1rem 5rem 1rem;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background-color: var(--color-surface);
+            padding: clamp(1.5rem, 5vw, 3rem);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        h1, h2 {
+            font-family: var(--font-serif);
+            color: var(--color-heading);
+            font-weight: 600;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 2.5rem); /* Ajustado para título de dos líneas */
+            line-height: 1.2; /* Espaciado entre líneas del título */
+            margin-bottom: 1rem;
+        }
+        
+        .intro {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .usage-instruction {
+            text-align: center;
+            font-style: italic;
+            color: var(--color-primary);
+            margin-bottom: 3rem;
+        }
+
+        details {
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            transition: box-shadow 0.2s ease-in-out;
+        }
+        
+        details[open] {
+            box-shadow: var(--shadow);
+        }
+
+        summary {
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            background-color: var(--color-surface);
+            transition: background-color 0.2s;
+            border-radius: var(--border-radius);
+        }
+        
+        details[open] summary {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        
+        summary:hover {
+            background-color: #fdfdff;
+        }
+
+        summary::-webkit-details-marker { display: none; }
+        
+        h2 {
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        summary::after {
+            content: '+';
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--color-primary);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            margin-left: 1rem;
+        }
+
+        details[open] > summary::after {
+            transform: rotate(45deg);
+        }
+
+        .details-content {
+            padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+            border-top: 1px solid var(--color-border);
+        }
+        
+        .syllabus-suggestion {
+            margin-top: 2rem;
+            background-color: #fdfdff;
+            border: 1px solid var(--color-border);
+            border-left-width: 4px;
+            border-radius: var(--border-radius);
+            padding: 1rem 1.5rem;
+        }
+        
+        .syllabus-suggestion h3 {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-heading);
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .suggestion-prohibition { border-left-color: var(--color-danger); }
+        .suggestion-restricted { border-left-color: var(--color-warning); }
+        .suggestion-open { border-left-color: var(--color-success); }
+        
+        .why-not {
+            font-style: italic;
+            color: #92400e;
+            background-color: #fefce8;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            border: 1px solid #fde68a;
+        }
+        
+        strong {
+           color: var(--color-heading);
+           font-weight: 600;
+        }
+        
+        .page-footer {
+            position: fixed;
+            bottom: 10px;
+            right: 15px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            text-align: right;
+        }
+        .page-footer a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        .page-footer a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <header>
+            <h1>Modelos de protocolo<br>de uso de IA en la cátedra</h1>
+            <p class="intro">A continuación se presentan tres modelos de políticas de uso de IA, desde la prohibición hasta la integración abierta.</p>
+            <p class="usage-instruction">Haz clic en el título de cada nivel para ver los detalles y la sugerencia de texto.</p>
+        </header>
+
+        <details>
+            <summary><h2>Nivel 1: Prohibición total (no recomendado)</h2></summary>
+            <div class="details-content">
+                <p><strong>Enfoque:</strong> se prohíbe completamente el uso de herramientas de IA generativa para cualquier tarea académica del curso.</p>
+                <p><strong>Fundamentos:</strong> este enfoque se centra en el desarrollo de habilidades fundamentales de escritura, investigación y análisis sin la asistencia de herramientas externas. El objetivo es asegurar que la producción del estudiante sea 100% original y refleje su proceso de aprendizaje sin atajos.</p>
+                <div class="why-not">
+                    <strong>Por qué no se recomienda:</strong> aunque busca proteger la originalidad, esta política es difícil de hacer cumplir, no prepara a los estudiantes para un entorno profesional donde estas herramientas son comunes y puede generar una relación de desconfianza. Además, ignora los usos beneficiosos de la IA como asistente de escritura o explorador de ideas.
+                </div>
+                <div class="syllabus-suggestion suggestion-prohibition">
+                    <h3>Sugerencia para incluir en el programa:</h3>
+                    <p><strong>Política sobre inteligencia artificial generativa:</strong> en este curso, el uso de herramientas de inteligencia artificial generativa (como ChatGPT, Gemini, Copilot, etc.) para la elaboración de trabajos, respuestas a exámenes o cualquier otra actividad evaluable está estrictamente prohibido. Todo el trabajo presentado debe ser producto exclusivo del esfuerzo intelectual del estudiante. El uso no autorizado de estas herramientas será considerado una falta a la honestidad académica y se tratará de acuerdo con el reglamento institucional sobre plagio.</p>
+                </div>
+            </div>
+        </details>
+
+        <details>
+            <summary><h2>Nivel 2: Uso restringido (caja de herramientas)</h2></summary>
+            <div class="details-content">
+                <p><strong>Enfoque:</strong> se permite el uso de IA generativa únicamente para tareas específicas y acotadas, definidas previamente por la cátedra. No se requiere una declaración formal de uso si se limita a las tareas permitidas.</p>
+                <p><strong>Fundamentos:</strong> este modelo intermedio reconoce la utilidad de la IA para ciertas tareas de bajo nivel (ej. revisión gramatical, traducción de una cita) pero reserva las tareas de alto nivel cognitivo (análisis, argumentación, creación) exclusivamente para el estudiante. Otorga al docente un control preciso sobre qué habilidades se evalúan con y sin asistencia.</p>
+                <div class="syllabus-suggestion suggestion-restricted">
+                    <h3>Sugerencia para incluir en el programa:</h3>
+                    <p><strong>Política sobre inteligencia artificial generativa:</strong> se permite el uso de herramientas de IA generativa (IAG) exclusivamente para las siguientes tareas de apoyo: a) revisar la gramática y ortografía de un texto ya escrito por el estudiante, y b) buscar sinónimos o reformular una oración para mejorar la claridad. Queda prohibido el uso de IAG para generar ideas, crear borradores, escribir párrafos completos o realizar análisis. El estudiante es plenamente responsable del contenido final de su trabajo. Cualquier uso que exceda estas pautas será considerado una falta académica.</p>
+                </div>
+            </div>
+        </details>
+        
+        <details>
+            <summary><h2>Nivel 3: Uso abierto con transparencia (copiloto)</h2></summary>
+            <div class="details-content">
+                <p><strong>Enfoque:</strong> se promueve el uso ético y crítico de la IA como una herramienta de asistencia intelectual. Es obligatorio declarar de forma explícita qué herramientas se usaron y para qué tareas concretas.</p>
+                <p><strong>Fundamentos:</strong> este es el enfoque más alineado con las competencias profesionales actuales. Considera la IA como un "copiloto" que puede potenciar el trabajo del estudiante, pero nunca reemplazar su pensamiento crítico y su voz autoral. La transparencia es el eje central: se evalúa tanto el producto final como la honestidad y la reflexión sobre el proceso de creación.</p>
+                <div class="syllabus-suggestion suggestion-open">
+                    <h3>Sugerencia para incluir en el programa:</h3>
+                    <p><strong>Política sobre inteligencia artificial generativa:</strong> la cátedra promueve el uso responsable y transparente de herramientas de inteligencia artificial generativa (IAG). Se permite su uso como "copiloto intelectual" para explorar ideas, mejorar la redacción o estructurar trabajos, siempre que no sustituya el análisis personal. Es obligatorio incluir en cada trabajo una "declaración de uso de IA" que especifique qué herramientas se utilizaron y para qué fines. No se permite presentar texto generado por IA como propio. El estudiante es el único responsable de la veracidad, coherencia y autoría de su producción académica. La omisión de la declaración o el uso indebido afectarán la calificación.</p>
+                </div>
+            </div>
+        </details>
+
+    </main>
+
+    <footer class="page-footer">
+        ¿Preguntas? ¿Sugerencias? <a href="mailto:stellamariscao@gmail.com">stellamariscao@gmail.com</a>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Guía de lectura de El proceso grupal</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 40px; 
+            background-color: #f9f9f9; 
+            color: #333; 
+            line-height: 1.6; 
+        }
+        h1 { 
+            color: #2c3e50; 
+            text-align: center; 
+            border-bottom: 2px solid #3498db; 
+            padding-bottom: 10px; 
+        }
+        p { margin-bottom: 20px; }
+        details { 
+            margin-bottom: 15px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            background-color: #fff; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+        summary { 
+            font-weight: bold; 
+            cursor: pointer; 
+            padding: 15px; 
+            background-color: #ecf0f1; 
+            color: #2c3e50; 
+            transition: background-color 0.3s; 
+        }
+        summary:hover { background-color: #d6eaff; }
+        details[open] summary { background-color: #3498db; color: #fff; }
+        .relevancia { 
+            font-weight: bold; 
+            background-color: #e8f4fd; 
+            padding: 15px; 
+            margin: 15px; 
+            border-left: 5px solid #3498db; 
+            border-radius: 4px; 
+        }
+        .relevancia p { font-weight: normal; }
+        .term { 
+            color: #2980b9; 
+            text-decoration: underline; 
+            cursor: pointer; 
+        }
+        .term:hover { color: #e74c3c; }
+        /* Modal styles */
+        #modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+            padding-top: 60px; 
+        }
+        #modal-content { 
+            background-color: #fff; 
+            margin: 5% auto; 
+            padding: 20px; 
+            border: 1px solid #888; 
+            width: 80%; 
+            max-width: 600px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+        }
+        #close { 
+            color: #aaa; 
+            float: right; 
+            font-size: 28px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+        #close:hover { color: #000; }
+        #modal-title { color: #2c3e50; }
+        #modal-definition { font-style: italic; }
+        footer { 
+            text-align: center; 
+            font-size: 0.8em; 
+            color: #777; 
+            margin-top: 40px; 
+            border-top: 1px solid #ddd; 
+            padding-top: 10px; 
+        }
+    </style>
+    <script>
+        var definitions = {
+            "Ambivalencia": "Relación o vínculo con un objeto total en que el amor y el odio se dirigen al mismo objeto. Es característica de la posición depresiva y muestra la complejidad de los afectos humanos. Ejemplo: un hijo puede amar profundamente a su padre y, al mismo tiempo, sentir enojo hacia él por sus exigencias.",
+            "Aprendizaje de la realidad (trastorno del)": "La enfermedad mental es entendida como un trastorno del aprendizaje de la realidad. Surge cuando se interrumpe el proceso dialéctico normal entre los momentos de cierre y apertura para incorporar nueva información. Ejemplo: una persona con fobia evita enfrentarse a lo temido, bloqueando así la posibilidad de aprender algo nuevo sobre esa experiencia.",
+            "Área 1 (psiquis)": "Una de las tres dimensiones que integran a la persona como totalidad significativa. Se refiere al mundo interno, a los pensamientos, emociones y representaciones. Ejemplo: reflexionar sobre un conflicto emocional pertenece al área psíquica.",
+            "Área 2 (cuerpo)": "Segunda dimensión de la totalidad humana. En ella se inscriben los objetos internos y los vínculos corporales. Ejemplo: las contracturas musculares que acompañan al estrés son manifestaciones corporales de un conflicto interno.",
+            "Área 3 (mundo exterior)": "Tercera dimensión que representa el contacto del sujeto con su entorno social, material y simbólico. Ejemplo: las normas de un grupo de trabajo o los roles familiares pertenecen al mundo exterior.",
+            "Angustia agorafóbica": "Una de las dos angustias básicas. Es el miedo a quedar demasiado tiempo abierto al mundo exterior o a perder los límites. Es una angustia de tipo espacial. Ejemplo: quien teme salir de su casa puede sentir que el espacio abierto lo amenaza o lo desborda.",
+            "Angustia claustrofóbica": "La otra angustia básica. Es el miedo a quedarse encerrado o atrapado, tanto en un espacio físico como en un vínculo o una situación emocional. Se asocia al tiempo de espera. Ejemplo: una persona que no soporta estar mucho tiempo en una relación percibida como asfixiante manifiesta esta forma de angustia.",
+            "Bivalencia": "Concepto que reemplaza al de ambivalencia. Indica que siempre coexisten dos vínculos: uno con el objeto bueno y otro con el objeto malo. Ejemplo: alguien puede sentir ternura y resentimiento hacia su pareja al mismo tiempo.",
+            "Campo psicológico": "Objeto central de la investigación pichoniana. Incluye las interacciones entre el individuo y su medio. No hay sujeto sin contexto. Ejemplo: el estado de ánimo de un estudiante no puede entenderse sin considerar el clima grupal de su aula.",
+            "Conducta": "Expresión visible de un vínculo. Muestra cómo la personalidad actúa como agente modificador en una situación. Ejemplo: una sonrisa en medio de una discusión puede expresar un intento de reparación.",
+            "Despersonalización": "Sensación de pérdida del yo o de la identidad. Es un mecanismo defensivo frente al temor de comprometerse en un vínculo. Ejemplo: alguien puede decir “me siento como si no fuera yo” después de una ruptura afectiva.",
+            "Desrealización": "Versión proyectada de la despersonalización: el mundo se percibe como extraño o modificado. Ejemplo: tras un impacto emocional fuerte, una persona siente que “todo está raro” o “como si fuera una película”.",
+            "Dialéctica o espiral dialéctica": "Modo de pensamiento que concibe la realidad como un proceso de interacción constante entre lo interno y lo externo. Es una espiral en movimiento que integra contradicciones. Ejemplo: aprender de los errores implica revisar la experiencia, reelaborarla y volver a actuar de un modo nuevo.",
+            "Teoría de las tres D (depositante, depositario y depositado)": "Describe la circulación de los contenidos psíquicos entre las personas. El paciente (depositante) coloca sus objetos internos (depositado) en el analista (depositario). Ejemplo: un alumno deposita en su docente la confianza o el temor que antes sintió hacia figuras parentales.",
+            "E.C.R.O. (esquema conceptual, referencial y operativo)": "Instrumento de trabajo para construir la interpretación. Es una estructura en continuo movimiento que resuelve la tensión entre lo previo y lo nuevo. Ejemplo: un equipo de trabajo revisa periódicamente sus supuestos teóricos y modifica su plan de acción.",
+            "Gestalt": "Estructura que funciona como totalidad. Persona, vínculo y grupo son configuraciones globales en constante evolución. Ejemplo: un grupo de estudio se convierte en una Gestalt cuando sus miembros funcionan de manera integrada.",
+            "Identificación introyectiva": "Mecanismo por el cual el sujeto incorpora rasgos o roles del otro, haciéndolos propios. Ejemplo: una hija que adopta el tono de voz de su madre sin notarlo.",
+            "Identificación proyectiva": "Mecanismo que consiste en proyectar en otro aspectos propios, manteniéndose como espectador de la acción. Ejemplo: un estudiante acusa a su docente de impaciencia, cuando en realidad es él quien está ansioso.",
+            "Inconsciente y consciente": "No se conciben como ámbitos separados, sino como diferencias de grado dentro de la misma actividad psíquica. Ejemplo: un lapsus verbal revela un contenido inconsciente que roza la conciencia.",
+            "Interpretación": "Hipótesis que actúa como dato operacional, permitiendo la síntesis entre teoría y práctica. Ejemplo: cuando un terapeuta señala una contradicción que ayuda al paciente a entender su conducta.",
+            "Introspección": "Equivalente al autoanálisis. Es el diálogo interno entre el yo y sus objetos internos. Ejemplo: alguien que se pregunta “¿por qué reaccioné así?” está realizando una introspección.",
+            "Investigación institucional": "Estudia grandes grupos, sus estructuras, ideologías y modos de organización. Ejemplo: analizar cómo se toman las decisiones en una escuela.",
+            "Investigación psicosocial": "Explora cómo el sujeto se expresa hacia afuera, en relación con otros. Ejemplo: observar las interacciones en un grupo de vecinos durante una asamblea.",
+            "Investigación sociodinámica": "Examina las tensiones internas de los grupos y las relaciones de fuerza entre sus miembros. Ejemplo: detectar cómo un liderazgo rígido genera resistencia en un equipo.",
+            "Lo racional y lo irracional": "No se oponen, sino que forman un continuo. Lo irracional surge del grado de inconsciencia de los vínculos que actúan. Ejemplo: reaccionar con enojo sin entender por qué refleja un vínculo interno no elaborado.",
+            "Observador participante": "Quien observa también transforma el campo que estudia; nunca es neutral. Ejemplo: un docente que evalúa a su grupo influye en el clima del aula mientras lo observa.",
+            "Praxis": "Síntesis entre teoría y práctica que se alcanza en el momento mismo de la acción transformadora. Ejemplo: un proyecto comunitario que ajusta su plan a partir de los resultados obtenidos.",
+            "Psiquiatría del vínculo": "Perspectiva que reemplaza la visión individualista por una mirada centrada en las relaciones interpersonales. Ejemplo: analizar una depresión considerando no solo la biografía del sujeto, sino también sus lazos sociales.",
+            "Regresión transferencial": "Proceso mediante el cual el paciente revive experiencias pasadas dentro de la relación terapéutica, para reconfigurarlas y aprender de ellas. Ejemplo: un alumno que se siente tratado con injusticia puede estar reeditando un vínculo antiguo con la autoridad.",
+            "Relación de objeto": "Estructura interna del vínculo que el sujeto establece con las figuras significativas de su mundo interno. Ejemplo: el modo en que alguien imagina la mirada crítica de su padre incluso en ausencia de él.",
+            "Rol": "Función particular que una persona intenta comunicar al otro; es el aspecto cualitativo de la función social. Ejemplo: en un grupo de trabajo, el rol de mediador puede surgir espontáneamente en quien tiende a armonizar.",
+            "Situación": "Campo de acción donde el medio es el agente principal de cambio o de influencia. Ejemplo: una entrevista laboral es una situación que pone a prueba la adaptación del sujeto al contexto.",
+            "Status": "Nivel o jerarquía del rol; indica su valor cuantitativo o de prestigio. Ejemplo: dentro de un grupo, el coordinador tiene un status más alto que los demás miembros, aunque todos compartan un objetivo común.",
+            "Totalidad significativa": "Concepción integral del ser humano, compuesto por mente, cuerpo y mundo exterior. Ejemplo: un malestar físico puede entenderse también desde sus causas emocionales y sociales.",
+            "Unidad dialéctica de relación": "Vínculo en el que dos personas actúan una sobre la otra en un proceso de mutua transformación. Ejemplo: en la terapia, tanto el paciente como el analista cambian a lo largo del tratamiento.",
+            "Vínculo": "Estructura dinámica en continuo movimiento que engloba por igual al sujeto y al objeto. Toda conducta se origina en un vínculo y tiende a repetirse. Ejemplo: un estudiante que se desanima ante las críticas puede estar repitiendo un vínculo de desvalorización aprendido en su infancia.",
+            "Grupo operativo": "Estructura grupal orientada a una tarea, con enfoque en la resolución de contradicciones para promover el cambio y el aprendizaje colectivo. Ejemplo: un equipo de trabajo que se reúne para resolver un problema comunitario, utilizando la dinámica de roles para superar resistencias.",
+            "Portavoz": "Miembro del grupo que expresa la ansiedad o el conflicto colectivo de manera consciente o inconsciente. Ejemplo: en una familia, el hijo que se enferma y manifiesta los problemas no resueltos de los padres.",
+            "Chivo emisario": "Rol en el grupo donde un miembro es culpabilizado por los problemas colectivos, sirviendo como válvula de escape para la ansiedad grupal. Ejemplo: en un equipo, el empleado que es blamed por los errores del grupo para evitar confrontar problemas estructurales.",
+            "Obstáculo epistemológico": "Elemento que impide el aprendizaje y la comprensión, representado por ruido en la comunicación o el 'tercero' en la situación triangular. Ejemplo: un prejuicio que bloquea la asimilación de nueva información en un grupo de discusión.",
+            "Epistemología convergente": "Aproximación interdisciplinaria que converge en un objeto único: el hombre en situación, permitiendo una visión pluridimensional. Ejemplo: integrar psicología, sociología e institucional para analizar un conflicto comunitario.",
+            "Tarea": "Momento en el proceso grupal donde se elabora la contradicción depresiva, logrando integración e insight. Ejemplo: en una sesión grupal, el grupo trabaja colectivamente para resolver una resistencia inicial y avanzar hacia el cambio.",
+            "Pre-tarea": "Etapa inicial de resistencias, ansiedades y mecanismos defensivos en el grupo operativo. Ejemplo: los miembros de un grupo evitan la tarea principal expresando dudas o conflictos superficiales.",
+            "Proyecto": "Fase final de modificación vincular y proyección hacia el futuro en el proceso grupal. Ejemplo: después de resolver un conflicto, el grupo planifica acciones concretas para implementar el aprendizaje adquirido."
+        };
+
+        function showDefinition(term) {
+            document.getElementById('modal-title').innerText = term;
+            document.getElementById('modal-definition').innerText = definitions[term] || 'Definición no encontrada.';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <h1>Guía de lectura de <i>El proceso grupal</i></h1>
+    <p style="text-align: center; font-weight: bold;">Enrique Pichon-Riviére</p>
+
+    <details>
+        <summary>Sobre el libro</summary>
+        <div>
+            <p>El libro <i>El proceso grupal</i> de Enrique Pichon-Riviére es una recopilación de textos teóricos, ensayos, prólogos, reportajes y conferencias que abordan la psicología social, psiquiatría operativa, procesos grupales y aplicaciones terapéuticas. El propósito de esta guía es ofrecer una lectura que vincule cada sección con los fundamentos de un Preproyecto Comunitario (PPC), concebido como un dispositivo cíclico de práctica → reflexión → praxis transformadora.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Prólogo</summary>
+        <div>
+            <p>Pichon-Riviére presenta un prólogo autobiográfico con un poema propio de 1924. Describe su origen en la emigración de sus padres de Ginebra al Chaco, la influencia de mitos guaraníes y el pensamiento mágico. Narra su vocación por las ciencias del hombre, la formación en psiquiatría, el contacto con el psicoanálisis y la evolución teórica hacia la psicología social. Introduce conceptos clave como <span class="term" onclick="showDefinition('Vínculo')">vínculo</span>, mundo interno y <span class="term" onclick="showDefinition('Epistemología convergente')">epistemología convergente</span>.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 1: Diagnóstico vivo).</strong><p> El prólogo orienta a comprender el origen relacional del sujeto y la necesidad de una investigación pluridimensional (psicosocial, sociodinámica, institucional). En un PPC, este enfoque ayuda a construir un diagnóstico participativo que integra lo interno y lo externo.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Una nueva problemática para la psiquiatría</summary>
+        <div>
+            <p>Se discute la historia de la psiquiatría, la concepción organicista vs. dialéctica, la relación endógeno-exógeno y el rol del psiquiatra. Se introduce la lógica dialéctica, el <span class="term" onclick="showDefinition('Obstáculo epistemológico')">obstáculo epistemológico</span>, la definición de <span class="term" onclick="showDefinition('Vínculo')">vínculo</span> como Gestalt, criterios de salud mental y estructuras depresivas. Se detallan posiciones de desarrollo y principios de causación.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Lógica Cíclica).</strong><p> La espiral dialéctica y el enfoque en conflictos internos/externos constituyen el núcleo de la lógica del PPC, promoviendo un aprendizaje comunitario que integra práctica y reflexión crítica.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>La noción de tarea en psiquiatría</summary>
+        <div>
+            <p>En colaboración con Dr. A. Bauleo (1964), se define la <span class="term" onclick="showDefinition('Tarea')">tarea</span> en psiquiatría con momentos terapéuticos: <span class="term" onclick="showDefinition('Pre-tarea')">pre-tarea</span> (resistencias), <span class="term" onclick="showDefinition('Tarea')">tarea</span> (elaboración) y <span class="term" onclick="showDefinition('Proyecto')">proyecto</span> (modificación). Se enfatiza la orientación terapéutica por y para otros.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 3: Roles y vocerías).</strong><p> La noción de tarea en grupos operativos es central para el trabajo comunitario, promoviendo roles rotativos y la madurez psicosocial a través de la resolución de contradicciones.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Praxis y psiquiatría</summary>
+        <div>
+            <p>Reportaje de 1966 en Revista Latinoamericana de Salud Mental. Se discute la higiene mental como tarea social, el enfermo como <span class="term" onclick="showDefinition('Portavoz')">portavoz</span> de ansiedad grupal y la transformación social. Se destaca la complementariedad con otras escuelas.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Praxis transformadora).</strong><p> La praxis como síntesis teoría-práctica implica convertir el conocimiento en acción colectiva, asegurando el sentido ético de la intervención comunitaria.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Freud: punto de partida de la psicología social</summary>
+        <div>
+            <p>De 1965, analiza "Psicología de las masas" de Freud, proponiendo la psicología individual como social. Critica el antropocentrismo y propone una psicología estrictamente social basada en internalización de relaciones.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Empleo del Tofranil en psicoterapia individual y grupal</summary>
+        <div>
+            <p>Se presenta el <span class="term" onclick="showDefinition('E.C.R.O. (esquema conceptual, referencial y operativo)')">ECRO</span>, situación depresiva y uso de Tofranil para movilizar estereotipos. Incluye casos individuales y grupales familiares, con administración grupal para romper rigidez.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 4: Monitoreo y ajuste).</strong><p> El uso de herramientas para modificar estereotipos legitima el monitoreo constante en acciones comunitarias, evaluando dinámicas y ajustando estrategias.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Tratamiento de grupos familiares: psicoterapia colectiva</summary>
+        <div>
+            <p>Definiciones de relaciones humanas, familia como unidad social. Análisis polidimensional (psicológico, sociodinámico, institucional). Tratamiento en cuatro momentos: diagnóstico, pronóstico, tratamiento, profilaxis. Incluye esquema del cono invertido y universales en dinámica grupal.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Mapa de actores y alianzas).</strong><p> El estudio de roles y status en grupos familiares ayuda a mapear actores, identificar conflictos y oportunidades en la comunidad.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Grupos familiares: un enfoque operativo</summary>
+        <div>
+            <p>Objetivo terapéutico, adaptación activa vs. pasiva, mundo interno, estructura del vínculo. Interacción en grupo familiar, enfermo como portavoz, redes de comunicación, grupo operativo. Tipología familiar según Mme. Minkowska.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Aplicaciones de la psicoterapia de grupo</summary>
+        <div>
+            <p>Perturbaciones en aprendizaje de psiquiatría, enseñanza en grupo, esquema referencial. Aplicaciones en hospital psiquiátrico y empresa/fábrica.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Validación y objetivos).</strong><p> Las aplicaciones en contextos institucionales ayudan a validar objetivos comunitarios, restableciendo comunicación para transformación colectiva.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Discurso pronunciado como presidente del Segundo Congreso Argentino de Psiquiatría</summary>
+        <div>
+            <p>Problemas globales de salud mental, morbilidad en ámbito estudiantil, concepto de persona sana. Enfoque grupal con grupos operativos y comunidades operativas.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>La psiquiatría en el contexto de los estudios médicos</summary>
+        <div>
+            <p>Reencuentro con el hombre en totalidad, contenido de enseñanza, programa en etapas, problemas pedagógicos, psicoterapia de grupo en enseñanza.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Metodología y ajuste dialéctico).</strong><p> El enfoque pedagógico en psiquiatría refleja la necesidad de un ECRO plástico para revisar hipótesis y ajustar estrategias en el PPC.</p></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>Presentación a la cátedra de psiquiatría de la Facultad de Medicina de la Universidad Nacional de La Plata</summary>
+        <div>
+            <p>Contacto con problemas emocionales/sociales, formación en tres años, pacientes diversas clases, postgraduados, educación pública, servicio para estudiantes, investigación práctica.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Prólogo al libro de F. K. Taylor “Un análisis de la psicoterapia grupal”</summary>
+        <div>
+            <p>Ediciones en escuela, ECRO, psicoterapia por grupo centrada en tarea, evaluación en psicoterapia grupal, análisis del libro de Taylor.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Técnica de los grupos operativos</summary>
+        <div>
+            <p>Investigación social con psicólogo social, experiencia en Rosario (preparación equipo, operación pasos, sesiones grupos), descripción experiencias (grupos homogéneos), didáctica interdisciplinaria, etapas desarrollo, laboratorio social, indagación operativa.</p>
+            <div class="relevancia"><strong>Relevancia para el PPC (Fase 1: Contexto y foco).</strong><p> La técnica de grupos operativos ofrece herramientas para analizar interacciones en niveles psicosocial, sociodinámico e institucional, integrando la persona en su totalidad significativa.</p></div>
+        </div>
+    </details>
+
+    <!-- Modal -->
+    <div id="modal">
+        <div id="modal-content">
+            <span id="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-definition"></p>
+        </div>
+    </div>
+
+    <footer>Stella M. Cao - Psicología Comunitaria 2025</footer>
+</body>
+</html>

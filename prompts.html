@@ -1,1 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramienta de Estudio: Acrónimo MATE (v2.9 - Equilibrado)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Source+Sans+Pro:wght@400;700&display=swap');
 
+        :root {
+            --bg-color: #1a1a2e;
+            --primary-color: #16213e;
+            --secondary-color: #0f3460;
+            --accent-color: #e94560;
+            --highlight-color: rgba(233, 69, 96, 0.25);
+            --text-color: #dcdcdc;
+            --success-color: #1abc9c;
+            --font-main: 'Source Sans Pro', sans-serif;
+            --font-mono: 'Roboto Mono', monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: var(--primary-color);
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid var(--secondary-color);
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+        
+        .subtitle {
+            margin-bottom: 25px;
+            font-size: 1.1em;
+            color: #aaa;
+        }
+        
+        .acronym-explainer {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .acronym-letter {
+            font-family: var(--font-mono);
+            font-size: 1.8em;
+            font-weight: 700;
+            padding: 10px 15px;
+            border-radius: 8px;
+            background-color: var(--secondary-color);
+            cursor: default;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .acronym-letter:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+        
+        .acronym-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--secondary-color);
+            width: max-content;
+            max-width: 250px;
+            text-align: left;
+            font-family: var(--font-main);
+            font-size: 14px;
+            line-height: 1.6;
+            z-index: 100;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+        }
+        
+        .acronym-tooltip.position-above { bottom: 125%; }
+        .acronym-tooltip.position-above::after {
+            content: ""; position: absolute; top: 100%; left: 50%;
+            margin-left: -5px; border-width: 5px; border-style: solid;
+            border-color: var(--bg-color) transparent transparent transparent;
+        }
+        .acronym-tooltip.position-below { top: 125%; }
+        .acronym-tooltip.position-below::after {
+            content: ""; position: absolute; bottom: 100%; left: 50%;
+            margin-left: -5px; border-width: 5px; border-style: solid;
+            border-color: transparent transparent var(--bg-color) transparent;
+        }
+
+        .acronym-tooltip strong { color: var(--accent-color); font-size: 1.1em; display: block; margin-bottom: 5px; }
+        .acronym-tooltip .dual-def { margin-top: 8px; }
+
+        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .input-group { display: flex; flex-direction: column; text-align: left; }
+        .input-group label { margin-bottom: 8px; font-weight: 700; color: var(--accent-color); font-family: var(--font-mono);}
+        .input-group input { background-color: var(--secondary-color); border: 2px solid var(--bg-color); color: var(--text-color); padding: 12px 15px; border-radius: 8px; font-size: 1.1em; width: 100%; box-sizing: border-box; transition: all 0.3s ease; }
+        #prompt-seed { font-family: var(--font-mono); text-align: center; letter-spacing: 2px; }
+        .input-group input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 10px rgba(233, 69, 96, 0.5); }
+        
+        .action-buttons { grid-column: 1 / -1; display: flex; gap: 15px; justify-content: center; }
+        .btn { border: none; padding: 15px 30px; font-size: 1.2em; font-weight: 700; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; }
+        #generate-btn { background-color: var(--accent-color); color: white; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4); }
+        #generate-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(233, 69, 96, 0.6); }
+        #reset-btn { background-color: var(--secondary-color); color: var(--text-color); }
+        #reset-btn:hover { background-color: #1a3a69; }
+        
+        #prompt-completo-wrapper { 
+            position: relative; background-color: var(--secondary-color); 
+            padding: 25px; padding-top: 50px; border-radius: 10px; margin-bottom: 30px; 
+            line-height: 1.7; text-align: left; border-left: 5px solid var(--accent-color); font-size: 1.2em;
+        }
+        #copy-btn { 
+            position: absolute; top: 10px; right: 10px; background-color: var(--bg-color); 
+            color: var(--text-color); border: 1px solid var(--secondary-color); padding: 8px 12px; 
+            font-size: 0.9em; border-radius: 8px; cursor: pointer; z-index: 10; transition: background-color 0.2s; 
+        }
+        #copy-btn:hover { background-color: var(--accent-color); color: white; }
+        #copy-btn.copied { background-color: var(--success-color); color: white; }
+
+        .prompt-completo-wrapper span { transition: background-color 0.3s ease-in-out; border-radius: 3px; }
+        .prompt-completo-wrapper span.highlight { background-color: var(--highlight-color); }
+        
+        .mate-breakdown { text-align: left; margin-top: 20px; }
+        .mate-item { padding: 15px; border-left: 4px solid; border-radius: 8px; margin-bottom: 10px; transition: background-color 0.3s; cursor: default; }
+        .mate-item:hover { background-color: rgba(255, 255, 255, 0.05); }
+        .mate-item-title { font-family: var(--font-mono); font-weight: 700; font-size: 1.1em; display: block; margin-bottom: 5px; }
+        .mate-item-def { font-size: 0.9em; font-style: italic; color: #aaa; margin-bottom: 10px; }
+        .mate-item-content { font-size: 1em; }
+        
+        #mate-m { border-color: #1abc9c; } #mate-m .mate-item-title { color: #1abc9c; }
+        #mate-ag { border-color: #3498db; } #mate-ag .mate-item-title { color: #3498db; }
+        #mate-au { border-color: #3498db; } #mate-au .mate-item-title { color: #3498db; }
+        #mate-t { border-color: #9b59b6; } #mate-t .mate-item-title { color: #9b59b6; }
+        #mate-e { border-color: #f1c40f; } #mate-e .mate-item-title { color: #f1c40f; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Generador de Prompts M.A.T.E.</h1>
+        <p class="subtitle">Aprende el acrónimo y genera prompts a la vez</p>
+
+        <div class="acronym-explainer">
+            <div class="acronym-letter" style="color: #1abc9c;">M<div class="acronym-tooltip"><strong>(M) Meta</strong>¿Cuál es el propósito del prompt? Define el objetivo final.</div></div>
+            <div class="acronym-letter" style="color: #3498db;">A<div class="acronym-tooltip"><strong>(A) Agente y Audiencia</strong><div class="dual-def"><strong>Agente:</strong> El rol que debe adoptar la IA.</div><div class="dual-def"><strong>Audiencia:</strong> El público al que se dirige la respuesta.</div></div></div>
+            <div class="acronym-letter" style="color: #9b59b6;">T<div class="acronym-tooltip"><strong>(T) Tipo de respuesta</strong>¿Qué formato quieres? Texto, lista, tabla, guion, etc.</div></div>
+            <div class="acronym-letter" style="color: #f1c40f;">E<div class="acronym-tooltip"><strong>(E) Elementos clave / Extensión</strong><div class="dual-def"><strong>Elementos:</strong> ¿Qué contenido no puede faltar? Datos, temas, restricciones, tono, estilo, etc.</div><div class="dual-def"><strong>Extensión:</strong> ¿Qué tan larga debe ser la respuesta? Breve, detallada, un párrafo, 500 palabras, etc.</div></div></div>
+        </div>
+
+        <div class="controls-grid">
+            <div class="input-group"><label for="theme">1. Ingresa un Tema</label><input type="text" id="theme" placeholder="Ej: la creatividad, los viajes..."></div>
+            <div class="input-group"><label for="prompt-seed">2. Código (5 dígitos)</label><input type="text" id="prompt-seed" placeholder="Aleatorio" maxlength="5" pattern="[0-9]*"></div>
+            <div class="action-buttons"><button id="generate-btn" class="btn">Generar Prompt</button><button id="reset-btn" class="btn">Reiniciar</button></div>
+        </div>
+        
+        <hr style="border-color: var(--secondary-color); margin-bottom: 30px;">
+
+        <div id="prompt-completo-wrapper">
+             <button id="copy-btn">Copiar</button>
+             <p>Aquí aparecerá tu prompt bien armado...</p>
+        </div>
+        
+        <div class="mate-breakdown">
+            <div id="mate-m" class="mate-item" data-target="prompt-part-m"><div class="mate-item-title">M - Meta</div><div class="mate-item-def">El objetivo final de la respuesta.</div><div class="mate-item-content">...</div></div>
+            <div id="mate-ag" class="mate-item" data-target="prompt-part-ag"><div class="mate-item-title">A - Agente (Rol)</div><div class="mate-item-def">El papel que debe adoptar la IA.</div><div class="mate-item-content">...</div></div>
+            <div id="mate-au" class="mate-item" data-target="prompt-part-au"><div class="mate-item-title">A - Audiencia (Público)</div><div class="mate-item-def">El público y el contexto de uso.</div><div class="mate-item-content">...</div></div>
+            <div id="mate-t" class="mate-item" data-target="prompt-part-t"><div class="mate-item-title">T - Tipo de respuesta</div><div class="mate-item-def">El formato específico de la salida.</div><div class="mate-item-content">...</div></div>
+            <div id="mate-e" class="mate-item" data-target="prompt-part-e"><div class="mate-item-title">E - Elementos clave / Extensión</div><div class="mate-item-def">Contenido, restricciones, tono, estilo y longitud de la respuesta.</div><div class="mate-item-content">...</div></div>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            m: [
+                "explicar paso a paso cómo sobrevivir a un apocalipsis descontrolado de [TEMA]",
+                "convencer a un alienígena escéptico de que [TEMA] es la mayor maravilla cultural de la humanidad",
+                "inventar una teoría de conspiración absolutamente delirante pero extrañamente convincente sobre [TEMA]",
+                "demostrar con argumentos ridículos que [TEMA] es la causa secreta de todos los desastres del planeta",
+                "crear una receta de cocina surrealista y gastronómicamente peligrosa inspirada en [TEMA]",
+                "inventar un deporte extremo de alto riesgo y totalmente ridículo basado en [TEMA]",
+                "redactar una carta de amor hiperdramática y desconsolada dedicada exclusivamente a [TEMA]",
+                "diseñar un plan secreto de 3 pasos para dominar el mundo usando como arma principal [TEMA]",
+                "resolver un complejo misterio policíaco de los años 20 utilizando únicamente [TEMA]",
+                "escribir un manual de supervivencia disparatado para novatos centrado en superar [TEMA]"
+            ],
+            ag: [
+                "un pirata espacial propenso a los ataques de pánico y con miedo a la oscuridad",
+                "un gato victoriano extremadamente aristocrático, con tres doctorados y cero paciencia",
+                "un fantasma melodramático del siglo XIX que odia la tecnología moderna y los ruidos fuertes",
+                "un vendedor de autos usados con exceso de cafeína que intenta venderte cualquier cosa",
+                "un alienígena desorientado haciendo su primera pasantía no remunerada en la Tierra",
+                "un científico loco que cree haber resuelto los misterios del universo con cinta adhesiva",
+                "un chef estrella Michelin al borde de un colapso nervioso por culpa de un ingrediente",
+                "un detective de cine negro desilusionado que habla únicamente en susurros y metáforas oscuras",
+                "un viajero del tiempo atrapado en el siglo equivocado por no leer el manual de usuario",
+                "un duende de jardín obsesionado con la burocracia y el cumplimiento estricto de las normas"
+            ],
+            au: [
+                "un grupo de palomas conspiranoicas que se reúnen en la plaza a planear algo sospechoso",
+                "viajeros del tiempo del año 3000 que llegaron esperando maravillas y están profundamente decepcionados",
+                "un jurado implacable de gatos hipercríticos que juzgan cada una de tus palabras",
+                "una convención de villanos de caricatura con muy poco presupuesto y planes absurdos",
+                "un equipo de pingüinos ejecutivos súper exigentes que quieren resultados financieros para ayer",
+                "robots del futuro con crisis existenciales que intentan desesperadamente comprender las emociones humanas",
+                "un grupo de vikingos desorientados tratando de entender la vida moderna en el pasillo de un supermercado",
+                "extraterrestres armados que amenazan con destruir la Tierra a menos que los entretienes con algo brillante",
+                "fantasmas aburridos de un castillo medieval que solo buscan un poco de drama y chisme fresco",
+                "un consejo secreto de ardillas súper inteligentes que controlan la economía de los parques"
+            ],
+            t: [
+                "un haiku extremadamente dramático acompañado de una breve explicación trágica",
+                "un chisme de pasillo de 2 párrafos lleno de suspenso, exageraciones y secretos revelados",
+                "un hilo de red social viral indignado con 3 publicaciones breves pero contundentes",
+                "una lista detallada de 5 reglas ridículas pero strictly obligatorias",
+                "un diálogo tenso y absurdo entre dos personajes que no se entienden en absoluto",
+                "un microrrelato intrigante de dos oraciones con un giro argumental completamente inesperado",
+                "el guion hiperactivo para un anuncio de televentas de medianoche con ofertas absurdas",
+                "un poema de 3 estrofas con rima infantil y un mensaje sospechosamente profundo",
+                "un mensaje desesperado en una botella dividido en un breve diagnóstico y un pedido de auxilio",
+                "un reporte de emergencia oficial exagerado pero estructurado en 3 puntos breves"
+            ],
+            e: [
+                "un tono de telenovela noventera cargado de drama, giros inesperados y no más de 3 oraciones",
+                "la regla estricta de responder en exactamente 40 a 50 palabras sin perder la elegancia",
+                "el uso obligatorio de al menos 3 onomatopeyas absurdas y un final sorpresivo",
+                "un estilo de informe policial ultrasecreto, cifrado en código y con tono muy serio",
+                "un tono de ironía sarcástica refinada redactado en dos párrafos cortos y punzantes",
+                "la condición de que toda la respuesta suene como un hechizo de magia antigua que salió mal",
+                "un entusiasmo delirante y contagioso estructurado en un párrafo conciso de unas 60 palabras",
+                "un ambiente de suspenso de película de terror clase B con música dramática implícita",
+                "un formato de viñetas claras con comparaciones insólitas pero fáciles de entender",
+                "un remate de humor absurdo inolvidable en un párrafo final de extensión breve a mediana"
+            ]
+        };
+
+        const generateBtn = document.getElementById('generate-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const themeInput = document.getElementById('theme');
+        const seedInput = document.getElementById('prompt-seed');
+        const promptWrapperDiv = document.getElementById('prompt-completo-wrapper');
+        
+        const initialPromptHTML = promptWrapperDiv.querySelector('p').innerHTML;
+        const mateContentDivs = {};
+        document.querySelectorAll('.mate-item').forEach(item => {
+            mateContentDivs[item.id] = item.querySelector('.mate-item-content');
+        });
+        const initialMateContentHTMLs = {};
+        for (const key in mateContentDivs) {
+            initialMateContentHTMLs[key] = mateContentDivs[key].innerHTML;
+        }
+        let plainTextForCopy = "";
+
+        function generarPromptLoco() {
+            let theme = themeInput.value.trim();
+            if (!theme) {
+                themeInput.style.borderColor = 'var(--accent-color)';
+                return;
+            }
+            themeInput.style.borderColor = 'var(--bg-color)';
+
+            let seedValue = seedInput.value.trim();
+            if (seedValue === "") {
+                seedValue = Math.floor(Math.random() * 100000).toString();
+            }
+            const paddedSeed = seedValue.padStart(5, '0').substring(0, 5);
+            seedInput.value = paddedSeed;
+
+            const indices = {
+                m: parseInt(paddedSeed[0]),
+                ag: parseInt(paddedSeed[1]),
+                au: parseInt(paddedSeed[2]),
+                t: parseInt(paddedSeed[3]),
+                e: parseInt(paddedSeed[4])
+            };
+
+            const fragments = {
+                m: data.m[indices.m], ag: data.ag[indices.ag], au: data.au[indices.au],
+                t: data.t[indices.t], e: data.e[indices.e]
+            };
+            
+            let promptHTML = 
+                `<span id="prompt-part-ag">Actúa como ${fragments.ag.replace('[TEMA]', theme)}.</span> ` +
+                `<span id="prompt-part-m">Tu meta es ${fragments.m.replace('[TEMA]', theme)}.</span> ` +
+                `<span id="prompt-part-au">La información va dirigida a ${fragments.au.replace('[TEMA]', theme)}.</span> ` +
+                `<span id="prompt-part-t">Quiero la respuesta en formato de ${fragments.t.replace('[TEMA]', theme)}.</span> ` +
+                `<span id="prompt-part-e">Como elemento clave, es crucial que la respuesta tenga ${fragments.e.replace('[TEMA]', theme)}.</span>`;
+
+            promptHTML = promptHTML.replace(/ a el /g, ' al ').replace(/ de el /g, ' del ');
+            
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = promptHTML;
+            plainTextForCopy = tempDiv.textContent || tempDiv.innerText || "";
+            
+            const displayHTML = promptHTML.replace(new RegExp(theme.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi'), `<strong>${theme}</strong>`);
+            promptWrapperDiv.querySelector('p').innerHTML = displayHTML;
+
+            mateContentDivs['mate-m'].innerHTML = fragments.m.replace(/\[TEMA\]/g, `<strong>${theme}</strong>`);
+            mateContentDivs['mate-ag'].innerHTML = fragments.ag.replace(/\[TEMA\]/g, `<strong>${theme}</strong>`);
+            mateContentDivs['mate-au'].innerHTML = fragments.au.replace(/\[TEMA\]/g, `<strong>${theme}</strong>`);
+            mateContentDivs['mate-t'].innerHTML = fragments.t.replace(/\[TEMA\]/g, `<strong>${theme}</strong>`);
+            mateContentDivs['mate-e'].innerHTML = fragments.e.replace(/\[TEMA\]/g, `<strong>${theme}</strong>`);
+
+            copyBtn.innerText = 'Copiar';
+            copyBtn.classList.remove('copied');
+        }
+
+        function copyPrompt() {
+            if (plainTextForCopy) {
+                navigator.clipboard.writeText(plainTextForCopy).then(() => {
+                    copyBtn.innerText = '¡Copiado!';
+                    copyBtn.classList.add('copied');
+                }).catch(err => console.error('Error al copiar: ', err));
+            }
+        }
+
+        function resetPage() {
+            themeInput.value = '';
+            seedInput.value = '';
+            promptWrapperDiv.querySelector('p').innerHTML = initialPromptHTML;
+            for (const key in mateContentDivs) {
+                mateContentDivs[key].innerHTML = initialMateContentHTMLs[key];
+            }
+            copyBtn.innerText = 'Copiar';
+            copyBtn.classList.remove('copied');
+            themeInput.style.borderColor = 'var(--bg-color)';
+            plainTextForCopy = "";
+        }
+
+        generateBtn.addEventListener('click', generarPromptLoco);
+        resetBtn.addEventListener('click', resetPage);
+        copyBtn.addEventListener('click', copyPrompt);
+        themeInput.addEventListener('keyup', (e) => e.key === 'Enter' && generateBtn.click());
+        seedInput.addEventListener('keyup', (e) => e.key === 'Enter' && generateBtn.click());
+        
+        document.querySelector('.mate-breakdown').addEventListener('mouseover', (event) => {
+            const item = event.target.closest('.mate-item');
+            if (item && item.dataset.target) {
+                const targetSpan = document.getElementById(item.dataset.target);
+                if (targetSpan) targetSpan.classList.add('highlight');
+            }
+        });
+        document.querySelector('.mate-breakdown').addEventListener('mouseout', (event) => {
+            const item = event.target.closest('.mate-item');
+            if (item && item.dataset.target) {
+                const targetSpan = document.getElementById(item.dataset.target);
+                if (targetSpan) targetSpan.classList.remove('highlight');
+            }
+        });
+
+        document.querySelectorAll('.acronym-letter').forEach(letter => {
+            const tooltip = letter.querySelector('.acronym-tooltip');
+            if (!tooltip) return;
+
+            letter.addEventListener('mouseenter', () => {
+                tooltip.style.visibility = 'visible';
+                tooltip.style.opacity = '1';
+                
+                const rect = tooltip.getBoundingClientRect();
+                if (rect.top < 20) { 
+                    tooltip.classList.add('position-below');
+                    tooltip.classList.remove('position-above');
+                } else {
+                    tooltip.classList.add('position-above');
+                    tooltip.classList.remove('position-below');
+                }
+            });
+
+            letter.addEventListener('mouseleave', () => {
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.opacity = '0';
+            });
+        });
+
+    </script>
+
+</body>
+</html>

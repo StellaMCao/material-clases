@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Docente — Cadáver Exquisito</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-overlay: rgba(12, 10, 24, 0.85);
+            --card-bg: rgba(22, 20, 38, 0.85);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --accent-purple: #9d4edd;
+            --accent-glow: #c77dff;
+            --accent-gold: #e0a96d;
+            --text-main: #f8f9fa;
+            --text-muted: #adb5bd;
+            --font-title: 'Cinzel', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-story: 'Special Elite', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0914;
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(157, 78, 221, 0.18) 0%, transparent 65%),
+                url('cadaver.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 15px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at center, rgba(15, 12, 29, 0.82) 0%, rgba(5, 4, 10, 0.95) 100%);
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        header {
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            font-family: var(--font-title);
+            font-size: 2.4rem;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(199, 125, 255, 0.4);
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--accent-gold);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .back-link {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-glow);
+            text-decoration: none;
+            font-size: 0.85rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(157, 78, 221, 0.25);
+            color: #fff;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Password Gate */
+        #loginGate {
+            max-width: 420px;
+            margin: 60px auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        input[type="password"], input[type="text"] {
+            width: 100%;
+            background: rgba(10, 8, 20, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            outline: none;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--accent-glow);
+            box-shadow: 0 0 10px rgba(199, 125, 255, 0.25);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            font-family: var(--font-title);
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* Stream Feed */
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .feed-title {
+            font-size: 1.1rem;
+            color: var(--accent-glow);
+            font-weight: 600;
+        }
+
+        .live-badge {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #2ecc71;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #2ecc71;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .feed-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            max-height: 520px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .turn-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .turn-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(199, 125, 255, 0.3);
+        }
+
+        .turn-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .turn-num {
+            background: rgba(157, 78, 221, 0.25);
+            color: var(--accent-glow);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.78rem;
+        }
+
+        .turn-author {
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        .turn-text {
+            font-family: var(--font-story);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #ffffff;
+            white-space: pre-wrap;
+            background: rgba(0,0,0,0.3);
+            padding: 12px 14px;
+            border-radius: 8px;
+        }
+
+        .turn-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-delete {
+            background: rgba(217, 4, 41, 0.18);
+            color: #ff4d6d;
+            border: 1px solid rgba(217, 4, 41, 0.35);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete:hover {
+            background: #d90429;
+            color: #ffffff;
+        }
+
+        /* Control Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 18px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7b2cbf 0%, #9d4edd 100%);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
+            transform: translateY(-2px);
+        }
+
+        .btn-gold {
+            background: rgba(224, 169, 109, 0.2);
+            color: var(--accent-gold);
+            border: 1px solid rgba(224, 169, 109, 0.4);
+        }
+
+        .btn-gold:hover {
+            background: rgba(224, 169, 109, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .btn-danger {
+            background: #d90429;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ef233c;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(20, 15, 35, 0.95);
+            border: 1px solid var(--accent-glow);
+            color: #ffffff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            font-size: 0.95rem;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .empty-hint {
+            text-align: center;
+            font-style: italic;
+            color: var(--text-muted);
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-link">← Vista Alumno</a>
+            <h1>🎓 Panel Docente</h1>
+            <div class="subtitle">Monitoreo en Tiempo Real</div>
+        </header>
+
+        <!-- ACCESO CON CONTRASEÑA -->
+        <div id="loginGate" class="glass-card">
+            <h2 style="color: var(--accent-gold); font-family: var(--font-title); font-size: 1.5rem;">Acceso Docente</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Ingresa la contraseña para supervisar la actividad de los alumnos:</p>
+            <input type="password" id="passInput" placeholder="Contraseña de docente" onkeypress="if(event.key==='Enter') checkPass()" />
+            <button class="btn-primary" onclick="checkPass()">Entrar al Panel</button>
+        </div>
+
+        <!-- PANEL DOCENTE PRINCIPAL -->
+        <div id="teacherDashboard" style="display: none; flex-direction: column; gap: 20px;">
+            
+            <!-- Barra de Estadísticas -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-value" id="statTurns">0</div>
+                    <div class="stat-label">Turnos Enviados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statWords">0</div>
+                    <div class="stat-label">Palabras Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statAuthors">0</div>
+                    <div class="stat-label">Autores Activos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statStatus" style="font-size: 1.1rem; padding-top: 6px;">En juego</div>
+                    <div class="stat-label">Estado de la Clase</div>
+                </div>
+            </div>
+
+            <!-- Botones de Control de Clase -->
+            <div class="glass-card">
+                <div class="btn-group">
+                    <button class="btn-gold" onclick="triggerFinalGame()">
+                        <span>📜 Revelar Historia a la Clase</span>
+                    </button>
+                    <button class="btn-primary" onclick="copyFullStory()">
+                        <span>📋 Copiar Texto Completo</span>
+                    </button>
+                    <button class="btn-secondary" onclick="exportStory()">
+                        <span>📥 Descargar (.txt)</span>
+                    </button>
+                    <button class="btn-danger" onclick="resetStory()">
+                        <span>🔄 Reiniciar Juego</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Feed en Vivo -->
+            <div class="glass-card">
+                <div class="feed-header">
+                    <div class="feed-title">📖 Feed de Escritura en Vivo (Orden Cronológico)</div>
+                    <div class="live-badge">Monitoreando en tiempo real</div>
+                </div>
+                <div class="feed-list" id="feedList">
+                    <div class="empty-hint">Esperando a que los estudiantes comiencen a escribir...</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="toast">Notificación</div>
+
+    <!-- 🔥 Firebase Realtime Database -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, ref, onValue, remove, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        const firebaseConfig = {
+            databaseURL: "https://cadaverexquisito-66d1a-default-rtdb.firebaseio.com/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const storyRef = ref(database, "cadaverExquisito");
+        const statusRef = ref(database, "cadaverExquisito_status");
+
+        const PASS_CORRECTA = "docente2026";
+        let currentFullStory = [];
+        let isFinished = false;
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.textContent = msg;
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 3200);
+        }
+
+        function checkPass() {
+            const val = document.getElementById("passInput").value;
+            if (val === PASS_CORRECTA || val === "docente") {
+                sessionStorage.setItem("docente_auth", "true");
+                showDashboard();
+            } else {
+                showToast("❌ Contraseña incorrecta.");
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById("loginGate").style.display = "none";
+            document.getElementById("teacherDashboard").style.display = "flex";
+        }
+
+        // Auto-login si ya inició sesión en la pestaña
+        if (sessionStorage.getItem("docente_auth") === "true") {
+            showDashboard();
+        }
+
+        // Escuchar Estado
+        onValue(statusRef, (snapshot) => {
+            const val = snapshot.val();
+            isFinished = val && val.finished === true;
+            const statusEl = document.getElementById("statStatus");
+            if (isFinished) {
+                statusEl.textContent = "🎉 Finalizado (Revelado)";
+                statusEl.style.color = "var(--accent-gold)";
+            } else {
+                statusEl.textContent = "✍️ En Progreso";
+                statusEl.style.color = "#2ecc71";
+            }
+        });
+
+        // Escuchar Fragmentos en vivo
+        onValue(storyRef, (snapshot) => {
+            currentFullStory = [];
+            let totalWords = 0;
+            let authorsSet = new Set();
+            const feedList = document.getElementById("feedList");
+            feedList.innerHTML = "";
+
+            if (!snapshot.exists()) {
+                feedList.innerHTML = `<div class="empty-hint">No hay fragmentos guardados en esta sesión.</div>`;
+                updateStats(0, 0, 0);
+                return;
+            }
+
+            let index = 1;
+            snapshot.forEach((childSnapshot) => {
+                const key = childSnapshot.key;
+                const data = childSnapshot.val();
+                currentFullStory.push({ key, ...data });
+
+                const words = data.text ? data.text.trim().split(/\s+/).length : 0;
+                totalWords += words;
+                if (data.author) authorsSet.add(data.author);
+
+                const timeStr = data.timestamp ? new Date(data.timestamp).toLocaleString([], {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit', second:'2-digit'}) : '';
+
+                // Crear tarjeta de turno para el feed
+                const card = document.createElement("div");
+                card.className = "turn-card";
+                card.innerHTML = `
+                    <div class="turn-meta">
+                        <div>
+                            <span class="turn-num">Turno #${index}</span>
+                            <span class="turn-author" style="margin-left: 8px;">✍️ ${escapeHtml(data.author || 'Anónimo')}</span>
+                        </div>
+                        <span style="font-size: 0.75rem;">${timeStr}</span>
+                    </div>
+                    <div class="turn-text">${escapeHtml(data.text || '')}</div>
+                    <div class="turn-actions">
+                        <button class="btn-delete" onclick="deleteEntry('${key}')">🗑️ Eliminar este turno</button>
+                    </div>
+                `;
+                feedList.appendChild(card);
+                index++;
+            });
+
+            // Scroll automático al último turno escrito
+            feedList.scrollTop = feedList.scrollHeight;
+
+            updateStats(currentFullStory.length, totalWords, authorsSet.size);
+        });
+
+        function updateStats(turns, words, authors) {
+            document.getElementById("statTurns").textContent = turns;
+            document.getElementById("statWords").textContent = words;
+            document.getElementById("statAuthors").textContent = authors;
+        }
+
+        function deleteEntry(key) {
+            if (confirm("⚠️ ¿Estás seguro de eliminar este turno de la historia?")) {
+                remove(ref(database, `cadaverExquisito/${key}`)).then(() => {
+                    showToast("🗑️ Turno eliminado con éxito.");
+                }).catch(err => {
+                    showToast("❌ Error al eliminar.");
+                    console.error(err);
+                });
+            }
+        }
+
+        function triggerFinalGame() {
+            set(statusRef, { finished: true, endedAt: Date.now() }).then(() => {
+                showToast("📜 ¡Historia revelada para todos los estudiantes!");
+            });
+        }
+
+        function copyFullStory() {
+            if (!currentFullStory || currentFullStory.length === 0) {
+                showToast("⚠️ No hay texto para copiar aún.");
+                return;
+            }
+            let fullText = currentFullStory.map(i => i.text).join("\n\n");
+            navigator.clipboard.writeText(fullText).then(() => {
+                showToast("📋 ¡Texto completo copiado al portapapeles!");
+            }).catch(() => {
+                showToast("❌ Error al copiar al portapapeles.");
+            });
+        }
+
+        function exportStory() {
+            if (currentFullStory.length === 0) {
+                showToast("⚠️ No hay fragmentos para exportar.");
+                return;
+            }
+
+            let storyText = "=========================================\n";
+            storyText += "       CADÁVER EXQUISITO - HISTORIA       \n";
+            storyText += "=========================================\n\n";
+
+            currentFullStory.forEach((item, index) => {
+                storyText += `[Turno ${index + 1} - ${item.author}]:\n${item.text}\n\n`;
+            });
+
+            let blob = new Blob([storyText], { type: "text/plain;charset=utf-8" });
+            let link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `CadaverExquisito_${new Date().toISOString().slice(0,10)}.txt`;
+            link.click();
+            showToast("📥 Descargando informe (.txt)...");
+        }
+
+        function resetStory() {
+            if (confirm("⚠️ ¿Estás seguro de reiniciar la historia completa para todos los alumnos?")) {
+                remove(storyRef);
+                set(statusRef, { finished: false }).then(() => {
+                    showToast("🔄 ¡Partida reiniciada correctamente!");
+                });
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        window.checkPass = checkPass;
+        window.deleteEntry = deleteEntry;
+        window.triggerFinalGame = triggerFinalGame;
+        window.copyFullStory = copyFullStory;
+        window.exportStory = exportStory;
+        window.resetStory = resetStory;
+    </script>
+</body>
+</html>

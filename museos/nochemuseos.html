@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noche de los Museos en el Alicia Moreau de Justo</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- General Body and Animated Background --- */
+        body {
+            font-family: 'Inter', sans-serif; margin: 0; padding: 40px 20px;
+            background-color: #0d001a; color: #f0f0f0; line-height: 1.7;
+            overflow-x: hidden; position: relative;
+        }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(circle at 10% 20%, rgba(10, 120, 110, 0.5) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(20, 130, 130, 0.4) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(0, 100, 120, 0.3) 0%, transparent 40%);
+            animation: moveGradient 20s linear infinite;
+        }
+        @keyframes moveGradient {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(10px, 20px) rotate(5deg); }
+            50% { transform: translate(-10px, -20px) rotate(-5deg); } 75% { transform: translate(20px, -10px) rotate(3deg); }
+        }
+
+        /* --- Main Container with Glassmorphism Effect --- */
+        .container {
+            max-width: 900px; margin: 0 auto; background: rgba(13, 2, 26, 0.6); padding: 50px;
+            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        }
+
+        /* --- Header Section --- */
+        .header-section { text-align: center; padding-bottom: 20px; margin-bottom: 40px; }
+        .header-section h1 {
+            margin: 0 0 10px; font-size: 3em; font-weight: 700; letter-spacing: -1.5px;
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .header-section .subtitle { color: #d1cce0; margin: 0; font-weight: 500; font-size: 1.5em; }
+        .header-section .address { color: #a9a2b3; margin-top: 8px; font-size: 1.2em; font-weight: 400; }
+        .hero-image { margin: 20px 0 50px; }
+        .hero-image img { width: 100%; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+
+        /* --- Section Headers (h2 & h3) --- */
+        h2, h3 { color: #a1c4fd; font-weight: 600; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+        h2 { margin: 80px 0 10px; font-size: 1.8em; }
+        h3 { margin: 60px 0 20px; font-size: 1.4em; }
+        h2:first-of-type, h3:first-of-type { margin-top: 0; }
+        .controls-label { font-size: 0.9em; color: #a9a2b3; margin: 20px 0 10px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- Sort & Filter Controls --- */
+        .sort-controls, .filter-controls { display: flex; flex-wrap: wrap; gap: 10px; }
+        .sort-btn, .filter-btn {
+            background: transparent; color: #c2e9fb; border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 18px; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; font-weight: 500;
+        }
+        .sort-btn:hover, .filter-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.5); }
+        .sort-btn.active, .filter-btn.active {
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            color: #111827; border-color: transparent; font-weight: 600;
+        }
+
+        /* --- Instructions Hint --- */
+        .instructions-hint {
+            background: rgba(80, 120, 220, 0.1); border: 1px solid rgba(161, 196, 253, 0.2);
+            padding: 15px 20px; margin: 40px 0 20px; border-radius: 12px;
+            font-size: 0.95em; color: #d1d1d1; display: flex; align-items: center; gap: 15px;
+        }
+        .instructions-hint i { color: #a1c4fd; font-size: 1.2em; }
+
+        /* --- Accordion Styles --- */
+        .accordion {
+            background-color: transparent; color: #f0f0f0; cursor: pointer; padding: 22px 15px;
+            width: 100%; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left; outline: none; font-size: 1.1em; font-weight: 600;
+            transition: background-color 0.3s ease; display: flex; justify-content: space-between; align-items: center;
+        }
+        .accordion:hover, .accordion.active { background-color: rgba(80, 120, 220, 0.1); }
+        .accordion.active { border-bottom: 1px solid transparent; }
+        .accordion-title-wrapper { display: flex; align-items: center; gap: 10px; flex-grow: 1; flex-wrap: wrap; }
+        .accordion-title { flex-shrink: 0; }
+        .destacado-tag {
+            background: linear-gradient(120deg, #f9d71c 0%, #f5af19 100%);
+            color: #111827; font-size: 0.7em; font-weight: 600;
+            padding: 3px 10px; border-radius: 12px;
+        }
+        .accordion-icons { display: flex; align-items: center; gap: 20px; margin-left: auto; padding-left: 15px; }
+        .itinerary-toggle { font-size: 1.2em; color: #a9a2b3; transition: color 0.2s; }
+        .itinerary-toggle.saved { color: #f9d71c; } /* Gold color for saved */
+        .accordion-arrow { font-size: 1em; color: #a1c4fd; transition: transform 0.3s ease; }
+        .accordion.active .accordion-arrow { transform: rotate(180deg); }
+        
+        .panel { background-color: rgba(10, 20, 40, 0.2); max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .panel-content { padding: 30px; }
+        .panel-content .description { color: #d1d1d1; font-size: 1.05em; margin: 0; }
+        .panel-content .location { color: #a9a2b3; margin-top: 16px; font-weight: 500; }
+        .panel-content .location i { margin-right: 12px; }
+        .panel-image { display: block; margin: 20px auto 0; max-width: 200px; border-radius: 8px; cursor: pointer; transition: transform 0.2s ease; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .panel-image:hover { transform: scale(1.05); }
+
+        /* --- Modals & FAB --- */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; }
+        .modal-content { max-width: 90%; max-height: 85%; }
+        .modal-close { position: absolute; top: 20px; right: 35px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; }
+        #itinerary-modal .modal-content {
+            background: rgba(13, 2, 26, 0.9); padding: 40px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.2);
+            width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto;
+        }
+        #itinerary-modal h4 { margin-top: 0; font-size: 1.5em; color: #a1c4fd; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; }
+        #itinerary-list { list-style: none; padding: 0; }
+        #itinerary-list li { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        #itinerary-list h5 { margin: 0 0 5px 0; font-size: 1.1em; color: #f0f0f0; }
+        #itinerary-list p { margin: 0; color: #a9a2b3; }
+        #itinerary-list li:last-child { border-bottom: none; }
+        #itinerary-empty-msg { color: #a9a2b3; }
+        #itinerary-fab {
+            position: fixed; bottom: 30px; right: 30px; z-index: 999;
+            background-color: #3b82f6; color: white; width: 60px; height: 60px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.5em; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer; transition: transform 0.2s ease;
+        }
+        #itinerary-fab:hover { transform: scale(1.1); }
+        #itinerary-counter {
+            position: absolute; top: -5px; right: -5px;
+            background-color: #ef4444; color: white;
+            width: 24px; height: 24px; border-radius: 50%; font-size: 0.6em; font-weight: bold;
+            display: flex; justify-content: center; align-items: center; border: 2px solid #3b82f6;
+        }
+
+        .footer { text-align: center; margin-top: 80px; padding-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.1); color: #a9a2b3; font-size: 0.9em; }
+        @media (max-width: 768px) {
+            body { padding: 0; }
+            .container { padding: 40px 25px; margin: 0; border-radius: 0; border: none; box-shadow: none; backdrop-filter: blur(10px); }
+            .header-section h1 { font-size: 2.4em; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>Noche de los Museos</h1>
+            <h3 class="subtitle">en el Alicia Moreau de Justo</h3>
+            <p class="address">Av. Córdoba 2016</p>
+        </div>
+
+        <div class="hero-image">
+            <img src="imagenes/2.png" alt="Afiche del edificio del IES N.1 Alicia Moreau de Justo">
+        </div>
+
+        <h2>Programación completa</h2>
+        <span class="controls-label">Ordenar por:</span>
+        <div class="sort-controls">
+            <button id="sortByLocationBtn" class="sort-btn active">Localización</button>
+            <button id="sortByNameBtn" class="sort-btn">Nombre</button>
+        </div>
+        <span class="controls-label">Filtrar por:</span>
+        <div class="filter-controls">
+            <button class="filter-btn active" data-category="todas">Todas</button>
+            <button class="filter-btn" data-category="destacado">Destacados</button>
+            <button class="filter-btn" data-category="muestra">Muestras</button>
+            <button class="filter-btn" data-category="charla">Charlas</button>
+            <button class="filter-btn" data-category="música">Música</button>
+            <button class="filter-btn" data-category="interactivo">Interactivo</button>
+        </div>
+        
+        <div class="instructions-hint">
+            <i class="fas fa-lightbulb"></i>
+            <span>Hacé clic en la estrella (☆) para guardar una actividad en <b>Mi Itinerario</b>. ¡Consultá tu plan con el botón azul flotante!</span>
+        </div>
+
+        <div id="accordion-container">
+            <!-- Activities will be rendered here by JavaScript -->
+        </div>
+        
+        <div class="footer">
+            © 2025 Noche de los Museos | IES N°1 "Dra. Alicia Moreau de Justo"
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="lightbox" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="lightbox-img">
+    </div>
+    
+    <div id="itinerary-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h4>Mi Itinerario</h4>
+            <ul id="itinerary-list">
+                <li id="itinerary-empty-msg">Aún no has guardado actividades. ¡Hacé clic en la estrella (☆) para añadirlas!</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Floating Action Button for Itinerary -->
+    <div id="itinerary-fab">
+        <i class="fas fa-star"></i>
+        <span id="itinerary-counter">0</span>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const activities = [
+        { id: 1, floor: 'pb', name: 'Museo del laboratorio de Física y Matemática', desc: 'Un viaje en el tiempo que recupera material histórico instrumental para la enseñanza de las ciencias. Una fascinante exposición permanente.', loc: 'Laboratorio Aula 1.', category: 'muestra' },
+        { id: 2, floor: 'pb', name: 'De luces y de sombras', desc: 'Una invitación a participar de experiencias interactivas con luces, sombras y colores que desafían la percepción.', loc: 'Aula 2, PB.', category: 'interactivo' },
+        { id: 3, floor: 'pb', name: 'Las cosas que encontramos en los libros', desc: 'Descubrí la "Historioteca", una muestra del segmento de la colección sobre ESI y los fascinantes "objetos hallados" en los libros donados a la biblioteca.', loc: 'Biblioteca, PB.', category: 'muestra' },
+        { id: 4, floor: 'pb', name: 'PsicoGPT', desc: 'Participá de un encuentro y diálogo único con personajes de la psicología y la filosofía.', loc: 'Hall central, PB.', category: 'interactivo' },
+        { id: 5, floor: 'pb', name: 'La alegría de crear juntxs', desc: 'Un espacio de encuentro entre generaciones donde se despiertan los sueños, la imaginación y la vida a través de una muestra participativa.', loc: 'Hall, PB. (19 a 21 hs)', category: 'interactivo' },
+        { id: 6, floor: 'pb', name: 'La psicopedagogía en acción: Hablemos de ESI', desc: 'Una actividad lúdica y artística para que toda la familia pueda abordar la Educación Sexual Integral en casa y en la escuela.', loc: 'Aula 3, PB.', category: 'interactivo' },
+        { id: 7, floor: 'pb', name: 'Tarot existencialista', desc: 'Una charla-encuentro con cartas de tarot especiales, creadas a partir de frases célebres de grandes filósofos y psicólogos.', loc: 'Hall central, PB.', category: 'interactivo' },
+        { id: 8, floor: 'pb', name: 'Objetos lúdicos mediadores', desc: 'Entre el amor al saber y la didáctica de la ternura. Propuesta interactiva que explora la corporalidad en el aprender a través de objetos diseñados por estudiantes.', loc: 'Pasillo lateral en PB. (19 a 21 hs)', category: 'interactivo' },
+        { id: 9, floor: 'p1', name: 'Norita: Cuando lo cotidiano se vuelve lucha', desc: 'Emotiva muestra fotográfica de Nora Cortiñas, Madre de Plaza de Mayo Línea Fundadora (PH David Paoli Testa).', loc: 'Aula 101, 1° piso. (19 a 24 hs)', category: 'muestra', image: 'imagenes/3.png', destacado: true },
+        { id: 10, floor: 'p1', name: 'Presentación conversatorio del libro: Viernes 25', desc: 'Lectura de poemas y fragmentos de una búsqueda de Dardo y Sebastián Dorronzoro y Nelly Dorronzoro, por el colectivo de la Asociación Civil El Periscopio.', loc: 'Salón, primer piso.', category: 'charla' },
+        { id: 11, floor: 'p1', name: 'Toda Vía Poesía', desc: 'Una pausa para disfrutar de la lectura de poesías con una profunda temática de derechos humanos.', loc: 'Aula 101. (19 a 24 hs)', category: 'charla' },
+        { id: 12, floor: 'p1', name: '"Señorita Maestra..."', desc: 'Muestra gráfica participativa propuesta por el Área de Género del Alicia, un espacio para repensar la docencia y sus representaciones.', loc: 'Salón. (19 a 24 hs)', category: 'muestra' },
+        { id: 13, floor: 'p1', name: 'Laboratorio de psicología histórico-cultural', desc: 'Un espacio de diálogo y exploración sobre los conceptos y aplicaciones de la psicología histórico-cultural.', loc: 'Salón, primer piso.', category: 'charla' },
+        { id: 14, floor: 'p1', name: 'Signos: Explicación del zodíaco', desc: 'Una muestra de esquema heliocéntrico tridimensional que explica el fascinante camino del zodíaco.', loc: 'Puerta de la institución.', category: 'muestra' },
+        { id: 15, floor: 'p1', name: 'Club de Ciencias', desc: '"Cuestión de peso": un paseo por la historia de las balanzas y otras divertidas experiencias científicas interactivas para toda la familia.', loc: 'Salón, primer piso.', category: 'interactivo' },
+        { id: 16, floor: 'p1', name: 'Música en vivo (21 hs)', desc: 'Disfrutá de la primera sesión de música en vivo de la noche para empezar el recorrido con energía.', loc: 'Salón, primer piso.', category: 'música' },
+        { id: 17, floor: 'p1', name: 'Memorias emotivas de la infancia', desc: 'Un emotivo montaje que exhibe objetos de la cultura material que marcaron la infancia durante el siglo XX.', loc: 'Salón de actos.', category: 'muestra' },
+        { id: 18, floor: 'p1', name: '¿Por qué hablamos de Ciencia Digna?', desc: 'Una muestra participativa que invita a la reflexión, propuesta por el equipo docente del postítulo pertenecientes al grupo Ciencia entre Todxs.', loc: 'Salón, primer piso. (19 a 19:30 hs)', category: 'muestra' },
+        { id: 19, floor: 'p1', name: 'Instalación: Pedagogías latinoamericanas', desc: 'Una instalación que explora las diversas pedagogías de la región y su fundamental vínculo con el derecho a la educación.', loc: 'Hall primer piso.', category: 'muestra' },
+        { id: 20, floor: 'p1', name: 'Música en vivo (22 hs)', desc: '¡La noche sigue a puro rock! Presentación de la increíble banda de música medieval (Rock).', loc: 'No especificado.', category: 'música' }
+    ];
+
+    let itinerary = JSON.parse(localStorage.getItem('itinerary')) || [];
+    let currentSort = 'location';
+    let currentFilter = 'todas';
+
+    const accordionContainer = document.getElementById('accordion-container');
+    const itineraryFab = document.getElementById('itinerary-fab');
+    const itineraryCounter = document.getElementById('itinerary-counter');
+    const itineraryModal = document.getElementById('itinerary-modal');
+    const itineraryList = document.getElementById('itinerary-list');
+    const itineraryEmptyMsg = document.getElementById('itinerary-empty-msg');
+
+    const render = () => {
+        accordionContainer.innerHTML = '';
+        const filteredActivities = activities.filter(act => {
+            if (currentFilter === 'todas') return true;
+            if (currentFilter === 'destacado') return act.destacado;
+            return act.category === currentFilter;
+        });
+
+        if (currentSort === 'name') {
+            filteredActivities.sort((a, b) => a.name.localeCompare(b.name, 'es'));
+        } else {
+            filteredActivities.sort((a, b) => {
+                if (a.floor === b.floor) return a.loc.localeCompare(b.loc, 'es');
+                return a.floor.localeCompare(b.floor);
+            });
+        }
+        
+        let lastHeader = '';
+        if (filteredActivities.length === 0) {
+            accordionContainer.innerHTML = '<div class="instructions-hint"><i class="fas fa-info-circle"></i><span>No hay actividades que coincidan con los filtros seleccionados.</span></div>';
+        }
+        filteredActivities.forEach(act => {
+            let header = '';
+            if (currentSort === 'location') {
+                const currentHeader = act.floor === 'pb' ? 'Actividades en planta baja' : 'Actividades en primer piso';
+                if (currentHeader !== lastHeader) {
+                    header = `<h3 class="accordion-header">${currentHeader}</h3>`;
+                    lastHeader = currentHeader;
+                }
+            } else if (!lastHeader) {
+                header = `<h3 class="accordion-header">Todas las actividades (orden alfabético)</h3>`;
+                lastHeader = 'all';
+            }
+            
+            const isSaved = itinerary.includes(act.id);
+            const starClass = isSaved ? 'fas saved' : 'far';
+            const imageHTML = act.image ? `<img src="${act.image}" alt="Afiche de ${act.name}" class="panel-image">` : '';
+            const destacadoTag = act.destacado ? '<span class="destacado-tag">Destacado</span>' : '';
+
+            const itemHTML = `
+                <div class="accordion-item" data-id="${act.id}">
+                    ${header}
+                    <button class="accordion">
+                        <div class="accordion-title-wrapper">
+                            <span class="accordion-title">${act.name}</span>
+                            ${destacadoTag}
+                        </div>
+                        <div class="accordion-icons">
+                            <i class="${starClass} fa-star itinerary-toggle" data-id="${act.id}"></i>
+                            <i class="fas fa-chevron-down accordion-arrow"></i>
+                        </div>
+                    </button>
+                    <div class="panel">
+                        <div class="panel-content">
+                            <p class="description">${act.desc}</p>
+                            ${imageHTML}
+                            <p class="location"><i class="fas fa-map-marker-alt"></i>Lugar: ${act.loc}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            accordionContainer.insertAdjacentHTML('beforeend', itemHTML);
+        });
+
+        setupEventListeners();
+    };
+    
+    const updateItinerary = () => {
+        itineraryCounter.textContent = itinerary.length;
+        localStorage.setItem('itinerary', JSON.stringify(itinerary));
+        
+        itineraryList.innerHTML = '';
+        if (itinerary.length === 0) {
+            itineraryList.appendChild(itineraryEmptyMsg);
+        } else {
+            const savedActivities = activities
+                .filter(act => itinerary.includes(act.id))
+                .sort((a,b) => a.name.localeCompare(b.name, 'es'));
+
+            savedActivities.forEach(act => {
+                const li = document.createElement('li');
+                li.innerHTML = `<h5>${act.name}</h5><p>${act.loc}</p>`;
+                itineraryList.appendChild(li);
+            });
+        }
+    };
+
+    const setupEventListeners = () => {
+        document.querySelectorAll('.accordion').forEach(btn => btn.addEventListener('click', e => {
+            const panel = e.currentTarget.nextElementSibling;
+            e.currentTarget.classList.toggle('active');
+            panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + 'px';
+        }));
+        
+        document.querySelectorAll('.itinerary-toggle').forEach(star => star.addEventListener('click', e => {
+            e.stopPropagation();
+            const id = parseInt(e.currentTarget.dataset.id);
+            if (itinerary.includes(id)) {
+                itinerary = itinerary.filter(i => i !== id);
+                e.currentTarget.classList.remove('fas', 'saved');
+                e.currentTarget.classList.add('far');
+            } else {
+                itinerary.push(id);
+                e.currentTarget.classList.remove('far');
+                e.currentTarget.classList.add('fas', 'saved');
+            }
+            updateItinerary();
+        }));
+    };
+
+    document.querySelector('.sort-controls').addEventListener('click', e => {
+        if (e.target.classList.contains('sort-btn')) {
+            document.querySelector('.sort-btn.active').classList.remove('active');
+            e.target.classList.add('active');
+            currentSort = e.target.id === 'sortByNameBtn' ? 'name' : 'location';
+            render();
+        }
+    });
+
+    document.querySelector('.filter-controls').addEventListener('click', e => {
+        if (e.target.classList.contains('filter-btn')) {
+            document.querySelector('.filter-btn.active').classList.remove('active');
+            e.target.classList.add('active');
+            currentFilter = e.target.dataset.category;
+            render();
+        }
+    });
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    accordionContainer.addEventListener('click', e => {
+        if (e.target.classList.contains('panel-image')) {
+            lightbox.style.display = 'flex';
+            lightboxImg.src = e.target.src;
+        }
+    });
+    
+    const closeModal = (modal) => { modal.style.display = 'none'; };
+    document.querySelectorAll('.modal-close').forEach(btn => btn.addEventListener('click', e => closeModal(e.target.closest('.modal'))));
+    document.querySelectorAll('.modal').forEach(modal => modal.addEventListener('click', e => { if (e.target === modal) closeModal(modal); }));
+
+    itineraryFab.addEventListener('click', () => { itineraryModal.style.display = 'flex'; });
+
+    updateItinerary();
+    render();
+});
+</script>
+
+</body>
+</html>```

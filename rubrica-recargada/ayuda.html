@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa y Ayuda | Rúbrica Recargada</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #f8fafc;
+            --dark: #334155;
+            --border: #e2e8f0;
+            --card-bg: #ffffff;
+            --accent-bg: #f1f5f9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.7;
+            padding: 20px 10px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.15rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto 20px;
+        }
+
+        .nav-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-back-btn:hover {
+            background-color: white;
+            color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .content { padding: 25px 18px; }
+            header h1 { font-size: 1.9rem; }
+        }
+
+        /* Índice */
+        .toc-box {
+            background-color: var(--accent-bg);
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 35px;
+        }
+
+        .toc-box h2 {
+            font-size: 1.25rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 10px 20px;
+        }
+
+        .toc-list a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover {
+            text-decoration: underline;
+            color: var(--secondary);
+        }
+
+        /* Secciones */
+        section {
+            margin-bottom: 50px;
+            scroll-margin-top: 30px;
+        }
+
+        h2.section-header {
+            color: var(--secondary);
+            font-size: 1.65rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3.subsection-header {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin: 25px 0 12px;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+
+        /* Tarjetas de pasos */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .step-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 34px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .step-card h4 {
+            font-size: 1.15rem;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        /* Callouts / Avisos */
+        .callout {
+            border-radius: 8px;
+            padding: 18px 20px;
+            margin: 20px 0;
+            border-left: 4px solid;
+            font-size: 0.98rem;
+        }
+
+        .callout-info {
+            background-color: #ebf8ff;
+            border-color: var(--primary);
+            color: #2b6cb0;
+        }
+
+        .callout-tip {
+            background-color: #f0fdf4;
+            border-color: var(--success);
+            color: #166534;
+        }
+
+        .callout-warning {
+            background-color: #fffbeb;
+            border-color: var(--warning);
+            color: #92400e;
+        }
+
+        .callout strong {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        /* Tablas de ejemplo */
+        .sample-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .sample-table th, .sample-table td {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .sample-table th {
+            background-color: var(--secondary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .sample-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Bloques de código */
+        pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 16px 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Consolas', monospace;
+            font-size: 0.92rem;
+            margin: 18px 0;
+        }
+
+        code {
+            font-family: 'Consolas', monospace;
+            background-color: #e2e8f0;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* FAQ */
+        .faq-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .faq-question {
+            padding: 16px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .faq-question:hover {
+            background: #f1f5f9;
+        }
+
+        .faq-answer {
+            padding: 18px 20px;
+            border-top: 1px solid var(--border);
+            font-size: 0.96rem;
+        }
+
+        footer {
+            background-color: var(--secondary);
+            color: #cbd5e1;
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        footer a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.78rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-success { background: #dcfce7; color: #15803d; }
+        .badge-info { background: #e0f2fe; color: #0369a1; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>📖 Guía Exhaustiva de Rúbrica Recargada</h1>
+        <p>Aprende a diseñar, ponderar, guardar y exportar rúbricas analíticas interactivas para una evaluación verdaderamente formativa.</p>
+        <a href="index.html" class="nav-back-btn">⬅ Volver a la aplicación</a>
+    </header>
+
+    <div class="content">
+
+        <!-- Índice -->
+        <div class="toc-box">
+            <h2>📑 Contenido de esta guía</h2>
+            <ul class="toc-list">
+                <li><a href="#que-es">1. ¿Qué es Rúbrica Recargada?</a></li>
+                <li><a href="#interfaz">2. Anatomía de la pantalla</a></li>
+                <li><a href="#paso-a-paso">3. Paso a paso: Cómo crear una rúbrica</a></li>
+                <li><a href="#calculo-puntajes">4. Cómo funciona el cálculo de notas</a></li>
+                <li><a href="#plantillas">5. Guardar y Cargar plantillas (.JSON)</a></li>
+                <li><a href="#exportacion">6. Exportar y corregir interactivamente</a></li>
+                <li><a href="#didactica">7. Buenas prácticas pedagógicas</a></li>
+                <li><a href="#faq">8. Preguntas Frecuentes (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- 1. Qué es -->
+        <section id="que-es">
+            <h2 class="section-header">1. ¿Qué es Rúbrica Recargada?</h2>
+            <p>
+                <strong>Rúbrica Recargada</strong> es una herramienta web interactiva concebida para docentes, formadores y estudiantes de carreras pedagógicas (como los profesorados). Su propósito es <strong>transparentar los criterios de evaluación</strong> y facilitar la confección de matrices analíticas de desempeño.
+            </p>
+            <p>
+                A diferencia de una simple tabla estática en un procesador de textos, esta aplicación:
+            </p>
+            <ul>
+                <li>Permite diseñar rúbricas <strong>cuantitativas</strong> (con puntajes calculados) o <strong>puramente cualitativas</strong> (orientadas solo al diálogo formativo).</li>
+                <li>Ofrece una <strong>vista previa en tiempo real</strong> donde se redactan los descriptores de cada celda de forma ágil.</li>
+                <li><strong>Guarda automáticamente</strong> el avance en el navegador (no se pierde la información ante un cierre accidental).</li>
+                <li>Genera un <strong>archivo HTML interactivo descargable</strong> que funciona de forma autónoma (sin conexión a internet), permitiendo al docente calificar con un clic, registrar el nombre del alumno, agregar devoluciones cualitativas y guardarlo como PDF o imprimirlo.</li>
+            </ul>
+
+            <div class="callout callout-tip">
+                <strong>🌿 Principio formativo clave</strong>
+                Evaluar no es simplemente calificar. La rúbrica es un puente pedagógico: compartida antes de la tarea, orienta al estudiante sobre qué se espera de su trabajo; utilizada durante el proceso, facilita la autoevaluación y coevaluación; y empleada al final, ofrece retroalimentación precisa y justificada.
+            </div>
+        </section>
+
+        <!-- 2. Anatomía -->
+        <section id="interfaz">
+            <h2 class="section-header">2. Anatomía de la pantalla</h2>
+            <p>La aplicación está dividida en dos paneles principales:</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <span class="step-number">1</span>
+                    <h4>Panel Izquierdo: Formulario</h4>
+                    <p>Aquí configuras la estructura de la rúbrica:</p>
+                    <ul style="padding-left: 20px; font-size: 0.95rem;">
+                        <li><strong>Modo:</strong> Con o sin puntaje.</li>
+                        <li><strong>Metadatos:</strong> Docente, Materia y Trabajo.</li>
+                        <li><strong>Niveles (columnas):</strong> Nombre y peso relativo.</li>
+                        <li><strong>Criterios (filas):</strong> Nombre y puntaje máximo.</li>
+                        <li><strong>Acciones:</strong> Guardar, cargar y reiniciar.</li>
+                    </ul>
+                </div>
+
+                <div class="step-card">
+                    <span class="step-number">2</span>
+                    <h4>Panel Derecho: Vista Previa y Edición</h4>
+                    <p>Aquí se construye y exporta el instrumento:</p>
+                    <ul style="padding-left: 20px; font-size: 0.95rem;">
+                        <li><strong>Encabezado dinámico:</strong> Refleja los datos de cátedra.</li>
+                        <li><strong>Matriz interactiva:</strong> Casillas de texto para redactar cada descriptor cualitativo en vivo.</li>
+                        <li><strong>Observaciones generales:</strong> Pautas o consignas iniciales.</li>
+                        <li><strong>Exportación:</strong> Generación a HTML interactivo o PDF directo.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Paso a paso -->
+        <section id="paso-a-paso">
+            <h2 class="section-header">3. Paso a paso: Cómo crear una rúbrica</h2>
+            
+            <h3 class="subsection-header">Paso 1: Definir si usará puntaje</h3>
+            <p>
+                Selecciona <strong>"Sí"</strong> si necesitas que cada criterio aporte a una calificación cuantitativa final (por ejemplo, sobre 100 puntos o sobre 10). Elige <strong>"No"</strong> si se trata de una rúbrica para evaluación formativa pura, diagnóstica o retroalimentación descriptiva sin nota numérica.
+            </p>
+
+            <h3 class="subsection-header">Paso 2: Completar los datos de cátedra</h3>
+            <p>
+                Escribe tu nombre, la asignatura y la denominación de la tarea evaluada (ej. <em>"Propuesta de evaluación para el Nivel Medio"</em> o <em>"Ensayo argumentativo"</em>).
+            </p>
+
+            <h3 class="subsection-header">Paso 3: Definir los Niveles de Desempeño (Columnas)</h3>
+            <p>
+                Los niveles representan la escala de logro progresivo. Normalmente se ordenan de mayor a menor calidad (por ejemplo: <em>Excelente, Bueno, Aceptable, A desarrollar</em>).
+            </p>
+            <ul>
+                <li>Ingresa el <strong>Nombre del nivel</strong>.</li>
+                <li>Ingresa su <strong>Valor relativo</strong>: asigna números proporcionales (ej: 4, 3, 2, 0). <em>¡Importante!</em> Si un nivel representa reprobación o incumplimiento, puedes asignarle <strong>0</strong> para que no sume puntos en ese criterio.</li>
+                <li>Presiona <strong>"Agregar nivel"</strong>. Podrás editarlos o eliminarlos en cualquier momento desde la lista.</li>
+            </ul>
+
+            <h3 class="subsection-header">Paso 4: Definir los Criterios de Evaluación (Filas)</h3>
+            <p>
+                Los criterios son los aspectos, dimensiones o habilidades que vas a valorar en la evidencia presentada por los estudiantes.
+            </p>
+            <ul>
+                <li>Ingresa el <strong>Nombre del criterio</strong> (ej: <em>"Articulación de la tríada Medio-Técnica-Instrumento"</em>).</li>
+                <li>Ingresa el <strong>Puntaje máximo</strong> que asignas a esa fila (ej: 30 puntos).</li>
+                <li>Presiona <strong>"Agregar criterio"</strong>.</li>
+            </ul>
+
+            <div class="callout callout-info">
+                <strong>💡 Recomendación para la escala total</strong>
+                Es una excelente práctica que la suma de los puntajes máximos de todos tus criterios sume exactamente <strong>100 puntos</strong> (o 10 puntos). De esa manera, el puntaje total que arroje la rúbrica coincidirá directamente con la escala de calificación tradicional.
+            </div>
+
+            <h3 class="subsection-header">Paso 5: Redactar los Descriptores en la Vista Previa</h3>
+            <p>
+                A medida que agregas criterios y niveles, en el panel derecho se genera la tabla de doble entrada. En cada casilla encontrarás un área de texto:
+            </p>
+            <p>
+                Redacta allí <strong>qué evidencia concreta y observable</strong> distingue a ese nivel en ese criterio específico. Evita palabras vagas como <em>"un poco"</em> o <em>"muy bien"</em>; prioriza descriptores que orienten sobre los logros y las oportunidades de mejora.
+            </p>
+        </section>
+
+        <!-- 4. Cálculo de Puntajes -->
+        <section id="calculo-puntajes">
+            <h2 class="section-header">4. Cómo funciona el cálculo de notas</h2>
+            <p>
+                Para garantizar la máxima flexibilidad (permitiendo que unos criterios valgan 30 puntos y otros 20 o 10), la aplicación utiliza una <strong>regla de proporcionalidad matemática estandarizada</strong>:
+            </p>
+
+            <pre>Puntaje en la celda = (Valor Relativo del Nivel / Valor Máximo de los Niveles) × Puntaje Máximo del Criterio</pre>
+
+            <h3 class="subsection-header">Ejemplo concreto:</h3>
+            <p>
+                Supongamos que tus niveles tienen valores relativos: <strong>Excelente = 4</strong>, <strong>Bueno = 3</strong>, <strong>Aceptable = 2</strong>, y <strong>A desarrollar = 0</strong>. El nivel máximo es <code>4</code>.
+            </p>
+            <p>Para un criterio que vale <strong>25 puntos</strong>, los puntajes calculados automáticamente serán:</p>
+
+            <table class="sample-table">
+                <thead>
+                    <tr>
+                        <th>Nivel</th>
+                        <th>Valor relativo</th>
+                        <th>Cálculo matemático</th>
+                        <th>Puntaje asignado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Excelente</strong></td>
+                        <td>4</td>
+                        <td>(4 / 4) × 25</td>
+                        <td><strong>25.0 pts</strong> (100%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bueno</strong></td>
+                        <td>3</td>
+                        <td>(3 / 4) × 25</td>
+                        <td><strong>18.8 pts</strong> (75%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Aceptable</strong></td>
+                        <td>2</td>
+                        <td>(2 / 4) × 25</td>
+                        <td><strong>12.5 pts</strong> (50%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A desarrollar</strong></td>
+                        <td>0</td>
+                        <td>(0 / 4) × 25</td>
+                        <td><strong>0.0 pts</strong> (0%)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout callout-warning">
+                <strong>⚠️ ¿Por qué poner 0 en el nivel inferior?</strong>
+                Si colocas valor relativo 1 a un nivel denominado "Insuficiente" o "A desarrollar", el estudiante aún sumará un 25% del puntaje en ese criterio. Asignar <strong>0 puntos</strong> garantiza que si una dimensión no fue abordada o no cumple los mínimos requeridos, no acumule puntos indebidos.
+            </div>
+        </section>
+
+        <!-- 5. Plantillas -->
+        <section id="plantillas">
+            <h2 class="section-header">5. Guardar y Cargar plantillas (.JSON)</h2>
+            <p>
+                Uno de los aspectos más potentes de la app es su capacidad para almacenar la estructura completa de tus rúbricas en archivos ligeros de extensión <code>.json</code>.
+            </p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <h4>💾 Guardar plantilla</h4>
+                    <p>Al hacer clic en el botón verde <strong>"Guardar plantilla"</strong>, se descargará en tu computadora un archivo con formato:</p>
+                    <code>plantilla-rubrica-[Nombre-del-Trabajo].json</code>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Guárdalo en tu carpeta de cátedra, pendrive o Google Drive para compartirlo con otros docentes o reutilizarlo en ciclos lectivos futuros.</p>
+                </div>
+
+                <div class="step-card">
+                    <h4>📂 Cargar plantilla</h4>
+                    <p>Al hacer clic en el botón <strong>"Cargar plantilla"</strong>, se abre el explorador de archivos:</p>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Elige cualquier archivo <code>.json</code> previamente generado y la aplicación reconstruirá de inmediato todos los nombres, puntajes y los descriptores de cada celda.</p>
+                </div>
+
+                <div class="step-card">
+                    <h4>🔄 Auto-guardado local</h4>
+                    <p>No tienes que temer perder tu trabajo si se cierra la pestaña o se apaga la máquina:</p>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">La app utiliza el <code>localStorage</code> del navegador. Si deseas volver a la plantilla oficial limpia, pulsa <strong>"Reiniciar formulario"</strong>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Exportación -->
+        <section id="exportacion">
+            <h2 class="section-header">6. Exportar y corregir interactivamente</h2>
+            <p>
+                Cuando tu rúbrica está lista, dispones de dos modalidades de exportación:
+            </p>
+
+            <h3 class="subsection-header">A. Exportar a HTML (Interactivo) — <em>Recomendado para corrección digital</em></h3>
+            <p>
+                Al hacer clic en <strong>"Exportar a HTML (Interactivo)"</strong>, se descarga un archivo <code>.html</code> completamente autónomo e interactivo:
+            </p>
+            <ul>
+                <li><strong>No requiere internet ni instalar nada:</strong> Se abre con doble clic en Google Chrome, Edge, Firefox, Safari o en el celular/tablet.</li>
+                <li><strong>Casillas superiores editables:</strong> Puedes escribir el nombre y apellido del estudiante evaluado y la fecha de corrección.</li>
+                <li><strong>Corrección dinámica con un clic:</strong> Haces clic sobre el descriptor alcanzado en cada criterio; la celda se resalta en azul claro y suma automáticamente el puntaje en el resumen inferior.</li>
+                <li><strong>Espacio para comentarios cualitativos:</strong> Cuenta con un área de texto libre (<code>textarea</code>) para que redactes la retroalimentación, felicitaciones o aspectos a mejorar.</li>
+                <li><strong>Guardado a PDF / Impresión con formato perfecto:</strong> Incluye un botón para imprimir o guardar como PDF; los botones de radio se ocultan, pero la celda seleccionada se mantiene resaltada y los textos se formatean con tipografía limpia y profesional.</li>
+            </ul>
+
+            <h3 class="subsection-header">B. Exportar a PDF (Imprimible) — <em>Para llevar en papel</em></h3>
+            <p>
+                Abre directamente el diálogo de impresión del navegador con una versión limpia que incluye líneas de puntos en blanco para escribir a mano el nombre del estudiante y realizar la corrección tradicional en papel físico dentro del aula.
+            </p>
+        </section>
+
+        <!-- 7. Didáctica -->
+        <section id="didactica">
+            <h2 class="section-header">7. Buenas prácticas pedagógicas</h2>
+            <p>
+                En consonancia con la literatura especializada en evaluación formativa (Hamodi, López Pastor y López, 2015; Anijovich, 2010):
+            </p>
+            <ol style="padding-left: 22px; margin-bottom: 20px;">
+                <li style="margin-bottom: 10px;">
+                    <strong>Coherencia didáctica:</strong> Asegúrate de que los criterios coincidan estrictamente con las capacidades y aprendizajes priorizados en tu propuesta de enseñanza, y no con aspectos puramente formales o superficiales.
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Descriptores graduados y cualitativos:</strong> Evita clasificaciones tautológicas (ej. <em>"Tiene coherencia excelente / buena / regular"</em>). En su lugar, describe qué evidencia concreta da cuenta de esa coherencia en el nivel de logro.
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Transparencia compartida:</strong> Entrega la rúbrica a tus estudiantes al momento de presentar la consigna de trabajo. Esto transforma la evaluación en un mapa de ruta y reduce la ansiedad frente a la corrección.
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Uso metacognitivo:</strong> Fomenta que el estudiante complete una rúbrica en modo de autoevaluación antes de entregar su producción definitiva, identificando qué aspecto necesita pulir.
+                </li>
+            </ol>
+        </section>
+
+        <!-- 8. FAQ -->
+        <section id="faq">
+            <h2 class="section-header">8. Preguntas Frecuentes (FAQ)</h2>
+
+            <div class="faq-item">
+                <div class="faq-question">¿Mis datos o los nombres de mis estudiantes se envían a algún servidor? <span>▾</span></div>
+                <div class="faq-answer">
+                    <strong>No, en lo absoluto.</strong> La aplicación funciona 100% del lado del cliente (en tu propio navegador web). Ni las rúbricas ni los datos de los estudiantes viajan por internet. Esto garantiza total privacidad y seguridad deontológica.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">¿Puedo modificar una rúbrica que ya exporté a HTML? <span>▾</span></div>
+                <div class="faq-answer">
+                    En el archivo HTML interactivo puedes escribir el nombre del estudiante, la fecha y los comentarios, así como seleccionar los niveles. Si necesitas cambiar los criterios o los textos de los descriptores de la matriz, lo ideal es hacerlo desde el generador y luego exportar una nueva copia.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">¿Cómo comparto una rúbrica con otro colega? <span>▾</span></div>
+                <div class="faq-answer">
+                    Presiona el botón verde <strong>"Guardar plantilla"</strong>. Envíale por correo electrónico o WhatsApp el archivo <code>.json</code> descargado. Tu colega solo tendrá que abrir el generador, presionar <strong>"Cargar plantilla"</strong> y seleccionar ese archivo.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">¿Puedo usar la rúbrica sin puntajes numéricos? <span>▾</span></div>
+                <div class="faq-answer">
+                    Sí. En la sección 1 del formulario, marca <em>"¿La rúbrica usará puntajes? -> No"</em>. Se ocultarán todas las casillas numéricas y la rúbrica generada será 100% cualitativa.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">¿Qué hago si quiero volver a la plantilla original? <span>▾</span></div>
+                <div class="faq-answer">
+                    Haz clic en el botón rojo <strong>"Reiniciar formulario"</strong>. La aplicación te pedirá confirmación y restaurará la plantilla oficial del <em>Taller de Evaluación para el Nivel Medio</em>.
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Rúbrica Recargada | Diseñado para el Taller de Evaluación (Profesorado en Psicología)</p>
+        <p style="margin-top: 8px;"><a href="index.html">Volver al Generador de Rúbricas</a></p>
+    </footer>
+</div>
+
+</body>
+</html>

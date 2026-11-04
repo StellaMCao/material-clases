@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Etapas del desarrollo según Piaget</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel Standalone for JSX compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+  }
+}
+</script>
+</head>
+<body class="bg-slate-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // --- START OF CONSTANTS ---
+        const KEY_CONCEPTS = [
+          {
+            title: 'Adaptación: asimilación y acomodación',
+            text: 'Para Piaget, la inteligencia es adaptación al medio. Este proceso se da a través de dos mecanismos complementarios que usamos constantemente:',
+            example: `
+              <ul class="list-disc list-inside space-y-2 text-slate-600">
+                <li><strong>Asimilación:</strong> es cuando incorporamos nueva información a nuestros esquemas mentales ya existentes. Tratamos de entender algo nuevo usando lo que ya sabemos. Por ejemplo, un bebé que sabe agarrar un sonajero (su esquema de prensión) intentará usar el mismo movimiento para agarrar un cubo.</li>
+                <li><strong>Acomodación:</strong> ocurre cuando un esquema existente no funciona y debe ser modificado para lidiar con una nueva situación. El bebé se da cuenta de que para agarrar el cubo, que es más grande, necesita abrir más la mano. Ahí está modificando su esquema de prensión original.</li>
+              </ul>
+            `,
+            activities: [
+               {
+                type: 'multiple-choice',
+                question: 'Un nene que aprendió a decir "guau" para los perros, ve un caballo y dice "¡guau!". ¿Qué proceso predomina?',
+                options: [
+                  { text: 'Acomodación, porque está creando una nueva categoría.', isCorrect: false },
+                  { text: 'Asimilación, porque está aplicando un esquema conocido a un objeto nuevo.', isCorrect: true },
+                  { text: 'Equilibración, porque está resolviendo un conflicto.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Correcto! Está tratando de "asimilar" el caballo a su esquema existente de "animal de cuatro patas que veo en la calle".',
+                  incorrect: 'En este caso, lo que predomina es la asimilación. Intenta usar un esquema que ya tiene ("guau") para una situación nueva.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Luego de que sus padres le explican que es un "caballo", el nene empieza a diferenciar entre "guau" y "caballo". ¿Qué proceso predomina ahora?',
+                options: [
+                  { text: 'Acomodación, porque está modificando sus esquemas para diferenciar los animales.', isCorrect: true },
+                  { text: 'Asimilación, porque sigue usando el concepto "guau".', isCorrect: false },
+                  { text: 'Imitación, porque solo repite lo que dicen sus padres.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Exacto! Tuvo que "acomodar" sus estructuras mentales, creando una nueva categoría para "caballo" y refinando la de "guau".',
+                  incorrect: 'Aquí el proceso clave es la acomodación. Sus esquemas mentales se modificaron para ajustarse a la nueva información y diferenciar los conceptos.',
+                },
+              }
+            ]
+          },
+          {
+            title: 'Equilibración superadora',
+            text: 'Es el motor del desarrollo. Constantemente buscamos un balance (equilibrio) entre lo que sabemos y las nuevas experiencias. Cuando surge un "conflicto cognitivo" (algo que no entendemos), se produce un desequilibrio. Para resolverlo, reorganizamos nuestros pensamientos a través de la asimilación y la acomodación, llegando a un nuevo estado de equilibrio que es superior y más complejo que el anterior. Por eso no es un simple balance, sino una "equilibración superadora".',
+            example: 'Cuando el nene que cree que todos los animales de cuatro patas son "perros" (asimilación) ve un gato y sus papás lo corrigen, entra en desequilibrio. Al crear una nueva categoría para "gatos" (acomodación), alcanza un nuevo equilibrio con una comprensión más rica del mundo animal.'
+          }
+        ];
+
+        const STAGES = [
+          {
+            id: 'sensoriomotor',
+            title: 'Estadio sensoriomotor',
+            ageRange: '0 a 2 años',
+            whyTheName: 'Se llama así porque el bebé conoce el mundo puramente a través de sus sentidos (lo que ve, toca, saborea) y sus acciones motoras (agarrar, chupar, gatear). No hay representaciones internas o pensamientos; para el bebé, "pensar es hacer".',
+            description: 'En esta etapa inicial, el bebé nace con reflejos básicos (como la succión) que son los cimientos de su inteligencia. A través de la práctica, estos reflejos se convierten en acciones voluntarias y coordinadas, pasando por subestadios de "reacciones circulares": acciones repetitivas para explorar y aprender. Primero son primarias (centradas en su cuerpo, como chuparse el dedo), luego secundarias (sobre objetos, como agitar un sonajero) y finalmente terciarias (experimentando, como tirar un juguete de distintas formas). No hay pensamiento simbólico; el conocimiento se construye a través de la acción directa. El gran logro de esta etapa es la construcción de la "permanencia del objeto": la comprensión de que las cosas siguen existiendo aunque no las pueda ver, oír o tocar.',
+            example: {
+              title: 'Ejemplo: ¿dónde está el osito?',
+              text: 'Si le escondés un juguete a un bebé de 8 meses debajo de una manta, probablemente piense que desapareció. Unos meses después, ya sabrá que el juguete sigue ahí y lo buscará activamente. ¡Eso es la permanencia del objeto en acción!',
+            },
+            activities: [
+              {
+                type: 'multiple-choice',
+                question: 'Cuando un bebé logra la permanencia del objeto, ¿qué hace si le tapás su sonajero con una tela?',
+                options: [
+                  { text: 'Llora porque piensa que el sonajero desapareció para siempre.', isCorrect: false },
+                  { text: 'Levanta la tela para buscar el sonajero.', isCorrect: true },
+                  { text: 'Se distrae con otra cosa y se olvida del sonajero.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Exacto! Al entender que el objeto sigue existiendo, el bebé toma la acción de buscarlo.',
+                  incorrect: 'No es del todo así. La permanencia del objeto implica justamente que el bebé sabe que el juguete no desapareció y puede buscarlo.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Un bebé de 4 meses agita un sonajero una y otra vez, fascinado por el ruido que hace. ¿Qué está demostrando?',
+                options: [
+                  { text: 'Una reacción circular secundaria (repetir una acción placentera sobre un objeto).', isCorrect: true },
+                  { text: 'El concepto de permanencia del objeto.', isCorrect: false },
+                  { text: 'Un simple reflejo de prensión involuntario.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Correcto! Está aprendiendo la relación causa-efecto a través de la repetición de una acción que produce un resultado interesante en el mundo exterior.',
+                  incorrect: 'En realidad, es un ejemplo de reacción circular secundaria, un paso clave para entender cómo sus acciones impactan el entorno.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: '¿Por qué se dice que en la etapa sensoriomotora "pensar es hacer"?',
+                options: [
+                  { text: 'Porque los bebés prefieren jugar a pensar.', isCorrect: false },
+                  { text: 'Porque su conocimiento se construye a través de la acción directa y la manipulación de objetos, no de representaciones mentales.', isCorrect: true },
+                  { text: 'Porque no tienen la capacidad de sentir emociones.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Exacto! La inteligencia es práctica, basada en la acción física sobre el entorno. Aún no hay pensamiento interno como lo conocemos.',
+                  incorrect: 'La frase se refiere a que la inteligencia se manifiesta y construye a través de la acción directa sobre los objetos, no con ideas o imágenes mentales.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Un bebé se chupa el pulgar repetidamente, una acción que descubrió por azar y le resulta placentera. Esto es un ejemplo de...',
+                options: [
+                  { text: 'Reacción circular primaria.', isCorrect: true },
+                  { text: 'Reacción circular terciaria.', isCorrect: false },
+                  { text: 'Permanencia del objeto.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Muy bien! Es una reacción circular primaria porque está centrada en su propio cuerpo y la repite por el placer que le produce.',
+                  incorrect: 'La respuesta correcta es "reacción circular primaria", ya que la acción está centrada en el propio cuerpo del bebé (chuparse el dedo).',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Hacia el final del estadio sensoriomotor, un nene ve a su hermano abrir una caja deslizando la tapa. Días después, se enfrenta a una caja similar y, antes de actuar, abre y cierra su propia boca, imitando el movimiento. ¿Qué indica este gesto?',
+                options: [
+                  { text: 'Que tiene hambre.', isCorrect: false },
+                  { text: 'El inicio de la representación mental: está "pensando" la solución con su cuerpo antes de ejecutarla.', isCorrect: true },
+                  { text: 'Un simple acto reflejo sin conexión con el problema.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Excelente observación! Este es un ejemplo clásico de Piaget que muestra el paso de la inteligencia puramente motora a la representación interna. El nene usa su cuerpo para simbolizar la acción que necesita realizar.',
+                  incorrect: 'Este comportamiento es muy significativo. Indica que está empezando a formar representaciones mentales, usando una acción motora (abrir la boca) como un símbolo interno para resolver el problema.',
+                },
+              }
+            ],
+          },
+          {
+            id: 'preoperacional',
+            title: 'Estadio preoperacional',
+            ageRange: '2 a 7 años',
+            whyTheName: 'Se llama "pre-operacional" porque los chicos aún no pueden realizar "operaciones" mentales lógicas. Su pensamiento es más intuitivo y mágico que racional. Es una etapa de preparación ("pre") para el pensamiento lógico que vendrá después.',
+            description: 'El gran salto de esta etapa es la aparición de la "función simbólica": la capacidad de representar algo (un significado) a través de otra cosa (un significante). Esto se manifiesta en el lenguaje, el juego simbólico (jugar "a que..."), la imitación diferida (imitar algo que vieron horas antes) y la imagen mental. Sin embargo, su pensamiento tiene varias limitaciones: es muy egocéntrico (les cuesta ver desde la perspectiva del otro), centrado (se enfocan en un solo aspecto de un problema), irreversible (no pueden deshacer una acción mentalmente) y animista (creen que los objetos inanimados tienen intenciones).',
+            example: {
+              title: 'Ejemplo: el animismo',
+              text: 'Una nena de 4 años se tropieza con una silla y dice: "¡Silla mala, me pegó!". No está siendo simplemente dramática; para ella, la silla tiene la capacidad de actuar y tener intenciones, como una persona.',
+            },
+            activities: [
+              {
+                type: 'multiple-choice',
+                question: 'Un nene de 5 años te dice que la luna lo está siguiendo mientras caminan por la calle. ¿A qué característica de esta etapa se debe?',
+                options: [
+                  { text: 'A su pensamiento lógico y científico.', isCorrect: false },
+                  { text: 'A su pensamiento egocéntrico, que le hace creer que los objetos se comportan en función de él.', isCorrect: true },
+                  { text: 'A que tiene una excelente visión.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Correcto! El pensamiento egocéntrico hace que los chicos relacionen los fenómenos del mundo con ellos mismos.',
+                  incorrect: 'En realidad, es un ejemplo clásico de egocentrismo. El nene no puede separar su propia perspectiva (él se mueve y ve la luna) de la del objeto (la luna está quieta en el cielo).',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Un nene juega a que una escoba es un caballo y "cabalga" por toda la casa. ¿Qué habilidad clave de la función simbólica está usando?',
+                options: [
+                  { text: 'El juego simbólico.', isCorrect: true },
+                  { text: 'La conservación de la materia.', isCorrect: false },
+                  { text: 'El razonamiento hipotético.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Perfecto! Está usando un objeto (la escoba) para representar otro que no está (el caballo).',
+                  incorrect: 'La habilidad que está demostrando es el juego simbólico, una de las manifestaciones más importantes de la función simbólica en esta etapa.',
+                },
+              },
+               {
+                type: 'multiple-choice',
+                question: 'Le mostrás a una nena de 5 años dos vasos idénticos con la misma cantidad de jugo. Luego, delante de ella, vertés el jugo de uno de los vasos en otro vaso más alto y delgado. Si le preguntás cuál tiene más, es muy probable que señale el vaso alto. ¿Por qué?',
+                options: [
+                  { text: 'Porque no le prestó atención a la acción.', isCorrect: false },
+                  { text: 'Por la "centración": se enfoca solo en la altura del líquido e ignora el ancho del vaso.', isCorrect: true },
+                  { text: 'Porque realmente hay más jugo en el vaso alto.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Exacto! Su pensamiento está "centrado" en una sola dimensión (la altura) y no puede coordinar mentalmente altura y anchura. Por eso aún no logra la conservación de líquidos.',
+                  incorrect: 'La razón es la "centración". Su percepción se enfoca en el rasgo más sobresaliente (el nivel del agua es más alto) y no puede considerar lógicamente las dos dimensiones a la vez (altura y anchura).',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Un nene de 4 años insiste en que las nubes se mueven porque "quieren ir a ver a su mamá". Este es un ejemplo de...',
+                options: [
+                  { text: 'Pensamiento animista.', isCorrect: true },
+                  { text: 'Imitación diferida.', isCorrect: false },
+                  { text: 'Egocentrismo.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Correcto! El animismo es la tendencia a atribuir vida, conciencia e intenciones a objetos inanimados.',
+                  incorrect: 'Esto es un claro ejemplo de pensamiento animista, donde se le otorgan cualidades humanas (intenciones, deseos) a fenómenos naturales.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Después de visitar a sus abuelos, una nena de 4 años dibuja a toda la familia como palitos y círculos. Esto es una manifestación de...',
+                options: [
+                  { text: 'El egocentrismo, porque se dibuja a ella misma en el centro.', isCorrect: false },
+                  { text: 'La función simbólica a través del dibujo.', isCorrect: true },
+                  { text: 'Un problema de motricidad fina.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Correcto! El dibujo es una de las formas más importantes en que los chicos usan símbolos para representar su realidad.',
+                  incorrect: 'Si bien el egocentrismo puede influir, la acción principal es el uso del dibujo como una forma de representación simbólica de la realidad.',
+                },
+              }
+            ],
+          },
+          {
+            id: 'operaciones-concretas',
+            title: 'Estadio de operaciones concretas',
+            ageRange: '7 a 11 años',
+            whyTheName: 'Se llama así porque los chicos ahora sí pueden realizar "operaciones" mentales lógicas (sumar, ordenar, clasificar), pero solo aplicadas a objetos y situaciones "concretas", es decir, reales, que pueden manipular o imaginar fácilmente. Todavía no pueden razonar sobre ideas puramente abstractas.',
+            description: 'En esta fase, el pensamiento se vuelve más lógico, flexible y organizado. Superan el egocentrismo y la centración de la etapa anterior. El gran avance es la adquisición de la noción de "conservación": entienden que una cantidad no cambia aunque su apariencia se modifique. Pueden clasificar objetos en jerarquías y seriarlos (ordenar palitos por tamaño). Un aspecto interesante es el "desfase horizontal": las conservaciones no se adquieren todas al mismo tiempo. Primero se logra la conservación del número (6-7 años), luego la de la materia (masa) y longitud (7-8 años), después la del peso (9-10 años) y finalmente la del volumen (11-12 años). Su lógica es poderosa, pero siempre anclada al mundo tangible.',
+            example: {
+              title: 'Ejemplo: la conservación de la materia',
+              text: 'Si le mostrás a una nena de 8 años dos bolitas de plastilina idénticas, y después aplastás una para que parezca una galletita, ella te dirá que ambas siguen teniendo la misma cantidad de plastilina. Un chico de la etapa anterior se habría dejado engañar por la forma y diría que la "galletita" tiene más.',
+            },
+            activities: [
+              {
+                type: 'multiple-choice',
+                question: 'Si le das a una nena de 9 años un montón de figuritas de animales y le pedís que las ordene, ¿qué es lo más probable que haga?',
+                options: [
+                  { text: 'Las va a agrupar por categorías lógicas, como "mamíferos", "aves", "de la granja", etc.', isCorrect: true },
+                  { text: 'Las va a amontonar todas juntas sin ningún orden.', isCorrect: false },
+                  { text: 'Las va a ordenar por su color favorito, sin seguir una lógica clara.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Muy bien! La capacidad de clasificar y seriar objetos según sus características es un hito de las operaciones concretas.',
+                  incorrect: 'A esta edad, ya desarrollaron la capacidad de pensar lógicamente sobre objetos concretos, por lo que buscarían una forma sistemática de clasificarlos.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Si mostrás dos filas con 5 monedas cada una, y luego espaciás una fila para que parezca más larga, un chico en esta etapa te dirá que ambas filas tienen la misma cantidad. ¿Qué concepto adquirió?',
+                options: [
+                  { text: 'El pensamiento egocéntrico.', isCorrect: false },
+                  { text: 'La conservación del número.', isCorrect: true },
+                  { text: 'El razonamiento abstracto.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Exacto! Entiende que la cantidad (el número de monedas) no cambia aunque la apariencia (la longitud de la fila) sí lo haga.',
+                  incorrect: 'La respuesta correcta es la conservación del número. Ya no se deja engañar por la información puramente perceptual.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Un maestro le pide a un alumno de 9 años que ordene una serie de varillas de madera de la más corta a la más larga. El alumno lo hace de manera sistemática. Esto demuestra la capacidad de...',
+                options: [
+                  { text: 'Seriación.', isCorrect: true },
+                  { text: 'Imitación diferida.', isCorrect: false },
+                  { text: 'Juego simbólico.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Muy bien! La seriación es la habilidad para ordenar elementos lógicamente según una dimensión cuantificable, como la longitud.',
+                  incorrect: 'La tarea de ordenar por tamaño corresponde a la capacidad de seriación, un logro clave de esta etapa.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Un nene de 8 años entiende perfectamente que una bola de plastilina aplastada sigue siendo la misma cantidad de plastilina, pero le cuesta entender que si sumergís esa bola en un vaso de agua, el nivel del agua subirá lo mismo que si la sumergís con forma de salchicha. ¿Cómo se llama este fenómeno?',
+                options: [
+                  { text: 'Desfase horizontal.', isCorrect: true },
+                  { text: 'Pensamiento irreversible.', isCorrect: false },
+                  { text: 'Egocentrismo.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Exacto! Se llama desfase horizontal. El nene ya adquirió la conservación de la materia (7-8 años) pero todavía no la del volumen (11-12 años). Las conservaciones se adquieren en un orden, no todas a la vez.',
+                  incorrect: 'Este fenómeno se conoce como "desfase horizontal". Significa que una misma operación lógica (la conservación) se aplica antes a unos contenidos (materia) que a otros (volumen).',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'La habilidad de entender que si "todos los perros son mamíferos" y "los caniches son perros", entonces "todos los caniches son mamíferos" se basa en la capacidad de...',
+                options: [
+                  { text: 'Clasificación jerárquica.', isCorrect: true },
+                  { text: 'Conservación del número.', isCorrect: false },
+                  { text: 'Pensamiento hipotético.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Correcto! Esta es la lógica de inclusión de clases. El chico puede entender las relaciones jerárquicas entre una clase general (mamíferos) y sus subclases (perros, caniches).',
+                  incorrect: 'La respuesta correcta es la clasificación jerárquica. Es la habilidad para organizar conceptos en diferentes niveles de abstracción, entendiendo que unas categorías incluyen a otras.',
+                },
+              }
+            ],
+          },
+          {
+            id: 'operaciones-formales',
+            title: 'Estadio de operaciones formales',
+            ageRange: '12 años en adelante',
+            whyTheName: 'Se llama "formal" porque el pensamiento se libera de lo concreto y puede operar sobre la "forma" lógica de los argumentos, independientemente de su contenido. El adolescente puede trabajar con ideas abstractas, proposiciones, hipótesis y posibilidades.',
+            description: 'Es la etapa final del desarrollo cognitivo. Aparece el pensamiento abstracto y el razonamiento hipotético-deductivo (la base del pensamiento científico). Pueden pensar sobre lo posible, y no solo sobre lo real. También desarrollan el pensamiento combinatorio: la capacidad de generar sistemáticamente todas las combinaciones posibles de variables para resolver un problema. Este nuevo poder cognitivo impacta en toda su personalidad: se interesan por temas abstractos (justicia, identidad), cuestionan las normas y pueden imaginar futuros y mundos ideales. Como señalan Aberastury y Knobel, esta capacidad de pensar en abstracto es una de las bases de los duelos y comportamientos propios del "síndrome de la adolescencia normal".',
+            example: {
+              title: 'Ejemplo: pensando en el futuro',
+              text: 'Un adolescente puede pensar sobre distintas carreras, evaluar los pros y contras de cada una, e imaginar cómo sería su vida en cada escenario. Este tipo de razonamiento hipotético ("si estudio X, entonces podría trabajar en Y, pero si estudio Z...") es característico de esta etapa.',
+            },
+            activities: [
+              {
+                type: 'multiple-choice',
+                question: 'Para resolver un problema de lógica como "si todos los A son B, y algunos C son A, ¿entonces...?", ¿qué tipo de pensamiento es fundamental?',
+                options: [
+                  { text: 'El pensamiento simbólico de la etapa preoperacional.', isCorrect: false },
+                  { text: 'La necesidad de manipular objetos concretos.', isCorrect: false },
+                  { text: 'El razonamiento abstracto y formal.', isCorrect: true },
+                ],
+                feedback: {
+                  correct: '¡Perfecto! Este tipo de problemas requiere pensar en reglas y relaciones lógicas, independientemente de si A, B y C son objetos reales.',
+                  incorrect: 'Este tipo de problema no se puede resolver con objetos concretos, sino con la capacidad de pensar en términos abstractos y lógicos.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Un adolescente, al discutir sobre política, puede analizar los pros y contras de diferentes sistemas (por ejemplo: democracia directa vs. indirecta) sin haber vivido en ellos. ¿Qué tipo de pensamiento está utilizando?',
+                options: [
+                  { text: 'Pensamiento concreto, basado en su experiencia directa.', isCorrect: false },
+                  { text: 'Pensamiento abstracto e hipotético.', isCorrect: true },
+                  { text: 'Pensamiento egocéntrico de la etapa preoperacional.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Así es! Puede razonar sobre ideas y sistemas complejos, evaluando su lógica interna más allá de la realidad concreta.',
+                  incorrect: 'La capacidad de analizar sistemas e ideas abstractas es la marca distintiva del pensamiento formal.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'La preocupación por temas como la justicia social, la búsqueda de la propia identidad y la planificación del futuro son posibles gracias a...',
+                options: [
+                  { text: 'La adquisición de la permanencia del objeto.', isCorrect: false },
+                  { text: 'El desarrollo del pensamiento formal y abstracto.', isCorrect: true },
+                  { text: 'La superación del egocentrismo infantil.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Correcto! La capacidad de pensar en lo posible, en el futuro y en conceptos abstractos abre todo un nuevo mundo de intereses y preocupaciones intelectuales y personales.',
+                  incorrect: 'Estas preocupaciones complejas y abstractas son una consecuencia directa de la llegada del pensamiento formal.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'Se le da a un adolescente un problema que consiste en combinar diferentes líquidos incoloros para obtener un color amarillo. El adolescente prueba a mezclar el líquido 1 con el 2, luego el 1 con el 3, luego el 1 con el 4, y así sistemáticamente hasta probar todas las combinaciones posibles. ¿Qué habilidad está demostrando?',
+                options: [
+                  { text: 'Pensamiento combinatorio.', isCorrect: true },
+                  { text: 'Seriación.', isCorrect: false },
+                  { text: 'Conservación del volumen.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Exacto! El pensamiento combinatorio es la capacidad de considerar todas las variables y combinaciones posibles de forma sistemática para resolver un problema, como haría un científico.',
+                  incorrect: 'Esta forma metódica de abordar el problema es un claro ejemplo del pensamiento combinatorio, una característica clave del estadio de las operaciones formales.',
+                },
+              },
+              {
+                type: 'multiple-choice',
+                question: 'La frase "no es que me enoje lo que me dijiste, sino cómo me lo dijiste, porque me hizo pensar que vos creés que yo soy tonto" es un ejemplo de...',
+                options: [
+                  { text: 'Animismo.', isCorrect: false },
+                  { text: 'Pensamiento sobre el pensamiento (metacognición).', isCorrect: true },
+                  { text: 'Razonamiento transductivo.', isCorrect: false },
+                ],
+                feedback: {
+                  correct: '¡Muy bien! Esta capacidad de analizar las intenciones de los demás, de pensar sobre los propios pensamientos y los de otros, es una forma avanzada de abstracción que se desarrolla en esta etapa.',
+                  incorrect: 'La respuesta correcta es el pensamiento sobre el pensamiento o metacognición. El adolescente puede analizar las relaciones interpersonales en un nivel mucho más profundo y abstracto.',
+                },
+              }
+            ],
+          },
+        ];
+
+        const FINAL_CHALLENGE_ITEMS = [
+          {
+            id: 'challenge1',
+            situation: 'Un nene de 3 años juega a que una caja de cartón es un auto de carreras.',
+            correctStageId: 'preoperacional',
+          },
+          {
+            id: 'challenge2',
+            situation: 'Una adolescente debate con sus amigos sobre conceptos filosóficos como la justicia y la libertad.',
+            correctStageId: 'operaciones-formales',
+          },
+          {
+            id: 'challenge3',
+            situation: 'Un bebé de 10 meses busca su chupete después de que su mamá lo escondiera bajo un almohadón.',
+            correctStageId: 'sensoriomotor',
+          },
+          {
+            id: 'challenge4',
+            situation: 'Una alumna de 4º grado arma una línea de tiempo con los eventos más importantes de la historia argentina.',
+            correctStageId: 'operaciones-concretas',
+          },
+            {
+            id: 'challenge5',
+            situation: 'Un chico le explica a su hermanito menor que, aunque su porción de pizza esté cortada en más pedazos, no significa que tenga más pizza que la porción entera del otro.',
+            correctStageId: 'operaciones-concretas',
+          },
+        ];
+
+        const PAGE_TITLES = [
+            'Conceptos clave',
+            'Sensoriomotor',
+            'Preoperacional',
+            'Op. Concretas',
+            'Op. Formales',
+            'Desafío',
+            'Resultados'
+        ];
+        // --- END OF CONSTANTS ---
+
+
+        // --- START OF COMPONENTS ---
+        const InteractiveActivity = ({ activity, onAnswer }) => {
+          const [selectedOption, setSelectedOption] = useState(null);
+          const [isAnswered, setIsAnswered] = useState(false);
+
+          const handleSelect = (option) => {
+            if (isAnswered) return;
+            setSelectedOption(option);
+            setIsAnswered(true);
+            onAnswer(option.isCorrect);
+          };
+
+          const getButtonClass = (option) => {
+            if (!isAnswered) {
+              return 'bg-white hover:bg-sky-100 border-slate-300';
+            }
+            if (option.isCorrect) {
+              return 'bg-green-100 border-green-400 text-green-800';
+            }
+            if (option === selectedOption && !option.isCorrect) {
+              return 'bg-red-100 border-red-400 text-red-800';
+            }
+            return 'bg-slate-100 border-slate-300 text-slate-500';
+          };
+          
+          const CheckIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 inline" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          );
+
+          const XIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 inline" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          );
+
+          return (
+            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 mt-4">
+              <h4 className="font-semibold text-slate-800 mb-3">¡Probá lo que aprendiste!</h4>
+              <p className="text-slate-600 mb-4">{activity.question}</p>
+              <div className="space-y-3">
+                {activity.options.map((option, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSelect(option)}
+                    disabled={isAnswered}
+                    className={`w-full text-left p-3 border rounded-md transition-all duration-200 ${getButtonClass(option)} disabled:cursor-not-allowed`}
+                  >
+                    {option.text}
+                  </button>
+                ))}
+              </div>
+              {isAnswered && selectedOption && (
+                <div className={`mt-4 p-3 rounded-md text-sm ${selectedOption.isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                  {selectedOption.isCorrect ? <CheckIcon/> : <XIcon/>}
+                  <strong>{selectedOption.isCorrect ? '¡Correcto!' : '¡Casi!'}</strong>{' '}
+                  {selectedOption.isCorrect ? activity.feedback.correct : activity.feedback.incorrect}
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        const Header = () => {
+          return (
+            <header className="text-center">
+              <h1 className="text-4xl sm:text-5xl font-bold text-sky-800">
+                Etapas del desarrollo de la inteligencia según Piaget
+              </h1>
+              <p className="mt-4 max-w-3xl mx-auto text-lg text-slate-600">
+                Jean Piaget, biólogo y epistemólogo suizo, revolucionó la psicología del desarrollo. Propuso que todos los chicos pasan por una serie de
+                cuatro estadios o etapas para construir su inteligencia. Entenderlos es clave en educación
+                para saber cómo aprenden y qué podemos esperar de ellos en cada momento. ¡Vamos a explorarlos!
+              </p>
+            </header>
+          );
+        };
+
+        const KeyConcepts = ({ onAnswer }) => {
+            return (
+                <section className="mt-8 bg-white p-6 sm:p-8 rounded-xl shadow-lg">
+                    <h2 className="text-2xl font-bold text-sky-900 border-b-2 border-sky-200 pb-3 mb-4">
+                        Conceptos clave para entender a Piaget
+                    </h2>
+                    <div className="space-y-6">
+                        {KEY_CONCEPTS.map((concept) => (
+                            <div key={concept.title}>
+                                <h3 className="text-xl font-semibold text-slate-700">{concept.title}</h3>
+                                <p className="text-slate-600 mt-2">{concept.text}</p>
+                                <div 
+                                    className="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm"
+                                    dangerouslySetInnerHTML={{ __html: concept.example }}
+                                />
+                                {concept.activities && (
+                                    <div className="mt-4 space-y-4">
+                                        {concept.activities.map((activity, index) => (
+                                            <InteractiveActivity
+                                                key={`${concept.title}-activity-${index}`}
+                                                activity={activity}
+                                                onAnswer={(isCorrect) => onAnswer(activity.question, isCorrect)}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            );
+        };
+
+        const Welcome = ({ onStart, onAnswer }) => {
+            return (
+                <div className="animate-fade-in">
+                    <Header />
+                    <KeyConcepts onAnswer={onAnswer} />
+                    <div className="mt-8 text-center">
+                        <button
+                            onClick={onStart}
+                            className="px-8 py-3 text-lg font-bold rounded-md text-white bg-sky-600 hover:bg-sky-700 transition-transform hover:scale-105"
+                        >
+                            Comenzar el recorrido
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const StageView = ({ stage, onPrev, onNext, isFirstStage, isLastStage, onAnswer }) => {
+          return (
+            <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-fade-in">
+              <div className="border-b-2 border-sky-200 pb-4 mb-6">
+                <p className="text-sm font-semibold text-sky-600">{stage.ageRange}</p>
+                <h2 className="text-3xl font-bold text-sky-900 mt-1">{stage.title}</h2>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                   <h3 className="text-xl font-semibold text-slate-700 mb-2">¿Por qué se llama así?</h3>
+                  <p className="text-slate-600 leading-relaxed italic">{stage.whyTheName}</p>
+                </div>
+              
+                <div>
+                  <h3 className="text-xl font-semibold text-slate-700 mb-2">¿De qué se trata?</h3>
+                  <p className="text-slate-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: stage.description }}></p>
+                </div>
+
+                <div className="bg-sky-50 p-4 rounded-lg border border-sky-200">
+                  <h4 className="font-semibold text-sky-800">{stage.example.title}</h4>
+                  <p className="text-slate-600 mt-1">{stage.example.text}</p>
+                </div>
+
+                <div className="space-y-4">
+                    {stage.activities.map((activity, index) => (
+                        <InteractiveActivity 
+                          activity={activity} 
+                          key={`${stage.id}-activity-${index}`}
+                          onAnswer={(isCorrect) => onAnswer(activity.question, isCorrect)}
+                        />
+                    ))}
+                </div>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-slate-200 flex justify-between items-center">
+                <button
+                  onClick={onPrev}
+                  className={`px-6 py-2 text-base font-medium rounded-md text-slate-700 bg-slate-200 hover:bg-slate-300 transition-colors ${isFirstStage ? 'invisible' : 'visible'}`}
+                >
+                  Anterior
+                </button>
+                <button
+                  onClick={onNext}
+                  className="px-6 py-2 text-base font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 transition-colors"
+                >
+                  {isLastStage ? 'Ir al desafío integrador' : 'Siguiente'}
+                </button>
+              </div>
+            </div>
+          );
+        };
+
+        const FinalChallenge = ({ onBack, onComplete }) => {
+          const [answers, setAnswers] = useState({});
+          const [isSubmitted, setIsSubmitted] = useState(false);
+
+          const handleSelectChange = (challengeId, selectedStageId) => {
+            if (isSubmitted) return;
+            setAnswers(prev => ({ ...prev, [challengeId]: selectedStageId }));
+          };
+
+          const handleSubmit = () => {
+            setIsSubmitted(true);
+          };
+          
+          const handleFinish = () => {
+              const challengeResults = FINAL_CHALLENGE_ITEMS.map(item => ({
+                question: item.situation,
+                isCorrect: answers[item.id] === item.correctStageId
+              }));
+              onComplete(challengeResults);
+          }
+
+          const getResultIcon = (item) => {
+            if (!isSubmitted) return null;
+            const isCorrect = answers[item.id] === item.correctStageId;
+            return isCorrect ? (
+              <span className="text-green-500 font-bold ml-2">✓ ¡Correcto!</span>
+            ) : (
+              <span className="text-red-500 font-bold ml-2">✗ Incorrecto</span>
+            );
+          };
+
+          const allAnswered = Object.keys(answers).length === FINAL_CHALLENGE_ITEMS.length;
+
+          return (
+            <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-fade-in">
+              <h2 className="text-3xl font-bold text-sky-900">Desafío integrador</h2>
+              <p className="text-slate-600 mt-2">
+                Ahora que viste todas las etapas, es tu turno. Leé cada situación y clasificála en el estadio
+                que te parezca correcto.
+              </p>
+
+              <div className="space-y-6 mt-8">
+                {FINAL_CHALLENGE_ITEMS.map((item) => (
+                  <div key={item.id} className={`p-4 rounded-lg border ${isSubmitted ? (answers[item.id] === item.correctStageId ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200') : 'bg-slate-50 border-slate-200'}`}>
+                    <p className="text-slate-700 font-medium">{item.situation}</p>
+                    <div className="flex items-center mt-3">
+                      <select
+                        value={answers[item.id] || ''}
+                        onChange={(e) => handleSelectChange(item.id, e.target.value)}
+                        disabled={isSubmitted}
+                        className="block w-full sm:w-auto p-2 border border-slate-300 rounded-md bg-white focus:ring-sky-500 focus:border-sky-500 disabled:bg-slate-200"
+                      >
+                        <option value="" disabled>Seleccioná una etapa...</option>
+                        {STAGES.map(stage => (
+                          <option key={stage.id} value={stage.id}>{stage.title}</option>
+                        ))}
+                      </select>
+                      {getResultIcon(item)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <button
+                  onClick={onBack}
+                  className="w-full sm:w-auto px-6 py-2 text-base font-medium rounded-md text-slate-700 bg-slate-200 hover:bg-slate-300 transition-colors"
+                >
+                  Anterior
+                </button>
+                
+                {!isSubmitted ? (
+                     <button
+                        onClick={handleSubmit}
+                        disabled={!allAnswered}
+                        className="w-full sm:w-auto px-6 py-2 text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors"
+                      >
+                        Corregir
+                      </button>
+                ): (
+                     <button
+                        onClick={handleFinish}
+                        className="w-full sm:w-auto px-6 py-2 text-base font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 transition-colors"
+                      >
+                        Ver resultados finales
+                      </button>
+                )}
+              </div>
+              {!allAnswered && !isSubmitted && <p className="text-sm text-center text-slate-500 mt-4">Respondé todas las situaciones para poder corregir.</p>}
+            </div>
+          );
+        };
+        
+        const Results = ({ results, onRestart }) => {
+            const correctAnswers = results.filter(r => r.isCorrect).length;
+            const totalQuestions = results.length;
+            const score = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+            const incorrectAnswers = results.filter(r => !r.isCorrect);
+
+            const getFeedback = () => {
+                if (score === 100) {
+                    return {
+                        title: "¡Excelente! Dominás la teoría de Piaget.",
+                        text: "Tu desempeño fue perfecto. Demostraste una comprensión profunda de cada uno de los estadios y los conceptos clave. ¡Felicitaciones!"
+                    };
+                } else if (score >= 70) {
+                    return {
+                        title: "¡Muy bien! Tenés una sólida comprensión del tema.",
+                        text: "Lograste un gran resultado. Entendés bien las etapas y sus características. Quizás solo necesites repasar algunos detalles para afianzar los conceptos."
+                    };
+                } else if (score >= 40) {
+                    return {
+                        title: "¡Vas por buen camino! Hay algunos conceptos para reforzar.",
+                        text: "Entendiste los conceptos generales, pero algunas diferencias entre las etapas pueden ser confusas. Te recomendamos volver a leer las explicaciones y probar de nuevo."
+                    };
+                } else {
+                    return {
+                        title: "¡A no desanimarse! Es un buen primer paso.",
+                        text: "La teoría de Piaget tiene sus complejidades. Te sugerimos tomarte un tiempo para revisar cada etapa con calma, prestando atención a los ejemplos. ¡El próximo intento será mucho mejor!"
+                    };
+                }
+            };
+
+            const feedback = getFeedback();
+
+            return (
+                <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-fade-in text-center">
+                    <h2 className="text-3xl font-bold text-sky-900">Resultados finales</h2>
+                    
+                    <div className="my-8">
+                        <p className="text-lg text-slate-600">Tu puntuación fue de:</p>
+                        <p className="text-6xl font-bold text-sky-700 my-2">{correctAnswers} / {totalQuestions}</p>
+                        <div className="w-full bg-slate-200 rounded-full h-4 mt-4">
+                            <div 
+                                className="bg-sky-600 h-4 rounded-full transition-all duration-1000 ease-out" 
+                                style={{ width: `${score}%` }}
+                            ></div>
+                        </div>
+                    </div>
+
+                    <div className="bg-sky-50 p-4 rounded-lg border border-sky-200">
+                        <h3 className="text-xl font-semibold text-sky-800">{feedback.title}</h3>
+                        <p className="text-slate-600 mt-2">{feedback.text}</p>
+                    </div>
+                    
+                    {incorrectAnswers.length > 0 && (
+                        <div className="mt-8 text-left border-t border-slate-200 pt-6">
+                            <h3 className="text-xl font-semibold text-slate-700 mb-4">Repasemos tus errores</h3>
+                            <ul className="space-y-3">
+                               {incorrectAnswers.map((answer, index) => (
+                                   <li key={index} className="p-3 bg-slate-50 border border-slate-200 rounded-md">
+                                       <p className="text-slate-600">{answer.question}</p>
+                                   </li>
+                               ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    <div className="mt-8 text-left border-t border-slate-200 pt-6">
+                        <h3 className="text-xl font-semibold text-slate-700 mb-3">Sugerencias de lectura para profundizar</h3>
+                        <ul className="list-disc list-inside space-y-2 text-slate-600">
+                            <li>"Seis estudios de Psicología" de Jean Piaget: una excelente introducción a su pensamiento.</li>
+                            <li>"La formación del símbolo en el niño" de Jean Piaget: para profundizar en la etapa preoperacional.</li>
+                            <li>"Psicología del niño" de Jean Piaget y Bärbel Inhelder: un resumen completo de su obra sobre el desarrollo infantil.</li>
+                        </ul>
+                    </div>
+
+                    <div className="mt-10 pt-6 border-t border-slate-200">
+                        <button
+                            onClick={onRestart}
+                            className="px-8 py-3 text-lg font-bold rounded-md text-white bg-sky-600 hover:bg-sky-700 transition-transform hover:scale-105"
+                        >
+                            Volver a empezar
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+        
+        const ProgressTracker = ({ currentPage, totalPages }) => {
+            const CheckIcon = () => (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+            );
+
+            return (
+                <div className="w-full mb-4">
+                    <ol className="grid grid-cols-4 sm:grid-cols-7 text-sm font-medium text-center text-slate-500">
+                        {PAGE_TITLES.map((title, index) => {
+                            const stepNumber = index + 1;
+                            const isCompleted = currentPage > stepNumber;
+                            const isCurrent = currentPage === stepNumber;
+
+                            let stateClasses = 'border-slate-300 bg-slate-100'; // Upcoming
+                            if (isCurrent) {
+                                stateClasses = 'border-sky-600 bg-sky-100 text-sky-700';
+                            }
+                            if (isCompleted) {
+                                stateClasses = 'border-sky-600 bg-sky-600 text-white';
+                            }
+
+                            return (
+                                <li key={title} className={`flex items-center ${index === 0 ? '' : 'sm:before:content-[\'\'] sm:before:w-full sm:before:h-0.5 sm:before:border-b sm:before:border-slate-200'} ${index > 3 ? 'hidden sm:flex' : ''}`}>
+                                    <div className="flex flex-col items-center w-full">
+                                        <span className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors duration-300 ${stateClasses}`}>
+                                            {isCompleted ? <CheckIcon /> : stepNumber}
+                                        </span>
+                                        <span className={`mt-2 text-xs sm:text-sm ${isCurrent ? 'font-bold text-sky-800' : ''}`}>{title}</span>
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ol>
+                </div>
+            );
+        };
+
+        const App = () => {
+          const [page, setPage] = useState(0); // 0: Welcome, 1-4: Stages, 5: Challenge, 6: Results
+          const [results, setResults] = useState([]);
+
+          const handleAnswer = (question, isCorrect) => {
+            // Evitar duplicados si el usuario interactúa varias veces
+            if (!results.some(r => r.question === question)) {
+              setResults(prev => [...prev, { question, isCorrect }]);
+            }
+          };
+          
+          const handleChallengeComplete = (challengeResults) => {
+            setResults(prev => [...prev, ...challengeResults]);
+            setPage(p => p + 1);
+          };
+
+          const handleNextPage = () => {
+            setPage(p => p + 1);
+          };
+
+          const handlePrevPage = () => {
+            setPage(p => p - 1);
+          };
+
+          const handleRestart = () => {
+            setResults([]);
+            setPage(0);
+          };
+
+          const renderContent = () => {
+            if (page === 0) {
+              return <Welcome onStart={handleNextPage} onAnswer={handleAnswer} />;
+            }
+            
+            if (page >= 1 && page <= STAGES.length) {
+              const stageIndex = page - 1;
+              return (
+                <StageView
+                  stage={STAGES[stageIndex]}
+                  onNext={handleNextPage}
+                  onPrev={page === 1 ? () => setPage(0) : handlePrevPage}
+                  isFirstStage={stageIndex === 0}
+                  isLastStage={stageIndex === STAGES.length - 1}
+                  onAnswer={handleAnswer}
+                />
+              );
+            }
+
+            if (page === STAGES.length + 1) {
+              return <FinalChallenge onComplete={handleChallengeComplete} onBack={handlePrevPage}/>;
+            }
+            
+            if (page === STAGES.length + 2) {
+              return <Results results={results} onRestart={handleRestart} />;
+            }
+
+            return null;
+          };
+
+          const showTracker = page > 0;
+          const trackerCurrentPage = page > STAGES.length ? page - 1 : page;
+
+          return (
+            <div className="min-h-screen font-sans text-slate-800 flex flex-col items-center p-4 sm:p-6 md:p-8">
+              <div className="w-full max-w-4xl mx-auto">
+                
+                {showTracker && (
+                     <ProgressTracker 
+                        currentPage={trackerCurrentPage} 
+                        totalPages={PAGE_TITLES.length}
+                     />
+                )}
+
+                <main className={showTracker ? 'mt-8' : ''}>
+                  {renderContent()}
+                </main>
+                <footer className="text-center mt-12 text-slate-500 text-sm">
+                  <p>Creado como material interactivo de aprendizaje.</p>
+                </footer>
+              </div>
+            </div>
+          );
+        };
+        // --- END OF COMPONENTS ---
+
+
+        // --- RENDER THE APP ---
+        const rootElement = document.getElementById('root');
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(<App />);
+
+    </script>
+</body>
+</html>
