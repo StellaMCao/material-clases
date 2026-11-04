@@ -166,9 +166,23 @@
         .hidden { display: none; }
 
         .tooltip-trigger {
-            position: relative; display: inline-block; cursor: help; color: #fff;
-            background-color: var(--primary); border-radius: 50%; width: 18px; height: 18px;
-            font-size: 12px; text-align: center; line-height: 18px;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
+            color: #fff;
+            background-color: var(--primary);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 1;
+            user-select: none;
+            vertical-align: middle;
+            margin-left: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
         }
         .tooltip-text {
             visibility: hidden; width: 220px; background-color: var(--secondary); color: #fff;
@@ -195,7 +209,7 @@
                 
                 <div class="form-group">
                     <label>¿La rúbrica usará puntajes?
-                        <span class="tooltip-trigger">(?)<span class="tooltip-text">Elige 'Sí' para una evaluación cuantitativa (con notas) o 'No' para una evaluación puramente cualitativa (solo comentarios).</span></span>
+                        <span class="tooltip-trigger">?<span class="tooltip-text">Elige 'Sí' para una evaluación cuantitativa (con notas) o 'No' para una evaluación puramente cualitativa (solo comentarios).</span></span>
                     </label>
                     <div class="qualify-options">
                         <div class="radio-group"><input type="radio" id="qualify-yes" name="qualify" value="yes" checked><label for="qualify-yes">Sí</label></div>
@@ -205,21 +219,21 @@
 
                 <div class="form-group">
                     <label for="teacher-name">Nombre del docente:
-                         <span class="tooltip-trigger">(?)<span class="tooltip-text">Tu nombre completo. Aparecerá en la cabecera de la rúbrica final.</span></span>
+                         <span class="tooltip-trigger">?<span class="tooltip-text">Tu nombre completo. Aparecerá en la cabecera de la rúbrica final.</span></span>
                     </label>
                     <input type="text" id="teacher-name" placeholder="Ej: Ana Martínez">
                 </div>
                 
                 <div class="form-group">
                     <label for="subject">Materia:
-                        <span class="tooltip-trigger">(?)<span class="tooltip-text">El nombre de la asignatura o curso.</span></span>
+                        <span class="tooltip-trigger">?<span class="tooltip-text">El nombre de la asignatura o curso.</span></span>
                     </label>
                     <input type="text" id="subject" placeholder="Ej: Lengua y literatura">
                 </div>
                 
                 <div class="form-group">
                     <label for="work">Trabajo a evaluar:
-                        <span class="tooltip-trigger">(?)<span class="tooltip-text">El nombre de la actividad específica. Ej: "Análisis de cuento corto".</span></span>
+                        <span class="tooltip-trigger">?<span class="tooltip-text">El nombre de la actividad específica. Ej: "Análisis de cuento corto".</span></span>
                     </label>
                     <input type="text" id="work" placeholder="Ej: Análisis de cuento corto">
                 </div>
@@ -227,13 +241,13 @@
                 <h2 class="section-title">2. Niveles de desempeño</h2>
                 <div class="form-group">
                     <label for="level-name">Nombre del nivel:
-                        <span class="tooltip-trigger">(?)<span class="tooltip-text">Define las columnas de tu rúbrica. Ej: "Excelente", "Bueno", "Aceptable", "Insuficiente".</span></span>
+                        <span class="tooltip-trigger">?<span class="tooltip-text">Define las columnas de tu rúbrica. Ej: "Excelente", "Bueno", "Aceptable", "Insuficiente".</span></span>
                     </label>
                     <input type="text" id="level-name" placeholder="Ej: Excelente">
                 </div>
                 <div class="form-group score-related">
                     <label for="level-value">Valor relativo:
-                        <span class="tooltip-trigger">(?)<span class="tooltip-text">Asigna un peso numérico a cada nivel (ej: 4 para el mejor, 1 para el peor). Esto se usa para calcular el puntaje final del criterio.</span></span>
+                        <span class="tooltip-trigger">?<span class="tooltip-text">Asigna un peso numérico a cada nivel (ej: 4 para el mejor, 1 para el peor). Esto se usa para calcular el puntaje final del criterio.</span></span>
                     </label>
                     <input type="number" id="level-value" min="0" value="0" placeholder="Ej: 4">
                 </div>
@@ -243,13 +257,13 @@
                 <h2 class="section-title">3. Criterios de evaluación</h2>
                 <div class="form-group">
                     <label for="criterion-name">Nombre del criterio:
-                         <span class="tooltip-trigger">(?)<span class="tooltip-text">Define las filas: los aspectos o habilidades que vas a evaluar. Ej: "Comprensión del tema".</span></span>
+                         <span class="tooltip-trigger">?<span class="tooltip-text">Define las filas: los aspectos o habilidades que vas a evaluar. Ej: "Comprensión del tema".</span></span>
                     </label>
                     <input type="text" id="criterion-name" placeholder="Ej: Comprensión del tema">
                 </div>
                 <div class="form-group score-related">
                     <label for="criterion-max-points">Puntaje máximo del criterio:
-                        <span class="tooltip-trigger">(?)<span class="tooltip-text">¿Cuántos puntos vale este criterio en la nota final? La suma de todos los criterios será el puntaje total del trabajo.</span></span>
+                        <span class="tooltip-trigger">?<span class="tooltip-text">¿Cuántos puntos vale este criterio en la nota final? La suma de todos los criterios será el puntaje total del trabajo.</span></span>
                     </label>
                     <input type="number" id="criterion-max-points" min="0" value="0" placeholder="Ej: 25">
                 </div>
@@ -273,7 +287,7 @@
                     <div class="rubric-table-container" id="rubric-table-preview"></div>
                     <div class="observations">
                         <h3>Observaciones generales de la rúbrica
-                            <span class="tooltip-trigger">(?)<span class="tooltip-text">Añade aquí cualquier aclaración o nota general que deba aparecer en la rúbrica final.</span></span>
+                            <span class="tooltip-trigger">?<span class="tooltip-text">Añade aquí cualquier aclaración o nota general que deba aparecer en la rúbrica final.</span></span>
                         </h3>
                         <textarea id="observations" placeholder="Instrucciones generales..."></textarea>
                     </div>
